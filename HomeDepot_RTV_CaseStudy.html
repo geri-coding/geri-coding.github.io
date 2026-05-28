@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home Depot RTV — Geri Arnold</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #D85A1A;
+    --orange-light: #FFF3EC;
+    --dark: #1A1410;
+    --mid: #5C4F45;
+    --light: #F7F4F1;
+    --white: #FFFFFF;
+    --border: #E8E0D8;
+    --green: #2A6B3C;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--light);
+    color: var(--dark);
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(247,244,241,0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 48px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--dark); text-decoration: none; }
+  .nav-back { font-size: 13px; color: var(--mid); text-decoration: none; letter-spacing: 0.05em; }
+  .nav-back:hover { color: var(--orange); }
+
+  /* HERO */
+  .hero {
+    padding: 140px 48px 80px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .hero-tag {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--orange);
+    border: 1px solid var(--orange);
+    padding: 4px 12px;
+    border-radius: 2px;
+    margin-bottom: 32px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 5vw, 64px);
+    line-height: 1.1;
+    color: var(--dark);
+    max-width: 800px;
+    margin-bottom: 24px;
+  }
+  .hero h1 em { font-style: italic; color: var(--orange); }
+  .hero-sub {
+    font-size: 18px;
+    color: var(--mid);
+    max-width: 580px;
+    line-height: 1.6;
+    margin-bottom: 56px;
+  }
+
+  /* METRICS ROW */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    max-width: 1000px;
+  }
+  .metric {
+    background: var(--white);
+    padding: 28px 24px;
+    text-align: center;
+  }
+  .metric-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    color: var(--orange);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .metric-label { font-size: 12px; color: var(--mid); letter-spacing: 0.04em; }
+
+  /* ROLE ROW */
+  .meta-row {
+    display: flex; gap: 48px; flex-wrap: wrap;
+    padding: 40px 48px;
+    max-width: 1100px; margin: 0 auto;
+    border-bottom: 1px solid var(--border);
+  }
+  .meta-item label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--mid); display: block; margin-bottom: 4px; }
+  .meta-item span { font-size: 14px; color: var(--dark); }
+
+  /* SECTIONS */
+  .section {
+    max-width: 1100px; margin: 0 auto;
+    padding: 80px 48px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section:last-child { border-bottom: none; }
+
+  .section-number {
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--orange); margin-bottom: 16px; display: block;
+  }
+  .section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 3vw, 38px);
+    color: var(--dark);
+    margin-bottom: 32px;
+    line-height: 1.2;
+  }
+  .section p {
+    font-size: 16px; color: var(--mid);
+    max-width: 680px; margin-bottom: 20px;
+  }
+
+  /* PROBLEMS GRID */
+  .problems-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px; margin-top: 40px;
+  }
+  .problem-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    position: relative;
+  }
+  .problem-card::before {
+    content: attr(data-num);
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    color: var(--orange-light);
+    position: absolute;
+    top: 12px; right: 16px;
+    line-height: 1;
+  }
+  .problem-card h3 { font-size: 14px; font-weight: 500; color: var(--dark); line-height: 1.4; }
+
+  /* PROCESS TIMELINE */
+  .process-steps {
+    display: flex; gap: 0; margin-top: 40px;
+    overflow-x: auto; padding-bottom: 8px;
+  }
+  .step {
+    flex: 1; min-width: 160px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-right: none;
+    padding: 20px 16px;
+    position: relative;
+  }
+  .step:last-child { border-right: 1px solid var(--border); border-radius: 0 8px 8px 0; }
+  .step:first-child { border-radius: 8px 0 0 8px; }
+  .step-phase {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--orange); font-weight: 500; margin-bottom: 8px; display: block;
+  }
+  .step h3 { font-size: 13px; font-weight: 500; color: var(--dark); margin-bottom: 8px; }
+  .step ul { font-size: 12px; color: var(--mid); padding-left: 14px; line-height: 1.8; }
+
+  /* TWO COL */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; margin-top: 40px; }
+  .two-col-text h3 { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 16px; }
+  .two-col-text p { font-size: 15px; color: var(--mid); margin-bottom: 12px; }
+
+  /* ARTIFACT CALLOUT */
+  .artifact {
+    background: var(--orange-light);
+    border-left: 3px solid var(--orange);
+    border-radius: 0 8px 8px 0;
+    padding: 20px 24px;
+    margin: 24px 0;
+    font-size: 14px; color: var(--dark);
+  }
+  .artifact strong { color: var(--orange); }
+
+  /* PERSONAS */
+  .personas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; }
+  .persona-card {
+    background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 24px;
+  }
+  .persona-card .role { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--orange); margin-bottom: 8px; display: block; }
+  .persona-card h3 { font-size: 16px; font-weight: 500; margin-bottom: 12px; }
+  .persona-card ul { font-size: 13px; color: var(--mid); padding-left: 16px; line-height: 1.9; }
+
+  /* COMPARISON */
+  .comparison {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+    margin-top: 40px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border);
+  }
+  .comp-col { padding: 32px; }
+  .comp-col.old { background: #2A2A2A; color: #AAA; }
+  .comp-col.new { background: var(--white); }
+  .comp-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
+    margin-bottom: 16px; display: block; font-weight: 500;
+  }
+  .comp-col.old .comp-label { color: #666; }
+  .comp-col.new .comp-label { color: var(--green); }
+  .comp-col.old h3 { font-family: 'Courier New', monospace; font-size: 14px; color: #88CC66; margin-bottom: 12px; }
+  .comp-col.new h3 { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--dark); margin-bottom: 12px; }
+  .comp-list { font-size: 13px; line-height: 2; padding-left: 0; list-style: none; }
+  .comp-col.old .comp-list li { color: #888; }
+  .comp-col.old .comp-list li::before { content: "> "; color: #88CC66; }
+  .comp-col.new .comp-list li { color: var(--mid); }
+  .comp-col.new .comp-list li::before { content: "✓ "; color: var(--green); }
+
+  /* OUTCOME */
+  .outcome-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
+  .outcome-card {
+    background: var(--white); border: 1px solid var(--border); border-radius: 8px;
+    padding: 28px 24px; text-align: center;
+  }
+  .outcome-big {
+    font-family: 'Playfair Display', serif; font-size: 48px;
+    color: var(--green); line-height: 1; margin-bottom: 8px;
+  }
+  .outcome-card p { font-size: 13px; color: var(--mid); max-width: none; }
+
+  /* QUOTE */
+  .pullquote {
+    border-left: 3px solid var(--orange);
+    padding: 24px 32px;
+    margin: 40px 0;
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-style: italic;
+    color: var(--dark); line-height: 1.5;
+    background: var(--white);
+    border-radius: 0 8px 8px 0;
+  }
+
+  /* SCROLL ANIMATION */
+  .fade-up {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .hero, .section, .meta-row { padding-left: 20px; padding-right: 20px; }
+    .metrics { grid-template-columns: 1fr 1fr; }
+    .two-col, .comparison, .personas, .outcome-grid { grid-template-columns: 1fr; }
+    .process-steps { flex-direction: column; }
+    .step { border-right: 1px solid var(--border); border-bottom: none; border-radius: 0; }
+    .step:first-child { border-radius: 8px 8px 0 0; }
+    .step:last-child { border-radius: 0 0 8px 8px; border-bottom: 1px solid var(--border); }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">GA.</a>
+  <a href="#" class="nav-back">← Back to Work</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero fade-up">
+  <span class="hero-tag">Case Study · 2018</span>
+  <h1>Replacing <em>four legacy systems</em> with one mobile application</h1>
+  <p class="hero-sub">The Home Depot processes customer returns across 2,300+ stores. Associates used four separate applications — including green-screen terminals — to disposition each item. I was brought in to design a single, research-grounded replacement.</p>
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-number">55%</div>
+      <div class="metric-label">Reduction in task time</div>
+    </div>
+    <div class="metric">
+      <div class="metric-number">4</div>
+      <div class="metric-label">Legacy apps retired</div>
+    </div>
+    <div class="metric">
+      <div class="metric-number">2,300+</div>
+      <div class="metric-label">Stores impacted</div>
+    </div>
+    <div class="metric">
+      <div class="metric-number">3</div>
+      <div class="metric-label">User roles studied</div>
+    </div>
+  </div>
+</section>
+
+<!-- META -->
+<div class="meta-row fade-up">
+  <div class="meta-item"><label>My Role</label><span>Sr. Interaction Designer · UX Researcher</span></div>
+  <div class="meta-item"><label>Team</label><span>1 PM · 8 Software Engineers</span></div>
+  <div class="meta-item"><label>Timeline</label><span>May – November 2018</span></div>
+  <div class="meta-item"><label>Platform</label><span>Mobile (First Phone / Android)</span></div>
+  <div class="meta-item"><label>Design System</label><span>Google Material</span></div>
+</div>
+
+<!-- THE PROBLEM -->
+<section class="section fade-up">
+  <span class="section-number">01 — Problem</span>
+  <h2>Five problems. Four applications. One broken process.</h2>
+  <p>When I joined the RTV team, there were five documented pain points that formed the foundation of the design brief. I did not accept these at face value — I used them as hypotheses to investigate through research.</p>
+  <div class="problems-grid">
+    <div class="problem-card" data-num="1"><h3>Too much associate decision-making — routing logic lived in associates' heads, not the system</h3></div>
+    <div class="problem-card" data-num="2"><h3>Labor wasted recovering margin — dispositions were missed or incorrect</h3></div>
+    <div class="problem-card" data-num="3"><h3>Preparing shipments was too complicated — required navigating multiple screens across systems</h3></div>
+    <div class="problem-card" data-num="4"><h3>Too many separate worklists — associates context-switched between four applications</h3></div>
+    <div class="problem-card" data-num="5"><h3>Need to retire green screens — legacy COBOL terminals were slow and error-prone</h3></div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="section fade-up">
+  <span class="section-number">02 — Process</span>
+  <h2>Discovery through delivery, grounded in the store</h2>
+  <p>I applied the Double Diamond process from initial research through final usability testing. Every phase produced artifacts that directly shaped the next one.</p>
+  <div class="process-steps">
+    <div class="step">
+      <span class="step-phase">Discover</span>
+      <h3>Research</h3>
+      <ul>
+        <li>Artifact analysis</li>
+        <li>Contextual inquiry</li>
+        <li>Associate interviews</li>
+        <li>Journey mapping</li>
+      </ul>
+    </div>
+    <div class="step">
+      <span class="step-phase">Define</span>
+      <h3>Synthesis</h3>
+      <ul>
+        <li>3 personas</li>
+        <li>Concept mapping</li>
+        <li>Stakeholder walkthroughs</li>
+        <li>5-phase process model</li>
+      </ul>
+    </div>
+    <div class="step">
+      <span class="step-phase">Develop</span>
+      <h3>Design</h3>
+      <ul>
+        <li>Whiteboard sketches</li>
+        <li>User flow maps</li>
+        <li>15+ hi-fi screens</li>
+        <li>Axure prototype</li>
+      </ul>
+    </div>
+    <div class="step">
+      <span class="step-phase">Deliver</span>
+      <h3>Validate</h3>
+      <ul>
+        <li>In-store usability tests</li>
+        <li>Remote research (Zoom)</li>
+        <li>Agile story writing</li>
+        <li>Side-by-side video comparison</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH -->
+<section class="section fade-up">
+  <span class="section-number">03 — Discovery</span>
+  <h2>I went to the store before I opened Figma</h2>
+  <div class="two-col">
+    <div class="two-col-text">
+      <h3>Contextual inquiry in Atlanta</h3>
+      <p>I arranged visits to a Home Depot warehouse in the greater Atlanta area and observed three associate roles as they processed returns in real time: the Customer Service Associate who receives the item, the Runner who moves it to the back, and the Receiving Associate who dispositions it.</p>
+      <p>I brought a notebook and my iPhone. I used identical questions across all participants. I informed associates that their participation was voluntary and would be anonymized.</p>
+      <div class="artifact"><strong>Finding:</strong> The RTV process crossed three separate employee roles, four applications, and two store locations — a complexity invisible from the stakeholder brief.</div>
+      <h3 style="margin-top:28px;">Five phases emerged from the process map</h3>
+      <p>I studied archival process documentation and identified a pattern. What had been described as a single "returns process" was actually five distinct phases, each with its own decision logic and error modes.</p>
+    </div>
+    <div>
+      <div style="background:var(--white); border:1px solid var(--border); border-radius:8px; padding:24px;">
+        <p style="font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:var(--orange); margin-bottom:16px; font-weight:500;">5-Phase RTV Model</p>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div style="background:var(--orange); color:white; padding:12px 16px; border-radius:4px; font-size:13px; font-weight:500;">1 — Customer Return Intake</div>
+          <div style="background:#E8762A; color:white; padding:12px 16px; border-radius:4px; font-size:13px; font-weight:500;">2 — RTV Determination</div>
+          <div style="background:#F09044; color:white; padding:12px 16px; border-radius:4px; font-size:13px; font-weight:500;">3 — Physical Product Movement</div>
+          <div style="background:#F8B070; color:white; padding:12px 16px; border-radius:4px; font-size:13px; font-weight:500;">4 — Verification</div>
+          <div style="background:var(--orange-light); color:var(--orange); border:1px solid #F0C090; padding:12px 16px; border-radius:4px; font-size:13px; font-weight:500;">5 — Disposition</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PERSONAS -->
+<section class="section fade-up">
+  <span class="section-number">04 — Define</span>
+  <h2>Three personas. One broken handoff.</h2>
+  <p>I built personas from interview data — not from assumptions. This project required three because the return process crossed three roles, and the design had to serve all of them.</p>
+  <div class="personas">
+    <div class="persona-card">
+      <span class="role">Customer Service Associate</span>
+      <h3>Cara</h3>
+      <ul>
+        <li>Handle returns quickly</li>
+        <li>Accurately assess item condition</li>
+        <li>Route product without delay</li>
+        <li>Adapts to complex process</li>
+      </ul>
+    </div>
+    <div class="persona-card">
+      <span class="role">Receiving Associate</span>
+      <h3>Sandra</h3>
+      <ul>
+        <li>Move product out fast</li>
+        <li>Prioritize incoming drivers</li>
+        <li>Maintain organized receiving area</li>
+        <li>Adapts to complex process</li>
+      </ul>
+    </div>
+    <div class="persona-card">
+      <span class="role">Customer</span>
+      <h3>Randy</h3>
+      <ul>
+        <li>Return item, leave quickly</li>
+        <li>Get money back without friction</li>
+        <li>Not involved in backend routing</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pullquote">"It takes about 1.5 hours per week to do shelf credits on tiles."</div>
+</section>
+
+<!-- OLD VS NEW -->
+<section class="section fade-up">
+  <span class="section-number">05 — Design Decision</span>
+  <h2>From green screens to one scannable mobile app</h2>
+  <p>Associates navigated between a COBOL green-screen terminal and multiple desktop applications to process a single return. The design goal was to eliminate that context-switching entirely — scan the item once, let the system route it.</p>
+  <div class="comparison">
+    <div class="comp-col old">
+      <span class="comp-label">Before</span>
+      <h3>MAINMENU — HOME DEPOT — STORE 9783</h3>
+      <ul class="comp-list">
+        <li>4 separate applications</li>
+        <li>Manual routing decisions</li>
+        <li>Green-screen text navigation</li>
+        <li>Multiple worklists</li>
+        <li>No disposition guidance</li>
+        <li>High error rate</li>
+      </ul>
+    </div>
+    <div class="comp-col new">
+      <span class="comp-label">After — SKU Mover</span>
+      <h3>One app. Scan. Done.</h3>
+      <ul class="comp-list">
+        <li>Single mobile application</li>
+        <li>System determines routing automatically</li>
+        <li>Material Design components</li>
+        <li>Unified worklist</li>
+        <li>Guided disposition flow</li>
+        <li>55% faster task completion</li>
+      </ul>
+    </div>
+  </div>
+  <div class="artifact" style="margin-top:24px;"><strong>Validation method:</strong> I captured side-by-side screen recordings of the old process vs. the new prototype and presented them to stakeholders at sprint reviews. The visual comparison made the efficiency gain immediately legible without requiring any data interpretation.</div>
+</section>
+
+<!-- DELIVERY -->
+<section class="section fade-up">
+  <span class="section-number">06 — Delivery</span>
+  <h2>Research in stores. Tested in stores.</h2>
+  <p>I did not test at a desk. I wrote a usability script, made store appointments, and tested the Axure prototype on my personal phone — held in the associate's hand, the way it would actually be used. I also ran remote sessions via Zoom for stores outside Atlanta.</p>
+  <div class="artifact"><strong>Key learning from usability testing:</strong> Presenting the prototype on a physical device changed how associates interacted with it. Testing on a desktop screen underrepresented the scanning and one-handed interaction patterns that mattered most in the warehouse environment.</div>
+</section>
+
+<!-- OUTCOME -->
+<section class="section fade-up">
+  <span class="section-number">07 — Outcome</span>
+  <h2>Built, deployed, and measurably faster</h2>
+  <p>The application was built and implemented on the First Phone across Home Depot stores. All five phases of the redesigned process were handed to developers via agile user stories. Associates reported processing returns more efficiently, and the time-on-task reduction was validated.</p>
+  <div class="outcome-grid">
+    <div class="outcome-card">
+      <div class="outcome-big">55%</div>
+      <p>Reduction in time-on-task for RTV processing</p>
+    </div>
+    <div class="outcome-card">
+      <div class="outcome-big">4</div>
+      <p>Legacy applications retired and replaced by one</p>
+    </div>
+    <div class="outcome-card">
+      <div class="outcome-big">2,300+</div>
+      <p>Stores operating the new application nationwide</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
