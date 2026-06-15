@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CMS Business Rules Redesign — Geri Arnold</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700display=swap" rel="stylesheet">
 <style>
   :root {
     --blue: #1A4A7A;
@@ -36,8 +36,47 @@
     padding: 16px 48px;
     display: flex; justify-content: space-between; align-items: center;
   }
-  .nav-logo { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--dark); text-decoration: none; }
-  .nav-back { font-size: 13px; color: var(--mid); text-decoration: none; letter-spacing: 0.05em; }
+.nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.05em;
+    color: var(--dark); text-decoration: none;
+  }
+  .nav-logo span { color: var(--orange); }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links > li > a {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--mid); text-decoration: none; transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links > li > a::after {
+    content: ''; position: absolute;
+    bottom: -2px; left: 0; right: 0;
+    height: 1px; background: var(--orange);
+    transform: scaleX(0); transform-origin: left; transition: transform 0.25s;
+  }
+  .nav-links > li > a:hover { color: var(--dark); }
+  .nav-links > li > a:hover::after { transform: scaleX(1); }
+  .nav-dropdown { position: relative; }
+  .nav-dropdown-menu {
+    position: absolute; top: calc(100% + 16px); left: 50%;
+    transform: translateX(-50%);
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: 6px; padding: 8px 0; min-width: 260px;
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08); z-index: 200;
+  }
+  .nav-dropdown:hover .nav-dropdown-menu { opacity: 1; visibility: visible; }
+  .nav-dropdown-menu a {
+    display: block; padding: 10px 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--mid); text-decoration: none;
+    transition: color 0.15s, background 0.15s;
+  }
+  .nav-dropdown-menu a:hover { color: var(--orange); background: var(--orange-light); }
+  .nav-dropdown-menu a.nav-active { color: var(--orange); }  .nav-back { font-size: 13px; color: var(--mid); text-decoration: none; letter-spacing: 0.05em; }
   .nav-back:hover { color: var(--blue); }
 
   .hero {
@@ -248,9 +287,22 @@
 </head>
 <body>
 
-<nav>
-  <a href="#" class="nav-logo">GA.</a>
-  <a href="#" class="nav-back">← Back to Work</a>
+<<nav>
+  <a href="GeriArnold_Portfolio.html" class="nav-logo">GA<span>.</span></a>
+  <ul class="nav-links">
+    <li class="nav-dropdown">
+      <a href="GeriArnold_Portfolio.html#work">Work</a>
+      <div class="nav-dropdown-menu">
+        <a href="HomeDepot_RTV_CaseStudy.html">Home Depot · RTV</a>
+        <a href="CMS_BusinessRules_CaseStudy.html" class="nav-active">Flexion · CMS</a>
+        <a href="HealthInsurance_IDP_CaseStudy.html">Health Insurance · IDP</a>
+      </div>
+    </li>
+    <li><a href="GeriArnold_Portfolio.html#about">About</a></li>
+    <li><a href="https://geriarnold.myportfolio.com/research" target="_blank">Research</a></li>
+    <li><a href="https://geriarnold.myportfolio.com/art" target="_blank">Art</a></li>
+    <li><a href="GeriArnold_Portfolio.html#contact">Contact</a></li>
+  </ul>
 </nav>
 
 <section class="hero fade-up">
