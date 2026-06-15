@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meridian IDP — Geri Arnold</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #D85A1A;
+    --orange-light: #FFF3EC;
+    --dark: #1A1410;
+    --mid: #5C4F45;
+    --light: #F7F4F1;
+    --white: #FFFFFF;
+    --border: #E8E0D8;
+    --green: #2A6B3C;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--light);
+    color: var(--dark);
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 48px;
+    background: rgba(247,244,241,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.05em;
+    color: var(--dark); text-decoration: none;
+  }
+  .nav-logo span { color: var(--orange); }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links > li > a {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--mid); text-decoration: none; transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links > li > a::after {
+    content: ''; position: absolute;
+    bottom: -2px; left: 0; right: 0;
+    height: 1px; background: var(--orange);
+    transform: scaleX(0); transform-origin: left; transition: transform 0.25s;
+  }
+  .nav-links > li > a:hover { color: var(--dark); }
+  .nav-links > li > a:hover::after { transform: scaleX(1); }
+  .nav-dropdown { position: relative; }
+  .nav-dropdown-menu {
+    position: absolute; top: calc(100% + 16px); left: 50%;
+    transform: translateX(-50%);
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: 6px; padding: 8px 0; min-width: 260px;
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08); z-index: 200;
+  }
+  .nav-dropdown:hover .nav-dropdown-menu { opacity: 1; visibility: visible; }
+  .nav-dropdown-menu a {
+    display: block; padding: 10px 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--mid); text-decoration: none;
+    transition: color 0.15s, background 0.15s;
+  }
+  .nav-dropdown-menu a:hover { color: var(--orange); background: var(--orange-light); }
+  .nav-dropdown-menu a.nav-active { color: var(--orange); }
+  @media (max-width: 768px) { .nav-links { display: none; } }
+
+  /* HERO */
+  .hero { padding: 140px 48px 80px; max-width: 1100px; margin: 0 auto; }
+  .hero-tag {
+    display: inline-block; font-size: 11px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--orange);
+    border: 1px solid var(--orange); padding: 4px 12px;
+    border-radius: 2px; margin-bottom: 32px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 4.5vw, 58px);
+    line-height: 1.1; color: var(--dark);
+    max-width: 820px; margin-bottom: 24px;
+  }
+  .hero h1 em { font-style: italic; color: var(--orange); }
+  .hero-sub {
+    font-size: 18px; color: var(--mid);
+    max-width: 600px; line-height: 1.6; margin-bottom: 56px;
+  }
+
+  /* METRICS */
+  .metrics {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1px; background: var(--border);
+    border: 1px solid var(--border); border-radius: 8px;
+    overflow: hidden; max-width: 1000px;
+  }
+  .metric { background: var(--white); padding: 28px 24px; text-align: center; }
+  .metric-number {
+    font-family: 'Playfair Display', serif; font-size: 42px;
+    color: var(--orange); line-height: 1; margin-bottom: 6px;
+  }
+  .metric-label { font-size: 12px; color: var(--mid); letter-spacing: 0.04em; }
+
+  /* META ROW */
+  .meta-row {
+    display: flex; gap: 48px; flex-wrap: wrap;
+    padding: 40px 48px; max-width: 1100px; margin: 0 auto;
+    border-bottom: 1px solid var(--border);
+  }
+  .meta-item label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--mid); display: block; margin-bottom: 4px; }
+  .meta-item span { font-size: 14px; color: var(--dark); }
+
+  /* SECTIONS */
+  .section {
+    max-width: 1100px; margin: 0 auto;
+    padding: 80px 48px; border-bottom: 1px solid var(--border);
+  }
+  .section:last-child { border-bottom: none; }
+  .section-number {
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--orange); margin-bottom: 16px; display: block;
+  }
+  .section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(24px, 3vw, 36px); color: var(--dark);
+    margin-bottom: 32px; line-height: 1.2;
+  }
+  .section p { font-size: 16px; color: var(--mid); max-width: 720px; margin-bottom: 20px; }
+
+  /* PROBLEMS GRID */
+  .problems-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px; margin-top: 40px;
+  }
+  .problem-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: 8px; padding: 24px; position: relative;
+  }
+  .problem-card::before {
+    content: attr(data-num);
+    font-family: 'Playfair Display', serif; font-size: 48px;
+    color: var(--orange-light); position: absolute;
+    top: 12px; right: 16px; line-height: 1;
+  }
+  .problem-card h3 { font-size: 14px; font-weight: 500; color: var(--dark); line-height: 1.4; }
+  .problem-card .heuristic { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--orange); letter-spacing: 0.06em; margin-top: 8px; display: block; }
+
+  /* PROCESS TIMELINE */
+  .process-steps { display: flex; gap: 0; margin-top: 40px; overflow-x: auto; padding-bottom: 8px; }
+  .step {
+    flex: 1; min-width: 160px; background: var(--white);
+    border: 1px solid var(--border); border-right: none; padding: 20px 16px;
+  }
+  .step:last-child { border-right: 1px solid var(--border); border-radius: 0 8px 8px 0; }
+  .step:first-child { border-radius: 8px 0 0 8px; }
+  .step-phase { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--orange); font-weight: 500; margin-bottom: 8px; display: block; }
+  .step h3 { font-size: 13px; font-weight: 500; color: var(--dark); margin-bottom: 8px; }
+  .step ul { font-size: 12px; color: var(--mid); padding-left: 14px; line-height: 1.8; }
+
+  /* TWO COL */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; margin-top: 40px; }
+  .two-col-text h3 { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 16px; color: var(--dark); }
+  .two-col-text p { font-size: 15px; color: var(--mid); margin-bottom: 14px; }
+
+  /* ARTIFACT CALLOUT */
+  .artifact {
+    background: var(--orange-light); border-left: 3px solid var(--orange);
+    border-radius: 0 8px 8px 0; padding: 20px 24px;
+    margin: 24px 0; font-size: 14px; color: var(--dark);
+  }
+  .artifact strong { color: var(--orange); }
+  .artifact.notice {
+    background: #F0F7FF; border-left-color: #3B82F6;
+  }
+  .artifact.notice strong { color: #3B82F6; }
+
+  /* CONCEPTS GRID */
+  .concepts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
+  .concept-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: 8px; padding: 24px; position: relative;
+  }
+  .concept-card .concept-num {
+    font-family: 'Space Mono', monospace; font-size: 10px;
+    color: var(--orange); letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 10px; display: block;
+  }
+  .concept-card h3 { font-size: 15px; font-weight: 600; color: var(--dark); margin-bottom: 12px; line-height: 1.3; }
+  .concept-card ul { font-size: 13px; color: var(--mid); padding-left: 16px; line-height: 1.9; }
+
+  /* FINDINGS TABLE */
+  .findings-table { width: 100%; border-collapse: collapse; margin-top: 32px; font-size: 14px; }
+  .findings-table th {
+    font-family: 'Space Mono', monospace; font-size: 10px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--mid); padding: 12px 16px;
+    border-bottom: 2px solid var(--border); text-align: left;
+    background: var(--white);
+  }
+  .findings-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); color: var(--mid); vertical-align: top; }
+  .findings-table tr:hover td { background: var(--orange-light); }
+  .tag-validated { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--green); background: rgba(42,107,60,0.08); border: 1px solid rgba(42,107,60,0.2); padding: 2px 8px; border-radius: 2px; white-space: nowrap; }
+  .tag-rejected { font-family: 'Space Mono', monospace; font-size: 10px; color: #B91C1C; background: rgba(185,28,28,0.06); border: 1px solid rgba(185,28,28,0.2); padding: 2px 8px; border-radius: 2px; white-space: nowrap; }
+
+  /* PULLQUOTE */
+  .pullquote {
+    border-left: 3px solid var(--orange); padding: 24px 32px; margin: 40px 0;
+    font-family: 'Playfair Display', serif; font-size: 22px; font-style: italic;
+    color: var(--dark); line-height: 1.5; background: var(--white);
+    border-radius: 0 8px 8px 0;
+  }
+  .pullquote cite { display: block; font-family: 'DM Sans', sans-serif; font-size: 12px; font-style: normal; color: var(--mid); margin-top: 12px; letter-spacing: 0.04em; }
+
+  /* OUTCOME GRID */
+  .outcome-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
+  .outcome-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: 8px; padding: 28px 24px; text-align: center;
+  }
+  .outcome-big { font-family: 'Playfair Display', serif; font-size: 48px; color: var(--green); line-height: 1; margin-bottom: 8px; }
+  .outcome-card p { font-size: 13px; color: var(--mid); max-width: none; }
+
+  /* SCROLL ANIMATION */
+  .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .hero, .section, .meta-row { padding-left: 20px; padding-right: 20px; }
+    .metrics { grid-template-columns: 1fr 1fr; }
+    .two-col, .concepts-grid, .outcome-grid { grid-template-columns: 1fr; }
+    .process-steps { flex-direction: column; }
+    .step { border-right: 1px solid var(--border); border-bottom: none; border-radius: 0; }
+    .step:first-child { border-radius: 8px 8px 0 0; }
+    .step:last-child { border-radius: 0 0 8px 8px; border-bottom: 1px solid var(--border); }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="GeriArnold_Portfolio.html" class="nav-logo">GA<span>.</span></a>
+  <ul class="nav-links">
+    <li class="nav-dropdown">
+      <a href="GeriArnold_Portfolio.html#work">Work</a>
+      <div class="nav-dropdown-menu">
+        <a href="HomeDepot_RTV_CaseStudy.html">Home Depot · RTV</a>
+        <a href="HealthInsurance_IDP_CaseStudy.html" class="nav-active">Health Insurance · IDP</a>
+      </div>
+    </li>
+    <li><a href="GeriArnold_Portfolio.html#about">About</a></li>
+    <li><a href="https://geriarnold.myportfolio.com/research" target="_blank">Research</a></li>
+    <li><a href="https://geriarnold.myportfolio.com/art" target="_blank">Art</a></li>
+    <li><a href="GeriArnold_Portfolio.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero fade-up">
+  <span class="hero-tag">Case Study · 2025–2026</span>
+  <h1>Built through <em>evidence.</em> How research formed a platform engineers actually needed.</h1>
+  <p class="hero-sub">A 7-engineer team had no shared direction, no UX process, and no research foundation. I was brought in as the sole Human Factors practitioner to establish what engineers needed — and test three design concepts against it before any development began.</p>
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-number">12</div>
+      <div class="metric-label">Engineer pain points mapped to heuristics</div>
+    </div>
+    <div class="metric">
+      <div class="metric-number">3</div>
+      <div class="metric-label">Concepts designed and tested</div>
+    </div>
+    <div class="metric">
+      <div class="metric-number">5</div>
+      <div class="metric-label">Engineers in formative evaluation</div>
+    </div>
+    <div class="metric">
+      <div class="metric-number">36%</div>
+      <div class="metric-label">Navigation reduction in Concept 2</div>
+    </div>
+  </div>
+</section>
+
+<!-- META -->
+<div class="meta-row fade-up">
+  <div class="meta-item"><label>My Role</label><span>Sole UX / Human Factors Practitioner</span></div>
+  <div class="meta-item"><label>Client</label><span>Major U.S. Health Insurance Carrier</span></div>
+  <div class="meta-item"><label>Timeline</label><span>November 2025 – May 2026</span></div>
+  <div class="meta-item"><label>Platform</label><span>Meridian — Internal Developer Platform</span></div>
+  <div class="meta-item"><label>Method</label><span>ISO 9241-210 · NN Heuristics</span></div>
+</div>
+
+<!-- VISUAL ARTIFACTS NOTICE -->
+<div class="section fade-up" style="padding-top: 40px; padding-bottom: 40px;">
+  <div class="artifact notice">
+    <strong>Note on visuals:</strong> This engagement ended May 2026. Work product belongs to the client. Sanitized visual artifacts — redrawn wireframes and process diagrams — are currently being prepared and will be added to this case study. The research process, findings, and design rationale are documented in full below.
+  </div>
+</div>
+
+<!-- 01 PROBLEM -->
+<section class="section fade-up">
+  <span class="section-number">01 — Problem</span>
+  <h2>No shared direction. No UX process. No research foundation.</h2>
+  <p>A 7-engineer team was assigned to deliver a Design System proof of concept for Meridian, an Internal Developer Platform built to support software engineers in accessing, managing, and building applications across the organization. The team could not align on a direction.</p>
+  <p>Without a shared understanding of what software engineers needed to accomplish, design decisions were being driven by opinion rather than evidence. The risk was not aesthetic. An internal developer platform that does not match how engineers think about their work will not be adopted — regardless of how well it is built.</p>
+  <p>The Human Factors problem was to establish what engineers needed, make that knowledge visible to the team, and test design concepts against it before committing to a direction.</p>
+
+  <div class="artifact">
+    <strong>Context:</strong> As a contractor, I was excluded from team meetings by default. All research access was obtained proactively through PM-facilitated sessions and direct recruitment.
+  </div>
+</section>
+
+<!-- 02 USERS -->
+<section class="section fade-up">
+  <span class="section-number">02 — Users and Context</span>
+  <h2>High cognitive load. Time-constrained. Spread across too many tools.</h2>
+
+  <div class="two-col">
+    <div class="two-col-text">
+      <h3>Primary users: Software Engineers</h3>
+      <p>Confirmed through two facilitated alignment workshops. The team reached consensus early: the platform should solve for the developer persona only. Non-developer needs were explicitly scoped out as an anti-goal.</p>
+      <p>Engineers operated across multiple external tools with no single view of their owned systems, team health, or active incidents. Their primary tasks included deploying applications, managing secrets, monitoring service status, reviewing pull requests, and resolving vulnerabilities.</p>
+      <p>Tools in use: GitLab, Dynatrace, SNYK, ServiceNow, and Argo CD — none integrated into one view.</p>
+    </div>
+    <div>
+      <div style="background:var(--white); border:1px solid var(--border); border-radius:8px; padding:24px;">
+        <p style="font-family:'Space Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:var(--orange); margin-bottom:16px;">Engineer Tasks</p>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div style="background:var(--orange); color:white; padding:10px 16px; border-radius:4px; font-size:13px;">Deploy and manage applications</div>
+          <div style="background:#E8762A; color:white; padding:10px 16px; border-radius:4px; font-size:13px;">Monitor service status and vulnerabilities</div>
+          <div style="background:#F09044; color:white; padding:10px 16px; border-radius:4px; font-size:13px;">Review and merge pull requests</div>
+          <div style="background:#F8B070; color:white; padding:10px 16px; border-radius:4px; font-size:13px;">Manage secrets and credentials</div>
+          <div style="background:var(--orange-light); color:var(--orange); border:1px solid #F0C090; padding:10px 16px; border-radius:4px; font-size:13px;">Resolve incidents and open vulnerabilities</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 PROCESS -->
+<section class="section fade-up">
+  <span class="section-number">03 — Process</span>
+  <h2>Discovery through evaluation, grounded in engineer input</h2>
+  <p>I applied the ISO 9241-210 human-centered design lifecycle. Every phase produced artifacts that directly shaped the next one. Research preceded every design decision.</p>
+  <div class="process-steps">
+    <div class="step">
+      <span class="step-phase">Discover</span>
+      <h3>Observation</h3>
+      <ul>
+        <li>Naturalistic observation</li>
+        <li>PM-facilitated sessions</li>
+        <li>12 pain points captured</li>
+        <li>Heuristic mapping</li>
+      </ul>
+    </div>
+    <div class="step">
+      <span class="step-phase">Define</span>
+      <h3>Alignment</h3>
+      <ul>
+        <li>2 affinity mapping workshops</li>
+        <li>7 engineers facilitated</li>
+        <li>Consensus on 7 questions</li>
+        <li>Data requirements defined</li>
+      </ul>
+    </div>
+    <div class="step">
+      <span class="step-phase">Develop</span>
+      <h3>Design</h3>
+      <ul>
+        <li>Competitive analysis</li>
+        <li>3 blueprint concepts</li>
+        <li>Each traceable to research</li>
+        <li>Figma prototypes</li>
+      </ul>
+    </div>
+    <div class="step">
+      <span class="step-phase">Evaluate</span>
+      <h3>Test</h3>
+      <ul>
+        <li>5 engineers recruited</li>
+        <li>Concept testing method</li>
+        <li>6 questions per concept</li>
+        <li>Field notes only</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 04 DISCOVERY -->
+<section class="section fade-up">
+  <span class="section-number">04 — Discovery</span>
+  <h2>Twelve pain points. Three independent sources. One triangulated brief.</h2>
+
+  <div class="two-col">
+    <div class="two-col-text">
+      <h3>Naturalistic observation</h3>
+      <p>I attended PM-facilitated group feedback sessions and captured engineer pain points verbatim as they surfaced in natural conversation. I did not prompt or lead. The goal was to understand the work as engineers described it — not as a product team interpreted it.</p>
+      <p>Twelve distinct pain points were identified and mapped to Nielsen Norman Group heuristics. These became the validation criteria for every design decision that followed.</p>
+
+      <h3 style="margin-top:28px;">Facilitated alignment workshops</h3>
+      <p>I designed and facilitated two 60-minute affinity mapping sessions with all 7 engineers. In Session 1, engineers generated sticky notes, shared them aloud, clustered by theme, dot-voted to surface priorities, and discussed only the top-voted clusters. I manually transcribed every sticky note in real time — no participant had FigJam access.</p>
+      <p>Session 2 was more challenging. The team was less cooperative. I maintained focus and closed decisions on all seven questions. Final consensus was reached.</p>
+
+      <div class="artifact">
+        <strong>Key output from workshops:</strong> A central platform to access, view, and manage owned workspaces. Data requirements — what engineers need to see in a workspace — became the anchor for all subsequent design work.
+      </div>
+    </div>
+
+    <div>
+      <p style="font-family:'Space Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:var(--orange); margin-bottom:16px;">12 Pain Points · NN Heuristic Mapping</p>
+      <div style="background:var(--white); border:1px solid var(--border); border-radius:8px; overflow:hidden;">
+        <table style="width:100%; border-collapse:collapse; font-size:13px;">
+          <tr style="background:var(--light);">
+            <th style="padding:10px 14px; text-align:left; font-family:'Space Mono',monospace; font-size:10px; color:var(--mid); font-weight:400; letter-spacing:0.06em; border-bottom:1px solid var(--border);">#</th>
+            <th style="padding:10px 14px; text-align:left; font-family:'Space Mono',monospace; font-size:10px; color:var(--mid); font-weight:400; letter-spacing:0.06em; border-bottom:1px solid var(--border);">Pain Point</th>
+            <th style="padding:10px 14px; text-align:left; font-family:'Space Mono',monospace; font-size:10px; color:var(--mid); font-weight:400; letter-spacing:0.06em; border-bottom:1px solid var(--border);">Heuristic</th>
+          </tr>
+          <tr><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--orange); font-family:'Space Mono',monospace; font-size:11px;">01</td><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--mid);">Open vulnerabilities visibility</td><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--mid);">H1</td></tr>
+          <tr><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--orange); font-family:'Space Mono',monospace; font-size:11px;">02</td><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--mid);">FinOps costing information</td><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--mid);">IA</td></tr>
+          <tr><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--orange); font-family:'Space Mono',monospace; font-size:11px;">03</td><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--mid);">Service down — no contact or ticket link</td><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--mid);">H9</td></tr>
+          <tr><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--orange); font-family:'Space Mono',monospace; font-size:11px;">04</td><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--mid);">Dependency status across environments</td><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--mid);">H1</td></tr>
+          <tr><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--orange); font-family:'Space Mono',monospace; font-size:11px;">05</td><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--mid);">Latest test results — pass/fail</td><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--mid);">H1</td></tr>
+          <tr><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--orange); font-family:'Space Mono',monospace; font-size:11px;">06</td><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--mid);">Single button to create secret</td><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--mid);">H7</td></tr>
+          <tr><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--orange); font-family:'Space Mono',monospace; font-size:11px;">07</td><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--mid);">New updates replacing morning banner</td><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--mid);">H6</td></tr>
+          <tr><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--orange); font-family:'Space Mono',monospace; font-size:11px;">08</td><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--mid);">Click into each owned application</td><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--mid);">H3</td></tr>
+          <tr><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--orange); font-family:'Space Mono',monospace; font-size:11px;">09</td><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--mid);">See owned apps — minimal, avoid clutter</td><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--mid);">H8</td></tr>
+          <tr><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--orange); font-family:'Space Mono',monospace; font-size:11px;">10</td><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--mid);">Direct access to Argo CD / ROSA</td><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--mid);">H7</td></tr>
+          <tr><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--orange); font-family:'Space Mono',monospace; font-size:11px;">11</td><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--mid);">Direct link to available MERNA services</td><td style="padding:8px 14px; border-bottom:1px solid var(--border); color:var(--mid);">IA</td></tr>
+          <tr><td style="padding:8px 14px; color:var(--orange); font-family:'Space Mono',monospace; font-size:11px;">12</td><td style="padding:8px 14px; color:var(--mid);">AWS migration path for unmigrated services</td><td style="padding:8px 14px; color:var(--mid);">H5</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 DESIGN -->
+<section class="section fade-up">
+  <span class="section-number">05 — Design</span>
+  <h2>Three concepts. Each directly traceable to research.</h2>
+  <p>Three homepage concepts were designed in blueprint wireframe style. Every card, every navigation item, and every interaction pattern was mapped to a specific pain point or workshop output. Cortex IDP was analyzed as a competitive reference and directly informed Concept 1.</p>
+
+  <div class="concepts-grid">
+    <div class="concept-card">
+      <span class="concept-num">Concept 1 — Cortex-Informed</span>
+      <h3>Full Feature Set</h3>
+      <ul>
+        <li>Card-based homepage</li>
+        <li>My Work (replaces banner)</li>
+        <li>My On-calls (service down)</li>
+        <li>My Workspaces</li>
+        <li>Top Score cards (test results)</li>
+        <li>Secrets Navigator card + full page</li>
+        <li>Search modal with tag filters</li>
+      </ul>
+    </div>
+    <div class="concept-card">
+      <span class="concept-num">Concept 2 — Paired Down</span>
+      <h3>Navigation Simplification</h3>
+      <ul>
+        <li>Top mega menu minimized</li>
+        <li>Left nav: 11 items → 7 (36% reduction)</li>
+        <li>Named labels retained</li>
+        <li>Personalized greeting</li>
+        <li>My Work, Vulnerabilities, Service Status</li>
+        <li>Node Builder — speculative concept</li>
+      </ul>
+    </div>
+    <div class="concept-card">
+      <span class="concept-num">Concept 3 — Workspace-Centered</span>
+      <h3>Tabbed Interface</h3>
+      <ul>
+        <li>3 tabs: My Workspace, Team Workspace, Workspace Data</li>
+        <li>Team tab: members, metrics, ownership, APIs</li>
+        <li>Workspace Data tab intentionally empty</li>
+        <li>Directly driven by Q1 workshop output</li>
+        <li>Research probe — not a gap</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="artifact" style="margin-top:32px;">
+    <strong>Design tension resolved in Concept 2:</strong> Pain point #9 said less information. Pain point #7 said show new things. Reducing the navigation by 36% addressed clutter while the My Work card surfaced timely updates — two competing needs resolved in one layout.
+  </div>
+</section>
+
+<!-- 06 EVALUATION -->
+<section class="section fade-up">
+  <span class="section-number">06 — Formative Evaluation</span>
+  <h2>What engineers actually said.</h2>
+  <p>Five engineers were recruited directly — I identified the most friction-aware participants from PM-facilitated sessions, avoiding management-mediated invitation. The PM was also included. Each participant viewed all three concepts via individual Figma prototype links on their own devices. Sessions were not recorded per enterprise security protocol and participant confidentiality. Findings are based on contemporaneous field notes.</p>
+
+  <div class="artifact">
+    <strong>Method:</strong> Concept testing — 3 concepts, 6 questions each. Questions covered navigation mental model, expectation gaps, feature relevance, task alignment, IA mental model, and efficiency perception.
+  </div>
+
+  <div class="pullquote">
+    "Nothing in here is my work."
+    <cite>— Engineer, responding to Concept 1's My Work card · Identified a label recognition problem, not a scope problem</cite>
+  </div>
+
+  <p>This was the most significant finding in Concept 1. The term "My Work" did not map to how engineers understand their own tasks, which live in GitLab and ServiceNow. The issue was not the concept — it was the label.</p>
+
+  <div class="pullquote">
+    "I would never use the top menu. Never."
+    <cite>— Engineer, responding to Concept 2's mega menu · Validated the decision to minimize it</cite>
+  </div>
+
+  <div class="pullquote">
+    "Cool feature. This would make work more efficient."
+    <cite>— Engineer, responding to Concept 3's Team Workspace tab · Surfaced a need not in the original 12 pain points</cite>
+  </div>
+
+  <p>The Team Workspace tab surfaced an unmet need that had not appeared in the original 12 pain points: knowing which teammates are working or out of office, and having early warning of active incidents before opening email.</p>
+
+  <div class="pullquote">
+    "Usually this is always manually for us. AWS connections we are connecting manually. LeanIX. This is a good opportunity."
+    <cite>— Engineer, responding to Node Builder speculative concept · Confirmed a real pain point without validating the specific solution</cite>
+  </div>
+
+  <p style="margin-top:32px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--orange);">Evaluation Summary</p>
+  <table class="findings-table" style="margin-top:16px;">
+    <tr>
+      <th>Element</th>
+      <th>Status</th>
+      <th>Finding</th>
+    </tr>
+    <tr>
+      <td>Workspaces, My Applications, Service Status, Vulnerabilities, Secrets Navigator</td>
+      <td><span class="tag-validated">Validated</span></td>
+      <td>Consistent positive response across all three concepts</td>
+    </tr>
+    <tr>
+      <td>Team Workspace tab</td>
+      <td><span class="tag-validated">Validated</span></td>
+      <td>Surfaced unmet need not in original 12 pain points</td>
+    </tr>
+    <tr>
+      <td>Workspace Data tab (empty)</td>
+      <td><span class="tag-validated">Validated</span></td>
+      <td>Participant confirmed unprompted they would not miss it — data requirements undefined</td>
+    </tr>
+    <tr>
+      <td>Top mega menu</td>
+      <td><span class="tag-rejected">Rejected</span></td>
+      <td>Multiple participants said they would never use it</td>
+    </tr>
+    <tr>
+      <td>Recent Activity card</td>
+      <td><span class="tag-rejected">Rejected</span></td>
+      <td>Already received via email and Dynatrace — redundant</td>
+    </tr>
+    <tr>
+      <td>Scorecards on homepage</td>
+      <td><span class="tag-rejected">Rejected</span></td>
+      <td>Not relevant to primary task flow</td>
+    </tr>
+    <tr>
+      <td>"Catalog" label</td>
+      <td><span class="tag-rejected">Rejected</span></td>
+      <td>No shared mental model — participants could not describe what it contained</td>
+    </tr>
+    <tr>
+      <td>Node Builder</td>
+      <td><span class="tag-validated">Signal — not validated</span></td>
+      <td>Confirmed real pain point (manual AWS connections). Solution requires further research.</td>
+    </tr>
+  </table>
+
+  <p style="margin-top:32px;"><strong>Concept preference:</strong> Two of four participants who stated a preference selected Concept 3. One selected Concept 2. One named elements from both Concept 1 and Concept 3.</p>
+</section>
+
+<!-- 07 OUTCOME -->
+<section class="section fade-up">
+  <span class="section-number">07 — Outcome</span>
+  <h2>The first structured research practice on this team.</h2>
+  <p>Findings from concept testing were presented to the team. Some findings were validated by the team. Design iteration was initiated based on participant feedback. Three versions of a workspace onboarding prototype were designed and delivered in collaboration with an engineer, applying H1 System Status, H8 Minimalist Design, and H9 Error Recovery across a stepped progression flow.</p>
+  <p>This was the first time a UX and Human Factors practitioner had embedded structured research methods into this team's workflow — establishing a repeatable foundation for future design decisions.</p>
+
+  <div class="outcome-grid">
+    <div class="outcome-card">
+      <div class="outcome-big">12</div>
+      <p>Pain points captured and mapped to Nielsen heuristics — became validation criteria for every design decision</p>
+    </div>
+    <div class="outcome-card">
+      <div class="outcome-big">36%</div>
+      <p>Navigation reduction in Concept 2 — from 11 to 7 items based on task analysis and engineer feedback</p>
+    </div>
+    <div class="outcome-card">
+      <div class="outcome-big">1st</div>
+      <p>Time structured HF research methods — observation, affinity mapping, concept testing — were embedded in this team's workflow</p>
+    </div>
+  </div>
+
+  <div class="pullquote" style="margin-top:48px;">
+    "On working without access. Being excluded from team meetings as a contractor did not prevent rigorous research — it required finding a different entry point. The PM-facilitated sessions became the access needed. The constraint shaped the method."
+    <cite>— Lesson learned</cite>
+  </div>
+</section>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
