@@ -3,291 +3,324 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CMS Business Rules Redesign — Geri Arnold</title>
+<title>CMS Business Rules — Geri Arnold</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --blue: #1A4A7A;
-    --blue-light: #EDF3FA;
-    --dark: #141820;
-    --mid: #4A5568;
-    --light: #F5F7FA;
-    --white: #FFFFFF;
-    --border: #DDE4EE;
-    --green: #2A6B3C;
-    --amber: #B45309;
+    --bg:      #F5F0E8;
+    --bg-2:    #EDEAE2;
+    --dark:    #1A1410;
+    --mid:     #7A7268;
+    --light:   #F5F0E8;
+    --white:   #FFFFFF;
+    --border:  #DDD8CE;
+    --orange:  #C45C28;
+    --orange-light: #F5EDE6;
+    --green:   #2D6A4F;
+    --red:     #C0392B;
+    --serif:   'Playfair Display', Georgia, serif;
+    --sans:    'DM Sans', system-ui, sans-serif;
+    --mono:    'Space Mono', monospace;
+    --max-w:   1200px;
+    --gutter:  clamp(24px, 5vw, 80px);
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--light);
+    font-family: var(--sans);
+    background: var(--bg);
     color: var(--dark);
     font-size: 16px;
     line-height: 1.7;
+    overflow-x: hidden;
   }
 
+  /* ── NAV ── */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: rgba(245,247,250,0.95);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--border);
-    padding: 16px 48px;
-    display: flex; justify-content: space-between; align-items: center;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px var(--gutter);
+    background: rgba(245,240,232,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s;
   }
-.nav-logo {
-    font-family: 'Space Mono', monospace;
-    font-size: 13px; font-weight: 700; letter-spacing: 0.05em;
-    color: var(--dark); text-decoration: none;
-  }
+  nav.scrolled { border-bottom-color: var(--border); }
+  .nav-logo { font-family: var(--mono); font-size: 13px; font-weight: 700; letter-spacing: 0.05em; color: var(--dark); text-decoration: none; }
   .nav-logo span { color: var(--orange); }
   .nav-links { display: flex; gap: 36px; list-style: none; }
-  .nav-links > li > a {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--mid); text-decoration: none; transition: color 0.2s;
-    position: relative;
-  }
-  .nav-links > li > a::after {
-    content: ''; position: absolute;
-    bottom: -2px; left: 0; right: 0;
-    height: 1px; background: var(--orange);
-    transform: scaleX(0); transform-origin: left; transition: transform 0.25s;
-  }
+  .nav-links > li > a { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid); text-decoration: none; transition: color 0.2s; position: relative; }
+  .nav-links > li > a::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 1px; background: var(--orange); transform: scaleX(0); transform-origin: left; transition: transform 0.25s; }
   .nav-links > li > a:hover { color: var(--dark); }
   .nav-links > li > a:hover::after { transform: scaleX(1); }
   .nav-dropdown { position: relative; }
-  .nav-dropdown-menu {
-    position: absolute; top: calc(100% + 16px); left: 50%;
-    transform: translateX(-50%);
-    background: var(--white); border: 1px solid var(--border);
-    border-radius: 6px; padding: 8px 0; min-width: 260px;
-    opacity: 0; visibility: hidden;
-    transition: opacity 0.2s, visibility 0.2s;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.08); z-index: 200;
-  }
+  .nav-dropdown-menu { position: absolute; top: calc(100% + 16px); left: 50%; transform: translateX(-50%); background: var(--white); border: 1px solid var(--border); border-radius: 6px; padding: 8px 0; min-width: 260px; opacity: 0; visibility: hidden; transition: opacity 0.2s, visibility 0.2s; box-shadow: 0 8px 24px rgba(0,0,0,0.08); z-index: 200; }
   .nav-dropdown:hover .nav-dropdown-menu { opacity: 1; visibility: visible; }
-  .nav-dropdown-menu a {
-    display: block; padding: 10px 16px;
-    font-family: 'Space Mono', monospace;
-    font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
-    color: var(--mid); text-decoration: none;
-    transition: color 0.15s, background 0.15s;
-  }
+  .nav-dropdown-menu a { display: block; padding: 10px 16px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--mid); text-decoration: none; transition: color 0.15s, background 0.15s; }
   .nav-dropdown-menu a:hover { color: var(--orange); background: var(--orange-light); }
-  .nav-dropdown-menu a.nav-active { color: var(--orange); }  .nav-back { font-size: 13px; color: var(--mid); text-decoration: none; letter-spacing: 0.05em; }
-  .nav-back:hover { color: var(--blue); }
+  .nav-dropdown-menu a.nav-active { color: var(--orange); }
+  @media (max-width: 768px) { .nav-links { display: none; } }
 
+  /* ── HERO ── */
   .hero {
-    padding: 140px 48px 80px;
-    max-width: 1100px; margin: 0 auto;
+    max-width: var(--max-w); margin: 0 auto;
+    padding: 160px var(--gutter) 80px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: clamp(40px, 6vw, 120px); align-items: start;
   }
-  .hero-tag {
-    display: inline-block;
-    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--blue); border: 1px solid var(--blue);
-    padding: 4px 12px; border-radius: 2px; margin-bottom: 32px;
-  }
-  .hero h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(34px, 5vw, 60px);
-    line-height: 1.1; color: var(--dark);
-    max-width: 820px; margin-bottom: 24px;
-  }
-  .hero h1 em { font-style: italic; color: var(--blue); }
-  .hero-sub {
-    font-size: 18px; color: var(--mid);
-    max-width: 600px; line-height: 1.6; margin-bottom: 56px;
-  }
+  .hero-eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); margin-bottom: 28px; display: flex; align-items: center; gap: 10px; }
+  .hero-eyebrow::before { content: ''; display: block; width: 28px; height: 1px; background: var(--orange); }
+  .hero h1 { font-family: var(--serif); font-size: clamp(52px, 7vw, 88px); line-height: 1.0; color: var(--dark); margin-bottom: 28px; font-weight: 700; }
+  .hero h1 em { font-style: italic; color: var(--orange); }
+  .hero-sub { font-size: 17px; font-weight: 300; line-height: 1.7; color: var(--mid); }
+  .hero-sub strong { color: var(--dark); font-weight: 500; }
+  .hero-right { padding-top: 160px; }
+  .hero-flow-card { border: 1px dashed var(--border); border-radius: 4px; padding: 16px 24px; display: inline-block; font-size: 13px; color: var(--mid); position: relative; }
+  .hero-flow-card::before { content: '→'; position: absolute; left: -24px; top: 50%; transform: translateY(-50%); color: var(--border); font-size: 16px; }
 
-  .metrics {
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: 1px; background: var(--border);
-    border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
-    max-width: 1000px;
-  }
-  .metric { background: var(--white); padding: 28px 24px; text-align: center; }
-  .metric-number {
-    font-family: 'Playfair Display', serif; font-size: 38px;
-    color: var(--blue); line-height: 1; margin-bottom: 6px;
-  }
-  .metric-label { font-size: 12px; color: var(--mid); letter-spacing: 0.04em; }
-
+  /* ── META ROW ── */
   .meta-row {
-    display: flex; gap: 48px; flex-wrap: wrap;
-    padding: 40px 48px; max-width: 1100px; margin: 0 auto;
-    border-bottom: 1px solid var(--border);
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    max-width: var(--max-w); margin: 0 auto;
   }
-  .meta-item label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--mid); display: block; margin-bottom: 4px; }
-  .meta-item span { font-size: 14px; color: var(--dark); }
+  .meta-item { padding: 28px var(--gutter); border-right: 1px solid var(--border); }
+  .meta-item:last-child { border-right: none; }
+  .meta-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--orange); margin-bottom: 8px; }
+  .meta-value { font-size: 15px; color: var(--dark); line-height: 1.4; }
 
-  .section {
-    max-width: 1100px; margin: 0 auto;
-    padding: 80px 48px;
-    border-bottom: 1px solid var(--border);
+  /* ── RULER STRIP ── */
+  .ruler {
+    width: 100%; height: 22px; overflow: hidden;
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; padding: 3px var(--gutter) 0;
+    background: var(--bg);
   }
-  .section:last-child { border-bottom: none; }
-  .section-number {
-    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--blue); margin-bottom: 16px; display: block;
-  }
-  .section h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(26px, 3vw, 38px);
-    color: var(--dark); margin-bottom: 32px; line-height: 1.2;
-  }
-  .section p {
-    font-size: 16px; color: var(--mid);
-    max-width: 680px; margin-bottom: 20px;
-  }
+  .ruler-inner { display: flex; gap: 0; width: 100%; }
+  .ruler-tick { flex: 1; border-left: 1px solid var(--border); height: 6px; }
+  .ruler-tick:nth-child(10n) { height: 14px; border-left-color: #C2B8A8; }
+  .ruler-tick:nth-child(5n) { height: 10px; }
 
-  /* PROBLEM STATEMENT */
-  .problem-block {
-    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px;
-    background: var(--border); border-radius: 8px; overflow: hidden;
-    margin-top: 40px;
-  }
-  .pb-col { background: var(--white); padding: 28px 24px; }
-  .pb-col label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--blue); display: block; margin-bottom: 12px; font-weight: 500; }
-  .pb-col p { font-size: 14px; color: var(--mid); max-width: none; margin: 0; line-height: 1.6; }
+  /* ── SECTION ── */
+  .cs-section { max-width: var(--max-w); margin: 0 auto; padding: 80px var(--gutter); }
+  .cs-section + .cs-section { padding-top: 40px; }
 
-  /* PROCESS */
-  .process-steps {
-    display: flex; gap: 0; margin-top: 40px;
-  }
-  .step {
-    flex: 1; background: var(--white);
-    border: 1px solid var(--border); border-right: none;
-    padding: 20px 16px;
-  }
-  .step:last-child { border-right: 1px solid var(--border); border-radius: 0 8px 8px 0; }
-  .step:first-child { border-radius: 8px 0 0 8px; }
-  .step-phase { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--blue); font-weight: 500; margin-bottom: 8px; display: block; }
-  .step h3 { font-size: 13px; font-weight: 500; color: var(--dark); margin-bottom: 8px; }
-  .step ul { font-size: 12px; color: var(--mid); padding-left: 14px; line-height: 1.9; }
+  /* Section header with number + label + rule */
+  .section-head { display: flex; align-items: center; gap: 16px; margin-bottom: 64px; }
+  .section-num { font-family: var(--mono); font-size: 11px; color: var(--orange); flex-shrink: 0; }
+  .section-tag { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); flex-shrink: 0; }
+  .section-rule { flex: 1; height: 1px; background: var(--border); }
 
-  /* METHODS */
-  .methods-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 40px; }
-  .method-card {
-    background: var(--white); border: 1px solid var(--border);
-    border-radius: 8px; padding: 24px;
-    border-top: 3px solid var(--blue);
-  }
-  .method-card h3 { font-size: 15px; font-weight: 500; color: var(--dark); margin-bottom: 10px; }
-  .method-card p { font-size: 13px; color: var(--mid); max-width: none; margin: 0; line-height: 1.6; }
+  /* Sub-label with arrow */
+  .sub-label { display: flex; align-items: center; gap: 12px; margin-bottom: 48px; }
+  .sub-label-arrow { color: var(--orange); font-size: 14px; }
+  .sub-label-text { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); }
+  .sub-label-rule { flex: 1; height: 1px; background: var(--border); }
 
-  /* WORKSHOP */
-  .workshop-flow {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
-    margin-top: 40px;
-  }
-  .wf-card {
-    background: var(--white); border: 1px solid var(--border);
-    border-radius: 8px; padding: 24px; position: relative;
-  }
-  .wf-card .wf-num {
-    width: 32px; height: 32px; border-radius: 50%;
-    background: var(--blue-light); color: var(--blue);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 13px; font-weight: 500; margin-bottom: 14px;
-  }
-  .wf-card h3 { font-size: 14px; font-weight: 500; color: var(--dark); margin-bottom: 8px; }
-  .wf-card p { font-size: 13px; color: var(--mid); max-width: none; margin: 0; }
+  /* Split layout: large serif headline left, body text right */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 6vw, 100px); align-items: start; margin-bottom: 56px; }
+  .split h2 { font-family: var(--serif); font-size: clamp(28px, 3.5vw, 44px); line-height: 1.15; color: var(--dark); font-weight: 700; }
+  .split h2 em { font-style: italic; color: var(--orange); }
+  .split-body p { font-size: 16px; color: var(--mid); line-height: 1.8; margin-bottom: 20px; font-weight: 300; }
+  .split-body p strong { color: var(--dark); font-weight: 500; }
+  .split-body p:last-child { margin-bottom: 0; }
 
-  /* ARTIFACT */
-  .artifact {
-    background: var(--blue-light);
-    border-left: 3px solid var(--blue);
-    border-radius: 0 8px 8px 0;
-    padding: 20px 24px; margin: 24px 0;
-    font-size: 14px; color: var(--dark);
-  }
-  .artifact strong { color: var(--blue); }
+  /* Diagram image */
+  .diagram-wrap { border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin-bottom: 16px; background: var(--white); }
+  .diagram-wrap img { width: 100%; display: block; }
+  .diagram-caption { display: flex; align-items: baseline; gap: 12px; font-size: 14px; color: var(--mid); margin-bottom: 48px; }
+  .diagram-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--orange); flex-shrink: 0; }
 
-  /* TWO COL */
-  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; margin-top: 40px; }
-  .two-col-text h3 { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 16px; }
-  .two-col-text p { font-size: 15px; color: var(--mid); margin-bottom: 12px; }
+  /* ── PROBLEM ITEMS ── */
+  .problem-list { margin-top: 40px; }
+  .problem-item { display: grid; grid-template-columns: 40px 1fr; gap: 16px; align-items: baseline; padding: 20px 0; border-bottom: 1px solid var(--border); }
+  .problem-item:first-child { border-top: 1px solid var(--border); }
+  .problem-num { font-family: var(--mono); font-size: 11px; color: var(--orange); }
+  .problem-text { font-size: 16px; color: var(--dark); line-height: 1.6; }
+  .problem-text strong { font-weight: 600; }
 
-  /* DELIVERABLES */
-  .deliverables-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 32px; }
-  .del-item {
-    background: var(--white); border: 1px solid var(--border);
-    border-radius: 6px; padding: 14px 16px;
-    font-size: 13px; color: var(--mid);
-    display: flex; align-items: center; gap: 10px;
+  /* ── DARK PULLQUOTE BLOCK ── */
+  .dark-block {
+    background: var(--dark); color: var(--white);
+    margin: 0 var(--gutter);
+    padding: clamp(48px, 6vw, 80px) clamp(40px, 6vw, 80px);
+    display: grid; grid-template-columns: 200px 1fr;
+    gap: clamp(40px, 6vw, 80px); align-items: center;
+    max-width: calc(var(--max-w) - 0px);
+    margin: 0 auto;
   }
-  .del-item::before {
-    content: '';
-    width: 6px; height: 6px; border-radius: 50%;
-    background: var(--blue); flex-shrink: 0;
-  }
+  .dark-block-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); }
+  .dark-quote { font-family: var(--serif); font-size: clamp(22px, 2.8vw, 36px); line-height: 1.3; font-style: italic; color: var(--white); }
+  .dark-quote em { font-style: normal; color: var(--orange); }
+  .dark-quote strong { font-style: normal; color: var(--white); }
 
-  /* SOLUTIONS */
-  .solutions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 40px; }
-  .solution-card {
-    background: var(--white); border: 1px solid var(--border);
-    border-radius: 8px; padding: 28px 24px;
-  }
-  .solution-card .sol-num {
-    font-family: 'Playfair Display', serif; font-size: 36px;
-    color: var(--border); line-height: 1; margin-bottom: 12px;
-  }
-  .solution-card h3 { font-size: 15px; font-weight: 500; color: var(--dark); margin-bottom: 10px; }
-  .solution-card p { font-size: 13px; color: var(--mid); max-width: none; margin: 0; }
+  /* ── USER ROWS ── */
+  .user-rows { margin-top: 40px; }
+  .user-row { display: grid; grid-template-columns: 240px 1fr; gap: 40px; padding: 28px 0; border-bottom: 1px solid var(--border); align-items: start; }
+  .user-row:first-child { border-top: 1px solid var(--border); }
+  .user-role-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--orange); margin-bottom: 8px; }
+  .user-role-name { font-family: var(--serif); font-size: 22px; font-weight: 700; color: var(--dark); line-height: 1.2; }
+  .user-role-desc { font-size: 15px; color: var(--mid); font-weight: 300; line-height: 1.7; }
 
-  /* OUTCOME */
-  .outcome-block {
-    background: var(--white); border: 1px solid var(--border);
-    border-radius: 8px; padding: 40px; margin-top: 40px;
-  }
-  .outcome-block h3 { font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 16px; }
-  .outcome-block p { font-size: 15px; color: var(--mid); margin-bottom: 12px; max-width: 680px; }
-  .outcome-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
-  .tag {
-    background: var(--blue-light); color: var(--blue);
-    font-size: 12px; padding: 4px 12px; border-radius: 20px;
-    border: 1px solid #BDD0E8;
-  }
+  /* ── SCOPE & CONSTRAINTS BOX ── */
+  .scope-box { border: 1px solid var(--border); border-radius: 4px; display: grid; grid-template-columns: 1fr 1fr; margin-top: 40px; overflow: hidden; }
+  .scope-col { padding: 36px; }
+  .scope-col + .scope-col { border-left: 1px solid var(--border); }
+  .scope-col-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--orange); margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+  .scope-item { display: flex; align-items: baseline; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--border); font-size: 15px; color: var(--dark); line-height: 1.5; }
+  .scope-item:last-child { border-bottom: none; }
+  .scope-plus { color: var(--orange); font-size: 14px; flex-shrink: 0; }
+  .scope-minus { color: var(--orange); font-size: 14px; flex-shrink: 0; }
+  .scope-item strong { font-weight: 600; }
 
-  /* HONEST NOTE */
-  .honest-note {
-    background: #FFFBEB; border-left: 3px solid var(--amber);
-    border-radius: 0 8px 8px 0; padding: 20px 24px;
-    margin-top: 24px; font-size: 14px; color: var(--dark);
-  }
-  .honest-note strong { color: var(--amber); }
+  /* ── PROCESS GOALS ── */
+  .process-goals { margin: 40px 0; }
+  .process-goal { display: grid; grid-template-columns: 40px 1fr; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border); font-size: 16px; color: var(--dark); }
+  .process-goal:first-child { border-top: 1px solid var(--border); }
+  .process-goal-num { font-family: var(--mono); font-size: 11px; color: var(--orange); }
 
-  /* PULLQUOTE */
-  .pullquote {
-    border-left: 3px solid var(--blue); padding: 24px 32px; margin: 40px 0;
-    font-family: 'Playfair Display', serif;
-    font-size: 22px; font-style: italic; color: var(--dark); line-height: 1.5;
-    background: var(--white); border-radius: 0 8px 8px 0;
-  }
+  /* ── DOUBLE DIAMOND ── */
+  .double-diamond-wrap { border: 1px solid var(--border); background: var(--white); border-radius: 4px; padding: 40px; margin-bottom: 16px; }
 
-  .fade-up {
-    opacity: 0; transform: translateY(24px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
+  /* ── METHODS ── */
+  .methods { margin-top: 40px; }
+  .method-item { display: grid; grid-template-columns: 40px 240px 1fr; gap: 16px; align-items: baseline; padding: 24px 0; border-bottom: 1px solid var(--border); }
+  .method-item:first-child { border-top: 1px solid var(--border); }
+  .method-num { font-family: var(--mono); font-size: 11px; color: var(--orange); }
+  .method-name { font-family: var(--serif); font-size: 20px; font-weight: 700; color: var(--dark); line-height: 1.3; }
+  .method-desc { font-size: 15px; color: var(--mid); font-weight: 300; line-height: 1.7; }
+
+  /* ── COMPARISON TABLE ── */
+  .comparison-intro { margin-top: 40px; }
+  .comparison-intro p { font-size: 16px; color: var(--mid); max-width: 720px; margin-bottom: 16px; font-weight: 300; }
+
+  .comparison-table { width: 100%; border-collapse: collapse; margin-top: 32px; border: 1px solid var(--border); }
+  .comparison-table th { padding: 24px 28px; text-align: left; border-bottom: 2px solid var(--border); border-right: 1px solid var(--border); background: var(--white); }
+  .comparison-table th:last-child { border-right: none; }
+  .comparison-table th.col-head { font-family: var(--serif); font-size: 18px; font-style: italic; font-weight: 700; color: var(--dark); }
+  .col-underline { display: block; width: 40px; height: 2px; background: var(--orange); margin-top: 8px; }
+  .comparison-table td { padding: 20px 28px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); vertical-align: top; background: var(--white); }
+  .comparison-table td:last-child { border-right: none; }
+  .comparison-table tr:last-child td { border-bottom: none; }
+  .row-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 8px; border-radius: 2px; display: inline-block; }
+  .row-label.pros { background: rgba(45,106,79,0.1); color: var(--green); }
+  .row-label.cons { background: rgba(192,57,43,0.1); color: var(--red); }
+  .comp-list { list-style: none; padding: 0; }
+  .comp-list li { font-size: 14px; color: var(--mid); padding: 6px 0; border-bottom: 1px solid var(--border); line-height: 1.5; display: flex; align-items: flex-start; gap: 10px; }
+  .comp-list li:last-child { border-bottom: none; }
+  .comp-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 7px; }
+  .comp-dot.green { background: var(--green); }
+  .comp-dot.red { background: var(--red); }
+
+  /* Eval criteria row */
+  .eval-criteria-row { background: var(--bg) !important; padding: 24px 28px; text-align: center; }
+  .eval-criteria-title { font-family: var(--serif); font-size: 16px; font-style: italic; font-weight: 700; color: var(--dark); margin-bottom: 16px; }
+  .eval-criteria-items { display: flex; justify-content: center; gap: 28px; flex-wrap: wrap; }
+  .eval-criterion { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--mid); }
+  .eval-criterion-icon { color: var(--orange); font-size: 14px; }
+
+  /* Scoring matrix */
+  .scoring-matrix { width: 100%; border-collapse: collapse; border: 1px solid var(--border); margin-top: 32px; }
+  .scoring-matrix th { padding: 20px 24px; border-bottom: 2px solid var(--border); border-right: 1px solid var(--border); background: var(--white); }
+  .scoring-matrix th:last-child { border-right: none; }
+  .scoring-matrix th.criteria-col { text-align: left; }
+  .scoring-matrix th.score-col { font-family: var(--serif); font-size: 16px; font-style: italic; font-weight: 700; text-align: center; color: var(--dark); }
+  .scoring-matrix td { padding: 16px 24px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); background: var(--white); vertical-align: middle; }
+  .scoring-matrix td:last-child { border-right: none; }
+  .criteria-cell { display: flex; align-items: center; gap: 14px; }
+  .criteria-icon { font-size: 18px; color: var(--dark); flex-shrink: 0; }
+  .criteria-name { font-family: var(--serif); font-size: 16px; font-weight: 700; color: var(--dark); }
+  .criteria-sub { font-size: 12px; color: var(--mid); font-weight: 300; }
+  .score-cell { border-radius: 6px; padding: 12px 16px; text-align: center; }
+  .score-cell.excellent { background: rgba(45,106,79,0.1); }
+  .score-cell.good { background: rgba(45,106,79,0.07); }
+  .score-cell.fair { background: rgba(196,92,40,0.08); }
+  .score-cell.poor { background: rgba(192,57,43,0.08); }
+  .score-marks { font-size: 14px; margin-bottom: 4px; letter-spacing: 2px; }
+  .score-label { font-family: var(--serif); font-size: 13px; font-style: italic; }
+  .score-label.excellent { color: var(--green); }
+  .score-label.good { color: var(--green); }
+  .score-label.fair { color: var(--orange); }
+  .score-label.poor { color: var(--red); }
+  .score-bar { height: 3px; border-radius: 2px; margin-top: 6px; }
+  .score-bar.excellent { background: var(--green); width: 100%; }
+  .score-bar.good { background: var(--green); width: 75%; }
+  .score-bar.fair { background: var(--orange); width: 50%; }
+  .score-bar.poor { background: var(--red); width: 25%; }
+
+  /* Totals row */
+  .totals-row td { background: var(--bg) !important; padding: 20px 24px; text-align: center; }
+  .totals-title { font-family: var(--serif); font-size: 15px; font-style: italic; font-weight: 700; color: var(--dark); margin-bottom: 8px; }
+  .totals-scores { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; }
+  .total-item { font-family: var(--serif); font-size: 14px; font-style: italic; color: var(--dark); }
+  .total-num.best { color: var(--green); }
+  .total-num.mid { color: var(--orange); }
+
+  /* Scoring legend */
+  .scoring-legend { border: 1px solid var(--border); border-radius: 4px; padding: 24px 28px; display: inline-block; margin-top: 24px; background: var(--white); }
+  .scoring-legend h4 { font-family: var(--serif); font-size: 16px; font-weight: 700; font-style: italic; color: var(--dark); margin-bottom: 16px; }
+  .legend-item { display: flex; align-items: center; gap: 12px; padding: 6px 0; font-size: 14px; color: var(--mid); }
+  .legend-mark { font-size: 14px; width: 20px; }
+  .legend-mark.check { color: var(--green); }
+  .legend-mark.partial { color: var(--orange); }
+  .legend-mark.cross { color: var(--mid); }
+  .legend-scale { font-size: 12px; color: var(--mid); margin-top: 8px; font-style: italic; }
+
+  /* ── LESSONS ── */
+  .lessons { margin-top: 40px; }
+  .lesson { display: grid; grid-template-columns: 32px 1fr; gap: 20px; padding: 24px 0; border-bottom: 1px solid var(--border); }
+  .lesson:first-child { border-top: 1px solid var(--border); }
+  .lesson-arrow { color: var(--orange); font-size: 20px; flex-shrink: 0; padding-top: 2px; }
+  .lesson-text { font-size: 16px; color: var(--dark); line-height: 1.7; }
+  .lesson-text strong { font-weight: 600; }
+
+  /* ── NEXT CASE STUDY ── */
+  .next-cs { max-width: var(--max-w); margin: 0 auto; padding: 60px var(--gutter); border-top: 1px solid var(--border); display: grid; grid-template-columns: 1fr 80px; align-items: center; text-decoration: none; color: inherit; transition: opacity 0.2s; }
+  .next-cs:hover { opacity: 0.7; }
+  .next-cs-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); margin-bottom: 8px; }
+  .next-cs-category { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mid); margin-bottom: 16px; }
+  .next-cs-title { font-family: var(--serif); font-size: clamp(36px, 5vw, 60px); font-weight: 700; color: var(--dark); line-height: 1.05; }
+  .next-cs-arrow { font-size: 28px; color: var(--mid); text-align: right; }
+
+  /* ── FOOTER ── */
+  footer { border-top: 1px solid var(--border); padding: 56px var(--gutter); display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 48px; max-width: var(--max-w); margin: 0 auto; }
+  .footer-name { font-family: var(--serif); font-size: 26px; font-weight: 700; color: var(--dark); margin-bottom: 8px; }
+  .footer-tag { font-size: 14px; color: var(--mid); font-weight: 300; line-height: 1.6; }
+  .footer-col-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--orange); margin-bottom: 20px; }
+  .footer-nav { display: flex; flex-direction: column; gap: 10px; }
+  .footer-nav a { font-size: 15px; color: var(--mid); text-decoration: none; font-weight: 300; transition: color 0.2s; }
+  .footer-nav a:hover { color: var(--dark); }
+  .footer-contact-link { font-family: var(--mono); font-size: 11px; color: var(--dark); text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: 2px; display: inline-block; margin-top: 12px; transition: border-color 0.2s; }
+  .footer-contact-link:hover { border-color: var(--dark); }
+  .footer-bottom { grid-column: 1/-1; padding-top: 28px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; }
+  .footer-copy { font-family: var(--mono); font-size: 10px; color: var(--mid); letter-spacing: 0.06em; }
+
+  /* ── SCROLL ANIMATIONS ── */
+  .fade-up { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
   .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-  @media (max-width: 768px) {
+  @media (max-width: 900px) {
     nav { padding: 16px 20px; }
-    .hero, .section, .meta-row { padding-left: 20px; padding-right: 20px; }
-    .metrics, .problem-block, .methods-grid, .workshop-flow, .solutions, .deliverables-grid { grid-template-columns: 1fr; }
-    .two-col { grid-template-columns: 1fr; }
-    .process-steps { flex-direction: column; }
-    .step { border-right: 1px solid var(--border); border-bottom: none; border-radius: 0; }
-    .step:first-child { border-radius: 8px 8px 0 0; }
-    .step:last-child { border-radius: 0 0 8px 8px; border-bottom: 1px solid var(--border); }
+    .hero { grid-template-columns: 1fr; padding: 120px 24px 60px; }
+    .hero-right { display: none; }
+    .meta-row { grid-template-columns: 1fr 1fr; }
+    .meta-item:nth-child(2) { border-right: none; }
+    .split { grid-template-columns: 1fr; }
+    .dark-block { grid-template-columns: 1fr; padding: 40px 24px; }
+    .user-row { grid-template-columns: 1fr; gap: 8px; }
+    .scope-box { grid-template-columns: 1fr; }
+    .scope-col + .scope-col { border-left: none; border-top: 1px solid var(--border); }
+    .method-item { grid-template-columns: 40px 1fr; }
+    .method-desc { grid-column: 2; margin-top: -16px; }
+    .comparison-table, .scoring-matrix { font-size: 13px; }
   }
 </style>
 </head>
 <body>
 
-<<nav>
+<!-- NAV -->
+<nav id="main-nav">
   <a href="GeriArnold_Portfolio.html" class="nav-logo">GA<span>.</span></a>
   <ul class="nav-links">
     <li class="nav-dropdown">
@@ -305,249 +338,519 @@
   </ul>
 </nav>
 
+<!-- HERO -->
 <section class="hero fade-up">
-  <span class="hero-tag">Case Study · Flexion · 2022–2024</span>
-  <h1>Modernizing <em>Medicare business rules</em> for the first time in decades</h1>
-  <p class="hero-sub">Medicare Advantage Contractors (MACs) fill the gap between CMS federal policy and real-world claims. They manage those rules in mainframe-bound, high-friction legacy systems. I led a multi-method research engagement to map the current state and produce three viable modernization pathways.</p>
-  <div class="metrics">
-    <div class="metric">
-      <div class="metric-number">5+</div>
-      <div class="metric-label">Stakeholder roles interviewed</div>
-    </div>
-    <div class="metric">
-      <div class="metric-number">6</div>
-      <div class="metric-label">Workshop breakout groups</div>
-    </div>
-    <div class="metric">
-      <div class="metric-number">3</div>
-      <div class="metric-label">Modernization options delivered</div>
-    </div>
-    <div class="metric">
-      <div class="metric-number">9</div>
-      <div class="metric-label">Research deliverables</div>
-    </div>
+  <div>
+    <div class="hero-eyebrow">Case Study · Medicare Claims Operations</div>
+    <h1>Giving <em>MACs</em> the rules they're left to write.</h1>
+    <p class="hero-sub">National Medicare policy from <strong>CMS</strong> can't anticipate every local claim scenario — so <strong>Medicare Administrative Contractors (MACs)</strong> fill the gap with localized business rules. They were doing it on legacy, mainframe-based tools that made those rules hard to see, slow to change, and easy to get wrong. I designed a clearer way for MACs to create and manage the rules they own.</p>
+  </div>
+  <div class="hero-right">
+    <div class="hero-flow-card">Business Analyst Approval</div>
   </div>
 </section>
 
+<!-- META ROW -->
 <div class="meta-row fade-up">
-  <div class="meta-item"><label>My Role</label><span>UX Designer · UX Researcher</span></div>
-  <div class="meta-item"><label>Client</label><span>Flexion / CMS Medicare Adjudication Platform</span></div>
-  <div class="meta-item"><label>Methods</label><span>Stakeholder interviews · Workshops · System analysis</span></div>
-  <div class="meta-item"><label>Deliverable</label><span>Stakeholder report · Three modernization options</span></div>
+  <div class="meta-item">
+    <div class="meta-label">Role</div>
+    <div class="meta-value">UX Designer &amp; Researcher</div>
+  </div>
+  <div class="meta-item">
+    <div class="meta-label">Timeline</div>
+    <div class="meta-value">2022 – 2025</div>
+  </div>
+  <div class="meta-item">
+    <div class="meta-label">Team</div>
+    <div class="meta-value">PM, Engineering, MAC subject-matter experts</div>
+  </div>
+  <div class="meta-item">
+    <div class="meta-label">Platform</div>
+    <div class="meta-value">Web — replacing legacy mainframe tooling</div>
+  </div>
 </div>
 
-<!-- PROBLEM -->
-<section class="section fade-up">
-  <span class="section-number">01 — Problem</span>
-  <h2>CMS policy doesn't cover everything. MACs fill the gap. Legacy tools make that dangerous.</h2>
-  <p>When federal Medicare policy doesn't address a specific claims scenario, Medicare Advantage Contractors write local business rules to handle it. These rules are created, edited, and audited in mainframe-based systems that lack transparency, slow down policy response, and create error risk at scale.</p>
-  <div class="problem-block">
-    <div class="pb-col">
-      <label>Problem</label>
-      <p>MACs need a better way to create and manage localized business rules that CMS policy doesn't cover.</p>
-    </div>
-    <div class="pb-col">
-      <label>Approach</label>
-      <p>Understand current MAC workflows, identify constraints, and explore modernization opportunities that maintain compliance.</p>
-    </div>
-    <div class="pb-col">
-      <label>Outcome</label>
-      <p>Stakeholder report with current state analysis and three validated pathways for modernization.</p>
+<!-- RULER -->
+<div class="ruler" aria-hidden="true"><div class="ruler-inner" id="ruler1"></div></div>
+
+<!-- 01 OVERVIEW -->
+<section class="cs-section fade-up">
+  <div class="section-head">
+    <span class="section-num">01</span>
+    <span class="section-tag">Overview</span>
+    <div class="section-rule"></div>
+  </div>
+  <div class="split">
+    <h2>The rules governing local Medicare claims lived in a mainframe almost no one could read.</h2>
+    <div class="split-body">
+      <p>CMS sets national Medicare policy, but that policy can't anticipate every local claim scenario. <strong>MACs — the regional contractors who process Medicare claims</strong> — fill those gaps with localized business rules that determine how specific claims are handled.</p>
+      <p>Those rules were authored and maintained in legacy, mainframe-based tools. The logic was hard to see, slow to change, and easy to get wrong, with little transparency into what a rule actually did or why.</p>
+      <p>The goal: give MACs a <strong>clearer, faster, and more transparent</strong> way to create and manage the localized rules they're responsible for.</p>
     </div>
   </div>
 </section>
 
-<!-- PROCESS -->
-<section class="section fade-up">
-  <span class="section-number">02 — Research Process</span>
-  <h2>Four phases. All grounded in primary research.</h2>
-  <p>I did not start with solutions. I started by mapping what I didn't know, and let each phase reveal the questions for the next one.</p>
-  <div class="process-steps">
-    <div class="step">
-      <span class="step-phase">Phase 1</span>
-      <h3>Discovery Workshops</h3>
-      <ul>
-        <li>Workflow observation</li>
-        <li>Stakeholder interviews</li>
-        <li>Current state mapping</li>
-      </ul>
+<!-- CURRENT-STATE PROCESS -->
+<section class="cs-section fade-up" style="padding-top:0;">
+  <div class="sub-label">
+    <span class="sub-label-arrow">›</span>
+    <span class="sub-label-text">Current-State Process</span>
+    <div class="sub-label-rule"></div>
+  </div>
+  <div class="split">
+    <h2>Implementing a single rule change today runs through <em>five roles</em> and takes <em>30–90 days.</em></h2>
+    <div class="split-body">
+      <p>Mapping the existing BPMN process made the cost of the legacy tooling concrete: a policy change request hands off from CMS to business analysts, coders, testers, and operations — with a test-fail loop back to revision — before rules ever reach production. Every handoff is a place for delay, rework, and lost context.</p>
     </div>
-    <div class="step">
-      <span class="step-phase">Phase 2</span>
-      <h3>System Analysis</h3>
-      <ul>
-        <li>MAP capabilities review</li>
-        <li>Mainframe infrastructure</li>
-        <li>Third-party integration points</li>
-      </ul>
-    </div>
-    <div class="step">
-      <span class="step-phase">Phase 3</span>
-      <h3>Synthesis</h3>
-      <ul>
-        <li>Affinity mapping</li>
-        <li>Pain point matrix</li>
-        <li>Architecture diagram</li>
-      </ul>
-    </div>
-    <div class="step">
-      <span class="step-phase">Phase 4</span>
-      <h3>Solution Concepts</h3>
-      <ul>
-        <li>Ideation workshops</li>
-        <li>Dot voting</li>
-        <li>Comparison matrix</li>
-      </ul>
-    </div>
+  </div>
+  <div class="diagram-wrap">
+    <img src="images/cms_bpmn_diagram.svg" alt="CMS Business Rules Implementation Process BPMN Diagram showing five swimlanes and 30-90 day timeline">
+  </div>
+  <div class="diagram-caption">
+    <span class="diagram-label">Fig.01</span>
+    <span>Current-state BPMN: a change request travels five swimlanes — CMS, Business Analyst, Coder, Tester, Operations — with a UAT fail-loop, over 30–90 days from request to deployment.</span>
   </div>
 </section>
 
-<!-- RESEARCH METHODS -->
-<section class="section fade-up">
-  <span class="section-number">03 — Methods</span>
-  <h2>Three methods. All primary data.</h2>
-  <div class="methods-grid">
-    <div class="method-card">
-      <h3>Stakeholder Interviews</h3>
-      <p>First-hand perspectives gathered from MAC analysts, coders, testers, and CMS stakeholders. I used consistent questions across roles to enable comparison and avoid confirmation bias.</p>
-    </div>
-    <div class="method-card">
-      <h3>Collaborative Workshops</h3>
-      <p>Structured sessions for solution generation. Breakout groups, gallery walls, and dot voting with criteria: feasibility, alignment with CMS goals, and creative potential.</p>
-    </div>
-    <div class="method-card">
-      <h3>System Analysis</h3>
-      <p>Reviewed MAP platform capabilities, mainframe infrastructure, and third-party integration points to understand what was technically possible — not just what was desirable.</p>
+<!-- 02 PROBLEM STATEMENT -->
+<section class="cs-section fade-up" style="padding-top:0;">
+  <div class="section-head">
+    <span class="section-num">02</span>
+    <span class="section-tag">Problem Statement</span>
+    <div class="section-rule"></div>
+  </div>
+  <div style="font-family:var(--mono); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--orange); margin-bottom:20px;">Mac-Controlled Business Rules</div>
+  <div class="split">
+    <h2>CMS policy can't cover every scenario — and the tools MACs used to fill the gap worked against them.</h2>
+    <div class="split-body">
+      <p>MACs had the expertise to write the rules national policy left open. What they lacked was tooling that made that work transparent, quick, and clear.</p>
     </div>
   </div>
-  <div class="pullquote">"I led this research to teach current workflows to engineers — and to find pathways forward that they hadn't been able to see from inside the system."</div>
-</section>
-
-<!-- WORKSHOP DETAIL -->
-<section class="section fade-up">
-  <span class="section-number">04 — Workshop Design</span>
-  <h2>A structured ideation method that produced consensus, not just ideas</h2>
-  <p>I designed and facilitated a multi-stage workshop. The problem was shared with all participants before any ideation began — a deliberate choice to prevent anchoring on existing assumptions.</p>
-  <div class="workshop-flow">
-    <div class="wf-card">
-      <div class="wf-num">1</div>
-      <h3>Breakout Groups</h3>
-      <p>Six groups worked independently within a colored workspace. Each created 3 concept stickies, then selected one to advance — forcing prioritization before sharing.</p>
+  <div class="problem-list">
+    <div class="problem-item">
+      <span class="problem-num">01</span>
+      <span class="problem-text"><strong>CMS policy updates don't address every scenario</strong> — and MACs fill the gap with localized business rules.</span>
     </div>
-    <div class="wf-card">
-      <div class="wf-num">2</div>
-      <h3>Gallery Wall</h3>
-      <p>Selected ideas from all groups were collected in a shared space, visible to everyone. This created a collective view of the solution space before any evaluation began.</p>
+    <div class="problem-item">
+      <span class="problem-num">02</span>
+      <span class="problem-text"><strong>MACs need a better way</strong> to create and manage those localized business rules.</span>
     </div>
-    <div class="wf-card">
-      <div class="wf-num">3</div>
-      <h3>Dot Voting</h3>
-      <p>Participants voted with red and blue dots. Criteria: feasibility within MAC systems, alignment with CMS and MAC goals, and creative approach to working differently.</p>
+    <div class="problem-item">
+      <span class="problem-num">03</span>
+      <span class="problem-text"><strong>Legacy mainframe-based tools</strong> hinder transparency, speed, and clarity.</span>
     </div>
   </div>
-  <div class="artifact"><strong>Why this structure matters:</strong> Without a shared problem statement at the start, groups anchor on different assumptions. Forcing each group to select one idea before the gallery prevents the loudest voice from dominating synthesis. These are Human Factors facilitation principles, not just design workshop conventions.</div>
+
+  <div class="diagram-wrap" style="margin-top:48px;">
+    <img src="images/cms_system_architecture.svg" alt="Problem-Approach-Outcome diagram showing MACs, CMS, and Beneficiaries served">
+  </div>
+  <div class="diagram-caption">
+    <span class="diagram-label">Diagram</span>
+    <span>Framing the work: from problem through approach to outcome, across the three groups it serves.</span>
+  </div>
 </section>
 
-<!-- CURRENT STATE -->
-<section class="section fade-up">
-  <span class="section-number">05 — Current State</span>
-  <h2>Layered If/Then logic. Mainframe-bound. No audit trail.</h2>
-  <div class="two-col">
-    <div class="two-col-text">
-      <h3>What the system analysis revealed</h3>
-      <p>The Medicare Claims System uses layered conditional logic across multiple subsystems. Coders, Analysts, and Testers each manage different parts of the rules lifecycle — but in a high-friction, mainframe-bound process with no unified view.</p>
-      <p>Three user roles touch the business rules system at different stages, with handoffs that introduced delay, inconsistency, and error risk at each transition point.</p>
-      <div class="artifact"><strong>Key finding:</strong> The current system architecture made it impossible to see the full impact of a rule change before it was applied. This is a Human Factors error-induction problem — the system design forced risky decisions under uncertainty.</div>
+<!-- DARK PULLQUOTE -->
+<div class="dark-block fade-up">
+  <div class="dark-block-label">The Problem</div>
+  <blockquote class="dark-quote">"The expertise was never the gap — <em>the tooling was.</em> Built for a mainframe, not for the people maintaining the rules."</blockquote>
+</div>
+
+<!-- RULER -->
+<div class="ruler" style="margin-top:0;" aria-hidden="true"><div class="ruler-inner" id="ruler2"></div></div>
+
+<!-- 03 USERS & AUDIENCE -->
+<section class="cs-section fade-up">
+  <div class="section-head">
+    <span class="section-num">03</span>
+    <span class="section-tag">Users &amp; Audience</span>
+    <div class="section-rule"></div>
+  </div>
+  <div class="split">
+    <h2>Built for the MAC staff who own the rules — and faithful to the precision Medicare claims demand.</h2>
+    <div class="split-body">
+      <p>The tool had to serve people with deep claims and policy expertise but no engineering background, while still producing logic precise enough to govern real Medicare claims correctly.</p>
     </div>
-    <div>
-      <div style="background:var(--white); border:1px solid var(--border); border-radius:8px; padding:24px;">
-        <p style="font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:var(--blue); margin-bottom:16px; font-weight:500;">Three roles in the business rules lifecycle</p>
-        <div style="display:flex; flex-direction:column; gap:10px;">
-          <div style="background:var(--blue-light); border:1px solid #BDD0E8; border-radius:6px; padding:14px 16px;">
-            <p style="font-size:13px; font-weight:500; color:var(--blue); margin-bottom:4px;">Coder</p>
-            <p style="font-size:12px; color:var(--mid); margin:0;">Writes and edits business rules in the mainframe environment</p>
-          </div>
-          <div style="background:var(--blue-light); border:1px solid #BDD0E8; border-radius:6px; padding:14px 16px;">
-            <p style="font-size:13px; font-weight:500; color:var(--blue); margin-bottom:4px;">Analyst</p>
-            <p style="font-size:12px; color:var(--mid); margin:0;">Interprets CMS policy and translates into rule requirements</p>
-          </div>
-          <div style="background:var(--blue-light); border:1px solid #BDD0E8; border-radius:6px; padding:14px 16px;">
-            <p style="font-size:13px; font-weight:500; color:var(--blue); margin-bottom:4px;">Tester</p>
-            <p style="font-size:12px; color:var(--mid); margin:0;">Validates rule logic before deployment to claims processing</p>
-          </div>
-        </div>
+  </div>
+  <div class="user-rows">
+    <div class="user-row">
+      <div>
+        <div class="user-role-label">Primary</div>
+        <div class="user-role-name">MAC rule authors</div>
       </div>
+      <div class="user-role-desc">Medicare Administrative Contractor staff who create and maintain localized business rules. Deep claims and policy expertise; underserved by legacy mainframe tooling.</div>
+    </div>
+    <div class="user-row">
+      <div>
+        <div class="user-role-label">Secondary</div>
+        <div class="user-role-name">Engineering &amp; maintainers</div>
+      </div>
+      <div class="user-role-desc">Maintain the underlying system and need authored rules to map cleanly and predictably to how claims are actually processed.</div>
+    </div>
+    <div class="user-row">
+      <div>
+        <div class="user-role-label">Stakeholders</div>
+        <div class="user-role-name">CMS &amp; program owners</div>
+      </div>
+      <div class="user-role-desc">Own national policy and depend on MACs applying it consistently, transparently, and correctly across regions.</div>
+    </div>
+    <div class="user-row">
+      <div>
+        <div class="user-role-label">Affected</div>
+        <div class="user-role-name">Providers &amp; beneficiaries</div>
+      </div>
+      <div class="user-role-desc">Never see the tool, but experience its output: how their Medicare claims are evaluated, paid, or denied.</div>
     </div>
   </div>
 </section>
 
-<!-- DELIVERABLES -->
-<section class="section fade-up">
-  <span class="section-number">06 — Deliverables</span>
-  <h2>Nine research artifacts. One stakeholder report.</h2>
-  <p>Every deliverable was grounded in primary data — not generative AI output, not assumptions from the brief. Each artifact served a specific function in communicating findings to different audiences.</p>
-  <div class="deliverables-grid">
-    <div class="del-item">System Architecture Diagram</div>
-    <div class="del-item">Persona Cards (3 roles)</div>
-    <div class="del-item">Current State Analysis</div>
-    <div class="del-item">BPMN Process Map</div>
-    <div class="del-item">Pain Point Matrix</div>
-    <div class="del-item">Workshop Artifact</div>
-    <div class="del-item">Solution Comparison Table</div>
-    <div class="del-item">Feature Priority Matrix</div>
-    <div class="del-item">System Concept Model</div>
+<!-- 04 ROLES & RESPONSIBILITIES -->
+<section class="cs-section fade-up" style="padding-top:0;">
+  <div class="section-head">
+    <span class="section-num">04</span>
+    <span class="section-tag">Roles &amp; Responsibilities</span>
+    <div class="section-rule"></div>
   </div>
-</section>
-
-<!-- SOLUTIONS -->
-<section class="section fade-up">
-  <span class="section-number">07 — Solution Options</span>
-  <h2>Three pathways to modernization — evaluated, not just listed</h2>
-  <p>I did not recommend one solution. I presented three options with a structured evaluation matrix across feasibility, alignment, and user impact — and let stakeholders make an informed decision with the data in hand.</p>
-  <div class="solutions">
-    <div class="solution-card">
-      <div class="sol-num">01</div>
-      <h3>Incremental modernization within existing MAP infrastructure</h3>
-      <p>Lowest technical risk. Reduces friction without retiring the mainframe. Highest continuity for existing workflows.</p>
-    </div>
-    <div class="solution-card">
-      <div class="sol-num">02</div>
-      <h3>Third-party rules engine integration</h3>
-      <p>Replaces mainframe rule logic with a dedicated business rules management system. Higher capability, higher integration complexity.</p>
-    </div>
-    <div class="solution-card">
-      <div class="sol-num">03</div>
-      <h3>Full re-architecture with modern rules platform</h3>
-      <p>Highest long-term value. Requires technical feasibility study and phased implementation plan before committing.</p>
+  <div class="split">
+    <h2>I translated dense conditional logic into an interface a non-engineer could reason about.</h2>
+    <div class="split-body">
+      <p>I led research with MAC rule authors and the engineers who maintained the existing tools, then designed the information architecture and interaction model for the rule builder — from how a single condition reads to how nested AND/OR logic stays comprehensible as it grows.</p>
+      <p>The core challenge was <strong>cognitive</strong>: making branching logic feel structured rather than tangled. I used Human Factors principles to externalize state, preview consequences before publishing, and prevent the class of errors that used to reach production.</p>
     </div>
   </div>
 </section>
 
-<!-- OUTCOME -->
-<section class="section fade-up">
-  <span class="section-number">08 — Outcome</span>
-  <h2>What this engagement delivered — and what it didn't</h2>
-  <div class="outcome-block">
-    <h3>What was delivered</h3>
-    <p>CMS received a stakeholder report with current state analysis, a system architecture diagram, and three structured modernization options — each evaluated against feasibility, alignment, and user impact criteria.</p>
-    <p>The research surfaced a Human Factors problem that had been invisible to the technical team: the mainframe architecture forced high-stakes decisions under uncertainty, with no way to preview the impact of a rule change before applying it. That finding reframed the modernization goal from "retire legacy technology" to "reduce decision risk for analysts."</p>
-    <div class="outcome-tags">
-      <span class="tag">Current state mapped</span>
-      <span class="tag">3 modernization options</span>
-      <span class="tag">Stakeholder report delivered</span>
-      <span class="tag">Risk reframed as HF problem</span>
-      <span class="tag">Next steps defined</span>
+<!-- RULER -->
+<div class="ruler" aria-hidden="true"><div class="ruler-inner" id="ruler3"></div></div>
+
+<!-- 05 SCOPE & CONSTRAINTS -->
+<section class="cs-section fade-up">
+  <div class="section-head">
+    <span class="section-num">05</span>
+    <span class="section-tag">Scope &amp; Constraints</span>
+    <div class="section-rule"></div>
+  </div>
+  <div class="scope-box">
+    <div class="scope-col">
+      <div class="scope-col-label">In Scope</div>
+      <div class="scope-item"><span class="scope-plus">+</span><span>The visual <strong>rule-authoring UI</strong> — conditions, operators, groups</span></div>
+      <div class="scope-item"><span class="scope-plus">+</span><span>An always-visible <strong>plain-language summary</strong> of the rule</span></div>
+      <div class="scope-item"><span class="scope-plus">+</span><span><strong>Preview / test</strong> of inputs before publishing</span></div>
+      <div class="scope-item"><span class="scope-plus">+</span><span><strong>Validation, conflict warnings,</strong> and a review step</span></div>
     </div>
-    <div class="honest-note" style="margin-top:24px;">
-      <strong>Honest scope note:</strong> This engagement ended at the research and strategy phase. Next steps — technical feasibility studies, prototyping, and user validation of the chosen option — were defined in the roadmap but not executed within this contract. The value of this work is in giving decision-makers a defensible basis for choosing a path forward, not in executing it.
+    <div class="scope-col">
+      <div class="scope-col-label">Constraints</div>
+      <div class="scope-item"><span class="scope-minus">–</span><span>Had to map exactly onto the existing rule engine</span></div>
+      <div class="scope-item"><span class="scope-minus">–</span><span>Must support deeply nested AND/OR logic without losing legibility</span></div>
+      <div class="scope-item"><span class="scope-minus">–</span><span>Zero tolerance for changes that break production</span></div>
+      <div class="scope-item"><span class="scope-minus">–</span><span>Learnable by non-engineers with no formal training</span></div>
     </div>
   </div>
 </section>
+
+<!-- 06 PROCESS & WHAT I DID -->
+<section class="cs-section fade-up">
+  <div class="section-head">
+    <span class="section-num">06</span>
+    <span class="section-tag">Process &amp; What I Did</span>
+    <div class="section-rule"></div>
+  </div>
+  <div class="split">
+    <h2>A multi-method research effort — system analysis, stakeholder interviews, and collaborative workshops — to <em>teach current workflows</em> to engineers and explore what a modern system could be.</h2>
+    <div class="split-body">
+      <p>I led the effort end to end, combining system analysis, stakeholder interviews, and collaborative workshops to surface how MAC rule work actually happens — then carried that understanding forward to explore solution pathways for a modern business-rules system.</p>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:48px;">
+    <span class="sub-label-arrow">›</span>
+    <span class="sub-label-text">The Process</span>
+    <div class="sub-label-rule"></div>
+  </div>
+
+  <div class="process-goals">
+    <div class="process-goal">
+      <span class="process-goal-num">01</span>
+      <span><strong>Understand current MAC workflows</strong> for creating, editing, and auditing rules.</span>
+    </div>
+    <div class="process-goal">
+      <span class="process-goal-num">02</span>
+      <span><strong>Identify constraints</strong> — business, technical, and policy — that shape rule implementation.</span>
+    </div>
+    <div class="process-goal">
+      <span class="process-goal-num">03</span>
+      <span><strong>Explore modernization opportunities</strong> that maintain compliance and efficiency.</span>
+    </div>
+  </div>
+
+  <!-- Double Diamond -->
+  <div class="double-diamond-wrap" style="margin-top:48px;">
+    <svg viewBox="0 0 800 360" xmlns="http://www.w3.org/2000/svg" width="100%">
+      <!-- Left diamond -->
+      <polygon points="200,20 380,180 200,340 20,180" fill="none" stroke="#C45C28" stroke-width="1.5"/>
+      <!-- Right diamond -->
+      <polygon points="600,20 780,180 600,340 420,180" fill="none" stroke="#C45C28" stroke-width="1.5"/>
+
+      <!-- Left oval -->
+      <ellipse cx="200" cy="180" rx="90" ry="52" fill="none" stroke="#C45C28" stroke-width="1" stroke-dasharray="4 3"/>
+      <!-- Right oval -->
+      <ellipse cx="600" cy="180" rx="90" ry="52" fill="none" stroke="#C45C28" stroke-width="1" stroke-dasharray="4 3"/>
+
+      <!-- Left diamond labels -->
+      <text x="200" y="56" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="13" font-weight="700" letter-spacing="1" fill="#1A1410">DISCOVER</text>
+      <text x="200" y="322" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="13" font-weight="700" letter-spacing="1" fill="#1A1410">DEFINE</text>
+      <text x="200" y="338" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="11" fill="#7A7268">Insights · Themes</text>
+
+      <!-- Right diamond labels -->
+      <text x="600" y="56" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="13" font-weight="700" letter-spacing="1" fill="#1A1410">DEVELOP</text>
+      <text x="600" y="322" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="13" font-weight="700" letter-spacing="1" fill="#1A1410">DELIVER</text>
+      <text x="600" y="338" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="11" fill="#7A7268">Solution Options</text>
+
+      <!-- Left oval content -->
+      <text x="188" y="172" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="11" fill="#1A1410">Research</text>
+      <text x="188" y="186" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="11" fill="#1A1410">Interviews</text>
+      <text x="188" y="200" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="11" fill="#1A1410">Mapping</text>
+
+      <!-- Right oval content -->
+      <text x="600" y="176" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="11" fill="#1A1410">Ideation</text>
+      <text x="600" y="192" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="11" fill="#1A1410">Concepts</text>
+    </svg>
+  </div>
+  <div class="diagram-caption">
+    <span class="diagram-label">Diagram</span>
+    <span>A Double Diamond shaped the work — diverging to discover, converging to define, then again to develop and deliver.</span>
+  </div>
+
+  <div class="sub-label" style="margin-top:40px;">
+    <span class="sub-label-arrow">›</span>
+    <span class="sub-label-text">Methods</span>
+    <div class="sub-label-rule"></div>
+  </div>
+
+  <div class="methods">
+    <div class="method-item">
+      <span class="method-num">01</span>
+      <div class="method-name">Stakeholder Interviews</div>
+      <div class="method-desc">Gathered first-hand perspectives from MAC analysts, coders, testers, and CMS stakeholders.</div>
+    </div>
+    <div class="method-item">
+      <span class="method-num">02</span>
+      <div class="method-name">Workshop Series</div>
+      <div class="method-desc">Structured brainstorming for solution generation, with breakout sessions for deep dives on integration, usability, and scalability — plus collaborative mapping of end-to-end rule-creation workflows.</div>
+    </div>
+    <div class="method-item">
+      <span class="method-num">03</span>
+      <div class="method-name">System Analysis</div>
+      <div class="method-desc">Reviewed MAP's capabilities, mainframe infrastructure, and potential third-party integration points.</div>
+    </div>
+  </div>
+
+  <div class="diagram-wrap" style="margin-top:40px;">
+    <img src="images/cms_research_methodology.svg" alt="Research methodology timeline showing Discovery, Workshops, System Analysis, Synthesis, and Solution Concepts">
+  </div>
+  <div class="diagram-caption">
+    <span class="diagram-label">Timeline</span>
+    <span>The activities leading to a set of viable pathways to modernize MAC-controlled business rules.</span>
+  </div>
+</section>
+
+<!-- 07 OUTCOMES & LESSONS -->
+<section class="cs-section fade-up">
+  <div class="section-head">
+    <span class="section-num">07</span>
+    <span class="section-tag">Outcomes &amp; Lessons</span>
+    <div class="section-rule"></div>
+  </div>
+  <div class="split">
+    <h2>The work delivered a set of <em>viable, side-by-side-evaluated pathways</em> to modernize MAC-controlled business rules.</h2>
+    <div class="split-body">
+      <p>Rather than a single recommendation, the research produced a decision framework: three solution options assessed against shared evaluation criteria, with the trade-offs of each made explicit so CMS and MAC stakeholders could make an informed build-, integrate-, or buy-decision.</p>
+    </div>
+  </div>
+
+  <!-- Comparison Table -->
+  <div class="comparison-intro">
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th style="width:80px;"></th>
+          <th class="col-head">Custom-Built MAP Capability<span class="col-underline"></span></th>
+          <th class="col-head">Mainframe Integration<span class="col-underline"></span></th>
+          <th class="col-head">Third-Party Service<span class="col-underline"></span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="row-label pros">PROS</span></td>
+          <td>
+            <ul class="comp-list">
+              <li><span class="comp-dot green"></span>Tailored specifically to CMS/MAC operational requirements</li>
+              <li><span class="comp-dot green"></span>Seamless integration with existing MAC infrastructure and workflows</li>
+              <li><span class="comp-dot green"></span>Long-term flexibility for future policy changes and enhancements</li>
+              <li><span class="comp-dot green"></span>Complete control over features, security, and compliance measures</li>
+            </ul>
+          </td>
+          <td>
+            <ul class="comp-list">
+              <li><span class="comp-dot green"></span>Leverages existing mainframe infrastructure and investments</li>
+              <li><span class="comp-dot green"></span>Faster initial deployment using established system architecture</li>
+              <li><span class="comp-dot green"></span>Lower short-term implementation costs and resource requirements</li>
+              <li><span class="comp-dot green"></span>Familiar technology stack for existing development teams</li>
+            </ul>
+          </td>
+          <td>
+            <ul class="comp-list">
+              <li><span class="comp-dot green"></span>Potentially faster implementation with pre-built solutions</li>
+              <li><span class="comp-dot green"></span>Modern UI/UX design patterns and user-experience standards</li>
+              <li><span class="comp-dot green"></span>Access to specialized vendor expertise and domain knowledge</li>
+              <li><span class="comp-dot green"></span>Reduced internal development and maintenance overhead</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="row-label cons">CONS</span></td>
+          <td>
+            <ul class="comp-list">
+              <li><span class="comp-dot red"></span>Higher upfront development costs and resource allocation</li>
+              <li><span class="comp-dot red"></span>Longer development timeline before system deployment</li>
+              <li><span class="comp-dot red"></span>Ongoing maintenance burden and technical-support requirements</li>
+              <li><span class="comp-dot red"></span>Risk of scope creep and implementation delays</li>
+            </ul>
+          </td>
+          <td>
+            <ul class="comp-list">
+              <li><span class="comp-dot red"></span>Limited scalability and performance constraints of legacy systems</li>
+              <li><span class="comp-dot red"></span>Continued reliance on aging mainframe infrastructure</li>
+              <li><span class="comp-dot red"></span>Difficult to modernize and adapt for future technological changes</li>
+              <li><span class="comp-dot red"></span>Limited user experience and interface modernization options</li>
+            </ul>
+          </td>
+          <td>
+            <ul class="comp-list">
+              <li><span class="comp-dot red"></span>Vendor lock-in risks and dependency on external provider</li>
+              <li><span class="comp-dot red"></span>Complex integration challenges with existing CMS/MAC systems</li>
+              <li><span class="comp-dot red"></span>Potential compliance and security risks with external data handling</li>
+              <li><span class="comp-dot red"></span>Limited customization options for CMS-specific requirements</li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="diagram-caption" style="margin-top:16px;">
+      <span class="diagram-label">Matrix</span>
+      <span>Solution options compared across pros, cons, and shared evaluation criteria.</span>
+    </div>
+  </div>
+
+  <!-- Scoring Matrix -->
+  <div class="diagram-wrap" style="margin-top:48px;">
+    <img src="images/cms_solution_options.svg" alt="Solution options evaluation matrix with scoring across usability, scalability, and compliance">
+  </div>
+  <div class="diagram-caption">
+    <span class="diagram-label">Scoring</span>
+    <span>How the engineering team scored each option against the criteria — Custom-Built MAP came out ahead.</span>
+  </div>
+
+  <div class="diagram-wrap">
+    <img src="images/cms_conclusion.svg" alt="Conclusion and scoring summary showing Custom-Built MAP 12/12, Mainframe 6/12, Third-Party 8/12">
+  </div>
+  <div class="diagram-caption">
+    <span class="diagram-label">Summary</span>
+    <span>Total scores: Custom-Built MAP 12/12 · Mainframe 6/12 · Third-Party 8/12.</span>
+  </div>
+
+  <!-- Scoring Legend -->
+  <div class="scoring-legend">
+    <h4>Scoring Legend</h4>
+    <div class="legend-item"><span class="legend-mark check">✓</span> Meets requirement</div>
+    <div class="legend-item"><span class="legend-mark partial">△</span> Partially meets</div>
+    <div class="legend-item"><span class="legend-mark cross">×</span> Does not meet</div>
+    <p class="legend-scale">Scale: 1–4 points per criterion</p>
+  </div>
+
+  <!-- Lessons -->
+  <div class="sub-label" style="margin-top:56px;">
+    <span class="sub-label-arrow">›</span>
+    <span class="sub-label-text">Lessons</span>
+    <div class="sub-label-rule"></div>
+  </div>
+  <div class="lessons">
+    <div class="lesson">
+      <span class="lesson-arrow">→</span>
+      <p class="lesson-text"><strong>The tooling was the constraint, not the expertise.</strong> MACs already knew the rules — the work was giving them a transparent place to express them.</p>
+    </div>
+    <div class="lesson">
+      <span class="lesson-arrow">→</span>
+      <p class="lesson-text"><strong>Modernization is a trade-off space, not a single answer.</strong> The most useful outcome was framing the options against shared criteria, not forcing one verdict.</p>
+    </div>
+    <div class="lesson">
+      <span class="lesson-arrow">→</span>
+      <p class="lesson-text"><strong>Bringing engineers into the research paid off.</strong> Workshops that taught current workflows built the shared understanding every option depended on.</p>
+    </div>
+  </div>
+</section>
+
+<!-- NEXT CASE STUDY -->
+<a href="HealthInsurance_IDP_CaseStudy.html" class="next-cs fade-up">
+  <div>
+    <div class="next-cs-label">Next Case Study</div>
+    <div class="next-cs-category">Health Insurance</div>
+    <div class="next-cs-title">Internal Developer Platform</div>
+  </div>
+  <div class="next-cs-arrow">→</div>
+</a>
+
+<!-- FOOTER -->
+<footer class="fade-up">
+  <div>
+    <div class="footer-name">Geri Arnold</div>
+    <p class="footer-tag">Human Factors–informed UX Designer<br>MFA · MSHCI · AHFP®</p>
+  </div>
+  <div>
+    <div class="footer-col-label">Navigate</div>
+    <div class="footer-nav">
+      <a href="GeriArnold_Portfolio.html#work">Selected Work</a>
+      <a href="GeriArnold_Portfolio.html#about">About</a>
+      <a href="https://geriarnold.myportfolio.com/research" target="_blank">Research ↗</a>
+      <a href="https://geriarnold.myportfolio.com/art" target="_blank">Art ↗</a>
+    </div>
+  </div>
+  <div>
+    <div class="footer-col-label">Get In Touch</div>
+    <p class="footer-tag">Open to new opportunities and conversations about complex design challenges.</p>
+    <a href="mailto:geri.arnold@outlook.com" class="footer-contact-link">geri.arnold@outlook.com</a>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2026 Geri Arnold — All rights reserved</span>
+    <span class="footer-copy">Human Factors · UX · Industrial Design</span>
+  </div>
+</footer>
 
 <script>
+  // Ruler strips
+  function buildRuler(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    for (let i = 0; i < 120; i++) {
+      const t = document.createElement('div');
+      t.className = 'ruler-tick';
+      el.appendChild(t);
+    }
+  }
+  buildRuler('ruler1');
+  buildRuler('ruler2');
+  buildRuler('ruler3');
+
+  // Nav scroll
+  const nav = document.getElementById('main-nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  }, { passive: true });
+
+  // Scroll reveal
   const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.1 });
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.08 });
   document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 </script>
 </body>
