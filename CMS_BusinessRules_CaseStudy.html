@@ -3,822 +3,738 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CMS Business Rules — Geri Arnold</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg:      #F5F0E8;
-    --bg-2:    #EDEAE2;
-    --dark:    #1A1410;
-    --mid:     #7A7268;
-    --light:   #F5F0E8;
-    --white:   #FFFFFF;
-    --border:  #DDD8CE;
-    --orange:  #C45C28;
-    --orange-light: #F5EDE6;
-    --green:   #2D6A4F;
-    --red:     #C0392B;
-    --serif:   'Playfair Display', Georgia, serif;
-    --sans:    'DM Sans', system-ui, sans-serif;
-    --mono:    'Space Mono', monospace;
-    --max-w:   1200px;
-    --gutter:  clamp(24px, 5vw, 80px);
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body {
-    font-family: var(--sans);
-    background: var(--bg);
-    color: var(--dark);
-    font-size: 16px;
-    line-height: 1.7;
-    overflow-x: hidden;
-  }
-
-  /* ── NAV ── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 20px var(--gutter);
-    background: rgba(245,240,232,0.95);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid transparent;
-    transition: border-color 0.3s;
-  }
-  nav.scrolled { border-bottom-color: var(--border); }
-  .nav-logo { font-family: var(--mono); font-size: 13px; font-weight: 700; letter-spacing: 0.05em; color: var(--dark); text-decoration: none; }
-  .nav-logo span { color: var(--orange); }
-  .nav-links { display: flex; gap: 36px; list-style: none; }
-  .nav-links > li > a { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid); text-decoration: none; transition: color 0.2s; position: relative; }
-  .nav-links > li > a::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 1px; background: var(--orange); transform: scaleX(0); transform-origin: left; transition: transform 0.25s; }
-  .nav-links > li > a:hover { color: var(--dark); }
-  .nav-links > li > a:hover::after { transform: scaleX(1); }
-  .nav-dropdown { position: relative; }
-  .nav-dropdown-menu { position: absolute; top: calc(100% + 16px); left: 50%; transform: translateX(-50%); background: var(--white); border: 1px solid var(--border); border-radius: 6px; padding: 8px 0; min-width: 260px; opacity: 0; visibility: hidden; transition: opacity 0.2s, visibility 0.2s; box-shadow: 0 8px 24px rgba(0,0,0,0.08); z-index: 200; }
-  .nav-dropdown:hover .nav-dropdown-menu { opacity: 1; visibility: visible; }
-  .nav-dropdown-menu a { display: block; padding: 10px 16px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--mid); text-decoration: none; transition: color 0.15s, background 0.15s; }
-  .nav-dropdown-menu a:hover { color: var(--orange); background: var(--orange-light); }
-  .nav-dropdown-menu a.nav-active { color: var(--orange); }
-  @media (max-width: 768px) { .nav-links { display: none; } }
-
-  /* ── HERO ── */
-  .hero {
-    max-width: var(--max-w); margin: 0 auto;
-    padding: 160px var(--gutter) 80px;
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: clamp(40px, 6vw, 120px); align-items: start;
-  }
-  .hero-eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); margin-bottom: 28px; display: flex; align-items: center; gap: 10px; }
-  .hero-eyebrow::before { content: ''; display: block; width: 28px; height: 1px; background: var(--orange); }
-  .hero h1 { font-family: var(--serif); font-size: clamp(52px, 7vw, 88px); line-height: 1.0; color: var(--dark); margin-bottom: 28px; font-weight: 700; }
-  .hero h1 em { font-style: italic; color: var(--orange); }
-  .hero-sub { font-size: 17px; font-weight: 300; line-height: 1.7; color: var(--mid); }
-  .hero-sub strong { color: var(--dark); font-weight: 500; }
-  .hero-right { padding-top: 160px; }
-  .hero-flow-card { border: 1px dashed var(--border); border-radius: 4px; padding: 16px 24px; display: inline-block; font-size: 13px; color: var(--mid); position: relative; }
-  .hero-flow-card::before { content: '→'; position: absolute; left: -24px; top: 50%; transform: translateY(-50%); color: var(--border); font-size: 16px; }
-
-  /* ── META ROW ── */
-  .meta-row {
-    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    max-width: var(--max-w); margin: 0 auto;
-  }
-  .meta-item { padding: 28px var(--gutter); border-right: 1px solid var(--border); }
-  .meta-item:last-child { border-right: none; }
-  .meta-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--orange); margin-bottom: 8px; }
-  .meta-value { font-size: 15px; color: var(--dark); line-height: 1.4; }
-
-  /* ── RULER STRIP ── */
-  .ruler {
-    width: 100%; height: 22px; overflow: hidden;
-    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-    display: flex; align-items: flex-start; padding: 3px var(--gutter) 0;
-    background: var(--bg);
-  }
-  .ruler-inner { display: flex; gap: 0; width: 100%; }
-  .ruler-tick { flex: 1; border-left: 1px solid var(--border); height: 6px; }
-  .ruler-tick:nth-child(10n) { height: 14px; border-left-color: #C2B8A8; }
-  .ruler-tick:nth-child(5n) { height: 10px; }
-
-  /* ── SECTION ── */
-  .cs-section { max-width: var(--max-w); margin: 0 auto; padding: 80px var(--gutter); }
-  .cs-section + .cs-section { padding-top: 40px; }
-
-  /* Section header with number + label + rule */
-  .section-head { display: flex; align-items: center; gap: 16px; margin-bottom: 64px; }
-  .section-num { font-family: var(--mono); font-size: 11px; color: var(--orange); flex-shrink: 0; }
-  .section-tag { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); flex-shrink: 0; }
-  .section-rule { flex: 1; height: 1px; background: var(--border); }
-
-  /* Sub-label with arrow */
-  .sub-label { display: flex; align-items: center; gap: 12px; margin-bottom: 48px; }
-  .sub-label-arrow { color: var(--orange); font-size: 14px; }
-  .sub-label-text { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); }
-  .sub-label-rule { flex: 1; height: 1px; background: var(--border); }
-
-  /* Split layout: large serif headline left, body text right */
-  .split { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 6vw, 100px); align-items: start; margin-bottom: 56px; }
-  .split h2 { font-family: var(--serif); font-size: clamp(28px, 3.5vw, 44px); line-height: 1.15; color: var(--dark); font-weight: 700; }
-  .split h2 em { font-style: italic; color: var(--orange); }
-  .split-body p { font-size: 16px; color: var(--mid); line-height: 1.8; margin-bottom: 20px; font-weight: 300; }
-  .split-body p strong { color: var(--dark); font-weight: 500; }
-  .split-body p:last-child { margin-bottom: 0; }
-
-  /* Diagram image */
-  .diagram-wrap { border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin-bottom: 16px; background: var(--white); }
-  .diagram-wrap img { width: 100%; display: block; }
-  .diagram-caption { display: flex; align-items: baseline; gap: 12px; font-size: 14px; color: var(--mid); margin-bottom: 48px; }
-  .diagram-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--orange); flex-shrink: 0; }
-
-  /* ── PROBLEM ITEMS ── */
-  .problem-list { margin-top: 40px; }
-  .problem-item { display: grid; grid-template-columns: 40px 1fr; gap: 16px; align-items: baseline; padding: 20px 0; border-bottom: 1px solid var(--border); }
-  .problem-item:first-child { border-top: 1px solid var(--border); }
-  .problem-num { font-family: var(--mono); font-size: 11px; color: var(--orange); }
-  .problem-text { font-size: 16px; color: var(--dark); line-height: 1.6; }
-  .problem-text strong { font-weight: 600; }
-
-  /* ── DARK PULLQUOTE BLOCK ── */
-  .dark-block {
-    background: var(--dark); color: var(--white);
-    margin: 0 var(--gutter);
-    padding: clamp(48px, 6vw, 80px) clamp(40px, 6vw, 80px);
-    display: grid; grid-template-columns: 200px 1fr;
-    gap: clamp(40px, 6vw, 80px); align-items: center;
-    max-width: calc(var(--max-w) - 0px);
-    margin: 0 auto;
-  }
-  .dark-block-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); }
-  .dark-quote { font-family: var(--serif); font-size: clamp(22px, 2.8vw, 36px); line-height: 1.3; font-style: italic; color: var(--white); }
-  .dark-quote em { font-style: normal; color: var(--orange); }
-  .dark-quote strong { font-style: normal; color: var(--white); }
-
-  /* ── USER ROWS ── */
-  .user-rows { margin-top: 40px; }
-  .user-row { display: grid; grid-template-columns: 240px 1fr; gap: 40px; padding: 28px 0; border-bottom: 1px solid var(--border); align-items: start; }
-  .user-row:first-child { border-top: 1px solid var(--border); }
-  .user-role-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--orange); margin-bottom: 8px; }
-  .user-role-name { font-family: var(--serif); font-size: 22px; font-weight: 700; color: var(--dark); line-height: 1.2; }
-  .user-role-desc { font-size: 15px; color: var(--mid); font-weight: 300; line-height: 1.7; }
-
-  /* ── SCOPE & CONSTRAINTS BOX ── */
-  .scope-box { border: 1px solid var(--border); border-radius: 4px; display: grid; grid-template-columns: 1fr 1fr; margin-top: 40px; overflow: hidden; }
-  .scope-col { padding: 36px; }
-  .scope-col + .scope-col { border-left: 1px solid var(--border); }
-  .scope-col-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--orange); margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
-  .scope-item { display: flex; align-items: baseline; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--border); font-size: 15px; color: var(--dark); line-height: 1.5; }
-  .scope-item:last-child { border-bottom: none; }
-  .scope-plus { color: var(--orange); font-size: 14px; flex-shrink: 0; }
-  .scope-minus { color: var(--orange); font-size: 14px; flex-shrink: 0; }
-  .scope-item strong { font-weight: 600; }
-
-  /* ── PROCESS GOALS ── */
-  .process-goals { margin: 40px 0; }
-  .process-goal { display: grid; grid-template-columns: 40px 1fr; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border); font-size: 16px; color: var(--dark); }
-  .process-goal:first-child { border-top: 1px solid var(--border); }
-  .process-goal-num { font-family: var(--mono); font-size: 11px; color: var(--orange); }
-
-  /* ── DOUBLE DIAMOND ── */
-  .double-diamond-wrap { border: 1px solid var(--border); background: var(--white); border-radius: 4px; padding: 40px; margin-bottom: 16px; }
-
-  /* ── METHODS ── */
-  .methods { margin-top: 40px; }
-  .method-item { display: grid; grid-template-columns: 40px 240px 1fr; gap: 16px; align-items: baseline; padding: 24px 0; border-bottom: 1px solid var(--border); }
-  .method-item:first-child { border-top: 1px solid var(--border); }
-  .method-num { font-family: var(--mono); font-size: 11px; color: var(--orange); }
-  .method-name { font-family: var(--serif); font-size: 20px; font-weight: 700; color: var(--dark); line-height: 1.3; }
-  .method-desc { font-size: 15px; color: var(--mid); font-weight: 300; line-height: 1.7; }
-
-  /* ── COMPARISON TABLE ── */
-  .comparison-intro { margin-top: 40px; }
-  .comparison-intro p { font-size: 16px; color: var(--mid); max-width: 720px; margin-bottom: 16px; font-weight: 300; }
-
-  .comparison-table { width: 100%; border-collapse: collapse; margin-top: 32px; border: 1px solid var(--border); }
-  .comparison-table th { padding: 24px 28px; text-align: left; border-bottom: 2px solid var(--border); border-right: 1px solid var(--border); background: var(--white); }
-  .comparison-table th:last-child { border-right: none; }
-  .comparison-table th.col-head { font-family: var(--serif); font-size: 18px; font-style: italic; font-weight: 700; color: var(--dark); }
-  .col-underline { display: block; width: 40px; height: 2px; background: var(--orange); margin-top: 8px; }
-  .comparison-table td { padding: 20px 28px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); vertical-align: top; background: var(--white); }
-  .comparison-table td:last-child { border-right: none; }
-  .comparison-table tr:last-child td { border-bottom: none; }
-  .row-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 8px; border-radius: 2px; display: inline-block; }
-  .row-label.pros { background: rgba(45,106,79,0.1); color: var(--green); }
-  .row-label.cons { background: rgba(192,57,43,0.1); color: var(--red); }
-  .comp-list { list-style: none; padding: 0; }
-  .comp-list li { font-size: 14px; color: var(--mid); padding: 6px 0; border-bottom: 1px solid var(--border); line-height: 1.5; display: flex; align-items: flex-start; gap: 10px; }
-  .comp-list li:last-child { border-bottom: none; }
-  .comp-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 7px; }
-  .comp-dot.green { background: var(--green); }
-  .comp-dot.red { background: var(--red); }
-
-  /* Eval criteria row */
-  .eval-criteria-row { background: var(--bg) !important; padding: 24px 28px; text-align: center; }
-  .eval-criteria-title { font-family: var(--serif); font-size: 16px; font-style: italic; font-weight: 700; color: var(--dark); margin-bottom: 16px; }
-  .eval-criteria-items { display: flex; justify-content: center; gap: 28px; flex-wrap: wrap; }
-  .eval-criterion { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--mid); }
-  .eval-criterion-icon { color: var(--orange); font-size: 14px; }
-
-  /* Scoring matrix */
-  .scoring-matrix { width: 100%; border-collapse: collapse; border: 1px solid var(--border); margin-top: 32px; }
-  .scoring-matrix th { padding: 20px 24px; border-bottom: 2px solid var(--border); border-right: 1px solid var(--border); background: var(--white); }
-  .scoring-matrix th:last-child { border-right: none; }
-  .scoring-matrix th.criteria-col { text-align: left; }
-  .scoring-matrix th.score-col { font-family: var(--serif); font-size: 16px; font-style: italic; font-weight: 700; text-align: center; color: var(--dark); }
-  .scoring-matrix td { padding: 16px 24px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); background: var(--white); vertical-align: middle; }
-  .scoring-matrix td:last-child { border-right: none; }
-  .criteria-cell { display: flex; align-items: center; gap: 14px; }
-  .criteria-icon { font-size: 18px; color: var(--dark); flex-shrink: 0; }
-  .criteria-name { font-family: var(--serif); font-size: 16px; font-weight: 700; color: var(--dark); }
-  .criteria-sub { font-size: 12px; color: var(--mid); font-weight: 300; }
-  .score-cell { border-radius: 6px; padding: 12px 16px; text-align: center; }
-  .score-cell.excellent { background: rgba(45,106,79,0.1); }
-  .score-cell.good { background: rgba(45,106,79,0.07); }
-  .score-cell.fair { background: rgba(196,92,40,0.08); }
-  .score-cell.poor { background: rgba(192,57,43,0.08); }
-  .score-marks { font-size: 14px; margin-bottom: 4px; letter-spacing: 2px; }
-  .score-label { font-family: var(--serif); font-size: 13px; font-style: italic; }
-  .score-label.excellent { color: var(--green); }
-  .score-label.good { color: var(--green); }
-  .score-label.fair { color: var(--orange); }
-  .score-label.poor { color: var(--red); }
-  .score-bar { height: 3px; border-radius: 2px; margin-top: 6px; }
-  .score-bar.excellent { background: var(--green); width: 100%; }
-  .score-bar.good { background: var(--green); width: 75%; }
-  .score-bar.fair { background: var(--orange); width: 50%; }
-  .score-bar.poor { background: var(--red); width: 25%; }
-
-  /* Totals row */
-  .totals-row td { background: var(--bg) !important; padding: 20px 24px; text-align: center; }
-  .totals-title { font-family: var(--serif); font-size: 15px; font-style: italic; font-weight: 700; color: var(--dark); margin-bottom: 8px; }
-  .totals-scores { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; }
-  .total-item { font-family: var(--serif); font-size: 14px; font-style: italic; color: var(--dark); }
-  .total-num.best { color: var(--green); }
-  .total-num.mid { color: var(--orange); }
-
-  /* Scoring legend */
-  .scoring-legend { border: 1px solid var(--border); border-radius: 4px; padding: 24px 28px; display: inline-block; margin-top: 24px; background: var(--white); }
-  .scoring-legend h4 { font-family: var(--serif); font-size: 16px; font-weight: 700; font-style: italic; color: var(--dark); margin-bottom: 16px; }
-  .legend-item { display: flex; align-items: center; gap: 12px; padding: 6px 0; font-size: 14px; color: var(--mid); }
-  .legend-mark { font-size: 14px; width: 20px; }
-  .legend-mark.check { color: var(--green); }
-  .legend-mark.partial { color: var(--orange); }
-  .legend-mark.cross { color: var(--mid); }
-  .legend-scale { font-size: 12px; color: var(--mid); margin-top: 8px; font-style: italic; }
-
-  /* ── LESSONS ── */
-  .lessons { margin-top: 40px; }
-  .lesson { display: grid; grid-template-columns: 32px 1fr; gap: 20px; padding: 24px 0; border-bottom: 1px solid var(--border); }
-  .lesson:first-child { border-top: 1px solid var(--border); }
-  .lesson-arrow { color: var(--orange); font-size: 20px; flex-shrink: 0; padding-top: 2px; }
-  .lesson-text { font-size: 16px; color: var(--dark); line-height: 1.7; }
-  .lesson-text strong { font-weight: 600; }
-
-  /* ── NEXT CASE STUDY ── */
-  .next-cs { max-width: var(--max-w); margin: 0 auto; padding: 60px var(--gutter); border-top: 1px solid var(--border); display: grid; grid-template-columns: 1fr 80px; align-items: center; text-decoration: none; color: inherit; transition: opacity 0.2s; }
-  .next-cs:hover { opacity: 0.7; }
-  .next-cs-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); margin-bottom: 8px; }
-  .next-cs-category { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mid); margin-bottom: 16px; }
-  .next-cs-title { font-family: var(--serif); font-size: clamp(36px, 5vw, 60px); font-weight: 700; color: var(--dark); line-height: 1.05; }
-  .next-cs-arrow { font-size: 28px; color: var(--mid); text-align: right; }
-
-  /* ── FOOTER ── */
-  footer { border-top: 1px solid var(--border); padding: 56px var(--gutter); display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 48px; max-width: var(--max-w); margin: 0 auto; }
-  .footer-name { font-family: var(--serif); font-size: 26px; font-weight: 700; color: var(--dark); margin-bottom: 8px; }
-  .footer-tag { font-size: 14px; color: var(--mid); font-weight: 300; line-height: 1.6; }
-  .footer-col-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--orange); margin-bottom: 20px; }
-  .footer-nav { display: flex; flex-direction: column; gap: 10px; }
-  .footer-nav a { font-size: 15px; color: var(--mid); text-decoration: none; font-weight: 300; transition: color 0.2s; }
-  .footer-nav a:hover { color: var(--dark); }
-  .footer-contact-link { font-family: var(--mono); font-size: 11px; color: var(--dark); text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: 2px; display: inline-block; margin-top: 12px; transition: border-color 0.2s; }
-  .footer-contact-link:hover { border-color: var(--dark); }
-  .footer-bottom { grid-column: 1/-1; padding-top: 28px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; }
-  .footer-copy { font-family: var(--mono); font-size: 10px; color: var(--mid); letter-spacing: 0.06em; }
-
-  /* ── SCROLL ANIMATIONS ── */
-  .fade-up { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
-  .fade-up.visible { opacity: 1; transform: translateY(0); }
-
-  @media (max-width: 900px) {
-    nav { padding: 16px 20px; }
-    .hero { grid-template-columns: 1fr; padding: 120px 24px 60px; }
-    .hero-right { display: none; }
-    .meta-row { grid-template-columns: 1fr 1fr; }
-    .meta-item:nth-child(2) { border-right: none; }
-    .split { grid-template-columns: 1fr; }
-    .dark-block { grid-template-columns: 1fr; padding: 40px 24px; }
-    .user-row { grid-template-columns: 1fr; gap: 8px; }
-    .scope-box { grid-template-columns: 1fr; }
-    .scope-col + .scope-col { border-left: none; border-top: 1px solid var(--border); }
-    .method-item { grid-template-columns: 40px 1fr; }
-    .method-desc { grid-column: 2; margin-top: -16px; }
-    .comparison-table, .scoring-matrix { font-size: 13px; }
-  }
-</style>
+<title>Business Rules — CMS · Geri Arnold</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="case-study.css">
 </head>
-<body>
+<body data-screen-label="Case Study — CMS Business Rules">
 
-<!-- NAV -->
-<nav id="main-nav">
-  <a href="GeriArnold_Portfolio.html" class="nav-logo">GA<span>.</span></a>
+<!-- NAVIGATION -->
+<nav id="nav">
+  <a href="Portfolio (standalone-source).html" class="nav-logo">GA<span>.</span></a>
   <ul class="nav-links">
     <li class="nav-dropdown">
-      <a href="GeriArnold_Portfolio.html#work">Work</a>
-      <div class="nav-dropdown-menu">
-        <a href="HomeDepot_RTV_CaseStudy.html">Home Depot · RTV</a>
-        <a href="CMS_BusinessRules_CaseStudy.html" class="nav-active">Flexion · CMS</a>
-        <a href="HealthInsurance_IDP_CaseStudy.html">Health Insurance · IDP</a>
+      <a href="Portfolio (standalone-source).html#work">Work <span class="nav-caret" aria-hidden="true">▾</span></a>
+      <div class="nav-dropdown-menu" role="menu">
+        <div class="nav-dropdown-head"><span>Case Studies</span><span class="ndh-line"></span></div>
+        <a href="HomeDepot_RTV_CaseStudy.html" class="nav-dropdown-item" role="menuitem">
+          <span class="ndi-company">The Home Depot</span>
+          <span class="ndi-title">Return-to-Vendor (RTV)</span>
+        </a>
+        <a href="CMS_BusinessRules_CaseStudy.html" class="nav-dropdown-item active" role="menuitem">
+          <span class="ndi-company">CMS</span>
+          <span class="ndi-title">Business Rules</span>
+        </a>
+        <a href="HealthInsurance_IDP_CaseStudy.html" class="nav-dropdown-item" role="menuitem">
+          <span class="ndi-company">Health Insurance</span>
+          <span class="ndi-title">Intelligent Document Processing</span>
+        </a>
       </div>
     </li>
-    <li><a href="GeriArnold_Portfolio.html#about">About</a></li>
+    <li><a href="Portfolio (standalone-source).html#about">About</a></li>
     <li><a href="https://geriarnold.myportfolio.com/research" target="_blank">Research</a></li>
     <li><a href="https://geriarnold.myportfolio.com/art" target="_blank">Art</a></li>
-    <li><a href="GeriArnold_Portfolio.html#contact">Contact</a></li>
+    <li><a href="Portfolio (standalone-source).html#contact">Contact</a></li>
   </ul>
 </nav>
 
 <!-- HERO -->
-<section class="hero fade-up">
-  <div>
-    <div class="hero-eyebrow">Case Study · Medicare Claims Operations</div>
-    <h1>Giving <em>MACs</em> the rules they're left to write.</h1>
-    <p class="hero-sub">National Medicare policy from <strong>CMS</strong> can't anticipate every local claim scenario — so <strong>Medicare Administrative Contractors (MACs)</strong> fill the gap with localized business rules. They were doing it on legacy, mainframe-based tools that made those rules hard to see, slow to change, and easy to get wrong. I designed a clearer way for MACs to create and manage the rules they own.</p>
-  </div>
-  <div class="hero-right">
-    <div class="hero-flow-card">Business Analyst Approval</div>
-  </div>
-</section>
+<header class="cs-hero">
+  <div class="cs-hero-bg" aria-hidden="true"><img src="images/cms-bpmn-current-state.png" alt=""></div>
+  <a href="Portfolio (standalone-source).html#work" class="cs-back">← Back to Selected Work</a>
+  <div class="cs-eyebrow">Case Study · Medicare Claims Operations</div>
+  <h1 class="cs-title">Giving <em>MACs</em> the rules they're left to write.</h1>
+  <p class="cs-deck">
+    National Medicare policy from <strong>CMS</strong> can't anticipate every local claim scenario — so
+    <strong>Medicare Administrative Contractors (MACs)</strong> fill the gap with localized business rules. They
+    were doing it on legacy, mainframe-based tools that made those rules hard to see, slow to change, and easy to
+    get wrong. I designed a clearer way for MACs to create and manage the rules they own.
+  </p>
 
-<!-- META ROW -->
-<div class="meta-row fade-up">
-  <div class="meta-item">
-    <div class="meta-label">Role</div>
-    <div class="meta-value">UX Designer &amp; Researcher</div>
+  <div class="cs-meta">
+    <div class="cs-meta-cell">
+      <div class="cs-meta-label">Role</div>
+      <div class="cs-meta-value">UX Designer &amp; Researcher</div>
+    </div>
+    <div class="cs-meta-cell">
+      <div class="cs-meta-label">Timeline</div>
+      <div class="cs-meta-value">[ Add duration ]</div>
+    </div>
+    <div class="cs-meta-cell">
+      <div class="cs-meta-label">Team</div>
+      <div class="cs-meta-value">PM, Engineering, MAC subject-matter experts</div>
+    </div>
+    <div class="cs-meta-cell">
+      <div class="cs-meta-label">Platform</div>
+      <div class="cs-meta-value">Web — replacing legacy mainframe tooling</div>
+    </div>
   </div>
-  <div class="meta-item">
-    <div class="meta-label">Timeline</div>
-    <div class="meta-value">2022 – 2025</div>
-  </div>
-  <div class="meta-item">
-    <div class="meta-label">Team</div>
-    <div class="meta-value">PM, Engineering, MAC subject-matter experts</div>
-  </div>
-  <div class="meta-item">
-    <div class="meta-label">Platform</div>
-    <div class="meta-value">Web — replacing legacy mainframe tooling</div>
-  </div>
-</div>
+</header>
 
 <!-- RULER -->
-<div class="ruler" aria-hidden="true"><div class="ruler-inner" id="ruler1"></div></div>
+<div class="ruler-strip ruler-warm" aria-hidden="true"><div class="ruler-inner" id="r1"></div></div>
 
-<!-- 01 OVERVIEW -->
-<section class="cs-section fade-up">
-  <div class="section-head">
+<!-- 01 · OVERVIEW -->
+<section class="cs-section">
+  <div class="section-header">
     <span class="section-num">01</span>
-    <span class="section-tag">Overview</span>
-    <div class="section-rule"></div>
+    <span class="section-label">Overview</span>
+    <div class="section-line"></div>
   </div>
-  <div class="split">
-    <h2>The rules governing local Medicare claims lived in a mainframe almost no one could read.</h2>
-    <div class="split-body">
-      <p>CMS sets national Medicare policy, but that policy can't anticipate every local claim scenario. <strong>MACs — the regional contractors who process Medicare claims</strong> — fill those gaps with localized business rules that determine how specific claims are handled.</p>
-      <p>Those rules were authored and maintained in legacy, mainframe-based tools. The logic was hard to see, slow to change, and easy to get wrong, with little transparency into what a rule actually did or why.</p>
-      <p>The goal: give MACs a <strong>clearer, faster, and more transparent</strong> way to create and manage the localized rules they're responsible for.</p>
+  <div class="cs-cols">
+    <p class="cs-lede reveal">The rules governing local Medicare claims lived in a mainframe almost no one could read.</p>
+    <div class="cs-body reveal">
+      <p>
+        CMS sets national Medicare policy, but that policy can't anticipate every local claim scenario. <strong>MACs —
+        the regional contractors who process Medicare claims</strong> — fill those gaps with localized business
+        rules that determine how specific claims are handled.
+      </p>
+      <p>
+        Those rules were authored and maintained in legacy, mainframe-based tools. The logic was hard to see, slow
+        to change, and easy to get wrong, with little transparency into what a rule actually did or why.
+      </p>
+      <p>
+        The goal: give MACs a <strong>clearer, faster, and more transparent</strong> way to create and manage the
+        localized rules they're responsible for.
+      </p>
     </div>
   </div>
 </section>
 
-<!-- CURRENT-STATE PROCESS -->
-<section class="cs-section fade-up" style="padding-top:0;">
-  <div class="sub-label">
-    <span class="sub-label-arrow">›</span>
-    <span class="sub-label-text">Current-State Process</span>
-    <div class="sub-label-rule"></div>
-  </div>
-  <div class="split">
-    <h2>Implementing a single rule change today runs through <em>five roles</em> and takes <em>30–90 days.</em></h2>
-    <div class="split-body">
-      <p>Mapping the existing BPMN process made the cost of the legacy tooling concrete: a policy change request hands off from CMS to business analysts, coders, testers, and operations — with a test-fail loop back to revision — before rules ever reach production. Every handoff is a place for delay, rework, and lost context.</p>
-    </div>
-  </div>
-  <div class="diagram-wrap">
-    <img src="images/cms_bpmn_diagram.svg" alt="CMS Business Rules Implementation Process BPMN Diagram showing five swimlanes and 30-90 day timeline">
-  </div>
-  <div class="diagram-caption">
-    <span class="diagram-label">Fig.01</span>
-    <span>Current-state BPMN: a change request travels five swimlanes — CMS, Business Analyst, Coder, Tester, Operations — with a UAT fail-loop, over 30–90 days from request to deployment.</span>
-  </div>
-</section>
-
-<!-- 02 PROBLEM STATEMENT -->
-<section class="cs-section fade-up" style="padding-top:0;">
-  <div class="section-head">
+<!-- 02 · PROBLEM STATEMENT -->
+<section class="cs-section">
+  <div class="section-header">
     <span class="section-num">02</span>
-    <span class="section-tag">Problem Statement</span>
-    <div class="section-rule"></div>
+    <span class="section-label">Problem Statement</span>
+    <div class="section-line"></div>
   </div>
-  <div style="font-family:var(--mono); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--orange); margin-bottom:20px;">Mac-Controlled Business Rules</div>
-  <div class="split">
-    <h2>CMS policy can't cover every scenario — and the tools MACs used to fill the gap worked against them.</h2>
-    <div class="split-body">
-      <p>MACs had the expertise to write the rules national policy left open. What they lacked was tooling that made that work transparent, quick, and clear.</p>
+  <div class="cs-cols" style="margin-bottom: 8px;">
+    <p class="cs-lede reveal"><span style="font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 16px;">MAC-Controlled Business Rules</span>CMS policy can't cover every scenario — and the tools MACs used to fill the gap worked against them.</p>
+    <div class="cs-body reveal">
+      <p>
+        MACs had the expertise to write the rules national policy left open. What they lacked was tooling that made
+        that work transparent, quick, and clear.
+      </p>
     </div>
   </div>
-  <div class="problem-list">
-    <div class="problem-item">
-      <span class="problem-num">01</span>
-      <span class="problem-text"><strong>CMS policy updates don't address every scenario</strong> — and MACs fill the gap with localized business rules.</span>
-    </div>
-    <div class="problem-item">
-      <span class="problem-num">02</span>
-      <span class="problem-text"><strong>MACs need a better way</strong> to create and manage those localized business rules.</span>
-    </div>
-    <div class="problem-item">
-      <span class="problem-num">03</span>
-      <span class="problem-text"><strong>Legacy mainframe-based tools</strong> hinder transparency, speed, and clarity.</span>
-    </div>
+  <div class="takeaways reveal" style="margin-top: 40px;">
+    <div class="takeaway"><span class="tk-mark" style="font-size:14px;">01</span><span class="tk-text"><strong>CMS policy updates don't address every scenario</strong> — and MACs fill the gap with localized business rules.</span></div>
+    <div class="takeaway"><span class="tk-mark" style="font-size:14px;">02</span><span class="tk-text"><strong>MACs need a better way</strong> to create and manage those localized business rules.</span></div>
+    <div class="takeaway"><span class="tk-mark" style="font-size:14px;">03</span><span class="tk-text"><strong>Legacy mainframe-based tools</strong> hinder transparency, speed, and clarity.</span></div>
   </div>
 
-  <div class="diagram-wrap" style="margin-top:48px;">
-    <img src="images/cms_system_architecture.svg" alt="Problem-Approach-Outcome diagram showing MACs, CMS, and Beneficiaries served">
+  <div class="section-header" style="margin-top: 64px;">
+    <span class="section-num">▸</span>
+    <span class="section-label">Current-State Process</span>
+    <div class="section-line"></div>
   </div>
-  <div class="diagram-caption">
-    <span class="diagram-label">Diagram</span>
-    <span>Framing the work: from problem through approach to outcome, across the three groups it serves.</span>
+  <div class="cs-cols" style="margin-bottom: 8px;">
+    <p class="cs-lede reveal">Implementing a single rule change today runs through <em>five roles</em> and takes <em>30–90 days</em>.</p>
+    <div class="cs-body reveal">
+      <p>
+        Mapping the existing BPMN process made the cost of the legacy tooling concrete: a policy change request
+        hands off from CMS to business analysts, coders, testers, and operations — with a test-fail loop back to
+        revision — before rules ever reach production. Every handoff is a place for delay, rework, and lost context.
+      </p>
+    </div>
+  </div>
+  <figure class="figure reveal" style="margin-top: 36px;">
+    <div class="diagram-plate">
+      <img src="images/cms-bpmn-current-state.png" alt="BPMN diagram of the current CMS business-rules implementation process, showing handoffs across CMS, MAC Business Analyst, MAC Coder, MAC Tester, and MAC Operations swimlanes over a 30–90 day timeline.">
+    </div>
+    <figcaption class="figure-cap" style="margin-top: 14px;">
+      <span class="fig-n">FIG.01</span>
+      <span class="fig-text">Current-state BPMN: a change request travels five swimlanes — CMS, Business Analyst, Coder, Tester, Operations — with a UAT fail-loop, over 30–90 days from request to deployment.</span>
+    </figcaption>
+  </figure>
+
+  <figure class="flow-diagram reveal" style="margin-top: 48px;">
+    <div class="flow-top">
+      <div class="flow-step">
+        <div class="flow-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="24" cy="24" r="20"/>
+            <line x1="24" y1="13" x2="24" y2="27"/>
+            <circle cx="24" cy="34" r="1.4" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>
+        <div class="flow-label">Problem</div>
+        <p class="flow-desc">MACs require autonomy to implement rules that comply with CMS policies.</p>
+      </div>
+      <div class="flow-arrow" aria-hidden="true">
+        <svg viewBox="0 0 54 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="4" y1="12" x2="44" y2="12"/>
+          <path d="M37 5 l8 7 l-8 7"/>
+        </svg>
+      </div>
+      <div class="flow-step is-accent">
+        <div class="flow-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="7" width="30" height="21" rx="1.5"/>
+            <circle cx="24" cy="16" r="4.6"/>
+            <line x1="22" y1="22.5" x2="26" y2="22.5"/>
+            <line x1="24" y1="28" x2="24" y2="34"/>
+            <path d="M16 41 l8 -7 l8 7"/>
+          </svg>
+        </div>
+        <div class="flow-label">Approach</div>
+        <p class="flow-desc">Explore solution pathways to integrate Business Rules within a modern portal.</p>
+      </div>
+      <div class="flow-arrow" aria-hidden="true">
+        <svg viewBox="0 0 54 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="4" y1="12" x2="44" y2="12"/>
+          <path d="M37 5 l8 7 l-8 7"/>
+        </svg>
+      </div>
+      <div class="flow-step is-muted">
+        <div class="flow-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M42 24 a18 18 0 1 1 -6.5 -13.9"/>
+            <path d="M16 23 l6.5 6.5 L40 12"/>
+          </svg>
+        </div>
+        <div class="flow-label">Outcome</div>
+        <p class="flow-desc">Actionable concepts that balance MAC autonomy with CMS-aligned decision-making.</p>
+      </div>
+    </div>
+    <div class="flow-connector" aria-hidden="true"></div>
+    <div class="flow-personas">
+      <div class="flow-persona">
+        <div class="flow-persona-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="18" cy="18" r="6"/>
+            <path d="M8 38 v-2 a10 10 0 0 1 20 0 v2"/>
+            <circle cx="33" cy="20" r="4.6"/>
+            <path d="M31 30.5 a8.5 8.5 0 0 1 9 7.5"/>
+          </svg>
+        </div>
+        <div class="flow-persona-label">MACs</div>
+      </div>
+      <div class="flow-persona">
+        <div class="flow-persona-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M24 7 l16 7.5 H8 Z"/>
+            <line x1="12.5" y1="18" x2="12.5" y2="35"/>
+            <line x1="20" y1="18" x2="20" y2="35"/>
+            <line x1="28" y1="18" x2="28" y2="35"/>
+            <line x1="35.5" y1="18" x2="35.5" y2="35"/>
+            <line x1="8" y1="40" x2="40" y2="40"/>
+          </svg>
+        </div>
+        <div class="flow-persona-label">CMS</div>
+      </div>
+      <div class="flow-persona">
+        <div class="flow-persona-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="24" cy="17" r="7"/>
+            <path d="M11 40 v-2 a13 13 0 0 1 26 0 v2"/>
+          </svg>
+        </div>
+        <div class="flow-persona-label">Beneficiaries</div>
+      </div>
+    </div>
+    <figcaption class="figure-cap" style="justify-content:center; margin-top: 28px;">
+      <span class="fig-n">DIAGRAM</span>
+      <span class="fig-text">Framing the work: from problem through approach to outcome, across the three groups it serves.</span>
+    </figcaption>
+  </figure>
+
+  <div class="cs-callout reveal" style="margin-top: 48px;">
+    <div class="co-label">The Problem</div>
+    <blockquote class="co-quote">
+      "The expertise was never the gap — <strong>the tooling was.</strong>
+      Built for a mainframe, not for the people maintaining the rules."
+    </blockquote>
   </div>
 </section>
 
-<!-- DARK PULLQUOTE -->
-<div class="dark-block fade-up">
-  <div class="dark-block-label">The Problem</div>
-  <blockquote class="dark-quote">"The expertise was never the gap — <em>the tooling was.</em> Built for a mainframe, not for the people maintaining the rules."</blockquote>
-</div>
-
 <!-- RULER -->
-<div class="ruler" style="margin-top:0;" aria-hidden="true"><div class="ruler-inner" id="ruler2"></div></div>
+<div class="ruler-strip" aria-hidden="true"><div class="ruler-inner" id="r2"></div></div>
 
-<!-- 03 USERS & AUDIENCE -->
-<section class="cs-section fade-up">
-  <div class="section-head">
+<!-- 03 · USERS & AUDIENCE -->
+<section class="cs-section">
+  <div class="section-header">
     <span class="section-num">03</span>
-    <span class="section-tag">Users &amp; Audience</span>
-    <div class="section-rule"></div>
+    <span class="section-label">Users &amp; Audience</span>
+    <div class="section-line"></div>
   </div>
-  <div class="split">
-    <h2>Built for the MAC staff who own the rules — and faithful to the precision Medicare claims demand.</h2>
-    <div class="split-body">
-      <p>The tool had to serve people with deep claims and policy expertise but no engineering background, while still producing logic precise enough to govern real Medicare claims correctly.</p>
+  <div class="cs-cols" style="margin-bottom: 8px;">
+    <p class="cs-lede reveal">Built for the MAC staff who own the rules — and faithful to the precision Medicare claims demand.</p>
+    <div class="cs-body reveal">
+      <p>
+        The tool had to serve people with deep claims and policy expertise but no engineering background, while
+        still producing logic precise enough to govern real Medicare claims correctly.
+      </p>
     </div>
   </div>
-  <div class="user-rows">
-    <div class="user-row">
-      <div>
-        <div class="user-role-label">Primary</div>
-        <div class="user-role-name">MAC rule authors</div>
-      </div>
-      <div class="user-role-desc">Medicare Administrative Contractor staff who create and maintain localized business rules. Deep claims and policy expertise; underserved by legacy mainframe tooling.</div>
+  <div class="def-rows">
+    <div class="def-row reveal">
+      <div class="def-key"><span class="def-tag">Primary</span><span class="def-name">MAC rule authors</span></div>
+      <p class="def-val">Medicare Administrative Contractor staff who create and maintain localized business rules. Deep claims and policy expertise; underserved by legacy mainframe tooling.</p>
     </div>
-    <div class="user-row">
-      <div>
-        <div class="user-role-label">Secondary</div>
-        <div class="user-role-name">Engineering &amp; maintainers</div>
-      </div>
-      <div class="user-role-desc">Maintain the underlying system and need authored rules to map cleanly and predictably to how claims are actually processed.</div>
+    <div class="def-row reveal">
+      <div class="def-key"><span class="def-tag">Secondary</span><span class="def-name">Engineering &amp; maintainers</span></div>
+      <p class="def-val">Maintain the underlying system and need authored rules to map cleanly and predictably to how claims are actually processed.</p>
     </div>
-    <div class="user-row">
-      <div>
-        <div class="user-role-label">Stakeholders</div>
-        <div class="user-role-name">CMS &amp; program owners</div>
-      </div>
-      <div class="user-role-desc">Own national policy and depend on MACs applying it consistently, transparently, and correctly across regions.</div>
+    <div class="def-row reveal">
+      <div class="def-key"><span class="def-tag">Stakeholders</span><span class="def-name">CMS &amp; program owners</span></div>
+      <p class="def-val">Own national policy and depend on MACs applying it consistently, transparently, and correctly across regions.</p>
     </div>
-    <div class="user-row">
-      <div>
-        <div class="user-role-label">Affected</div>
-        <div class="user-role-name">Providers &amp; beneficiaries</div>
-      </div>
-      <div class="user-role-desc">Never see the tool, but experience its output: how their Medicare claims are evaluated, paid, or denied.</div>
+    <div class="def-row reveal">
+      <div class="def-key"><span class="def-tag">Affected</span><span class="def-name">Providers &amp; beneficiaries</span></div>
+      <p class="def-val">Never see the tool, but experience its output: how their Medicare claims are evaluated, paid, or denied.</p>
     </div>
   </div>
 </section>
 
-<!-- 04 ROLES & RESPONSIBILITIES -->
-<section class="cs-section fade-up" style="padding-top:0;">
-  <div class="section-head">
+<!-- 04 · ROLES & RESPONSIBILITIES -->
+<section class="cs-section tight">
+  <div class="section-header">
     <span class="section-num">04</span>
-    <span class="section-tag">Roles &amp; Responsibilities</span>
-    <div class="section-rule"></div>
+    <span class="section-label">Roles &amp; Responsibilities</span>
+    <div class="section-line"></div>
   </div>
-  <div class="split">
-    <h2>I translated dense conditional logic into an interface a non-engineer could reason about.</h2>
-    <div class="split-body">
-      <p>I led research with MAC rule authors and the engineers who maintained the existing tools, then designed the information architecture and interaction model for the rule builder — from how a single condition reads to how nested AND/OR logic stays comprehensible as it grows.</p>
-      <p>The core challenge was <strong>cognitive</strong>: making branching logic feel structured rather than tangled. I used Human Factors principles to externalize state, preview consequences before publishing, and prevent the class of errors that used to reach production.</p>
+  <div class="cs-cols">
+    <p class="cs-lede reveal">I translated dense conditional logic into an interface a non-engineer could reason about.</p>
+    <div class="cs-body reveal">
+      <p>
+        I led research with MAC rule authors and the engineers who maintained the existing tools, then designed
+        the information architecture and interaction model for the rule builder — from how a single condition reads
+        to how nested AND/OR logic stays comprehensible as it grows.
+      </p>
+      <p>
+        The core challenge was <strong>cognitive</strong>: making branching logic feel structured rather than
+        tangled. I used Human Factors principles to externalize state, preview consequences before publishing, and
+        prevent the class of errors that used to reach production.
+      </p>
     </div>
   </div>
 </section>
 
 <!-- RULER -->
-<div class="ruler" aria-hidden="true"><div class="ruler-inner" id="ruler3"></div></div>
+<div class="ruler-strip ruler-warm" aria-hidden="true"><div class="ruler-inner" id="r3"></div></div>
 
-<!-- 05 SCOPE & CONSTRAINTS -->
-<section class="cs-section fade-up">
-  <div class="section-head">
+<!-- 05 · SCOPE & CONSTRAINTS -->
+<section class="cs-section">
+  <div class="section-header">
     <span class="section-num">05</span>
-    <span class="section-tag">Scope &amp; Constraints</span>
-    <div class="section-rule"></div>
+    <span class="section-label">Scope &amp; Constraints</span>
+    <div class="section-line"></div>
   </div>
-  <div class="scope-box">
-    <div class="scope-col">
-      <div class="scope-col-label">In Scope</div>
-      <div class="scope-item"><span class="scope-plus">+</span><span>The visual <strong>rule-authoring UI</strong> — conditions, operators, groups</span></div>
-      <div class="scope-item"><span class="scope-plus">+</span><span>An always-visible <strong>plain-language summary</strong> of the rule</span></div>
-      <div class="scope-item"><span class="scope-plus">+</span><span><strong>Preview / test</strong> of inputs before publishing</span></div>
-      <div class="scope-item"><span class="scope-plus">+</span><span><strong>Validation, conflict warnings,</strong> and a review step</span></div>
+  <div class="split-cols reveal">
+    <div class="split-col">
+      <div class="split-head">In Scope</div>
+      <div class="spec-item"><span class="si-mark">+</span><span class="si-text">The visual <strong>rule-authoring UI</strong> — conditions, operators, groups</span></div>
+      <div class="spec-item"><span class="si-mark">+</span><span class="si-text">An always-visible plain-language summary of the rule</span></div>
+      <div class="spec-item"><span class="si-mark">+</span><span class="si-text">Preview / test of inputs before publishing</span></div>
+      <div class="spec-item"><span class="si-mark">+</span><span class="si-text">Validation, conflict warnings, and a review step</span></div>
     </div>
-    <div class="scope-col">
-      <div class="scope-col-label">Constraints</div>
-      <div class="scope-item"><span class="scope-minus">–</span><span>Had to map exactly onto the existing rule engine</span></div>
-      <div class="scope-item"><span class="scope-minus">–</span><span>Must support deeply nested AND/OR logic without losing legibility</span></div>
-      <div class="scope-item"><span class="scope-minus">–</span><span>Zero tolerance for changes that break production</span></div>
-      <div class="scope-item"><span class="scope-minus">–</span><span>Learnable by non-engineers with no formal training</span></div>
+    <div class="split-col">
+      <div class="split-head">Constraints</div>
+      <div class="spec-item"><span class="si-mark">—</span><span class="si-text">Had to map exactly onto the existing rule engine</span></div>
+      <div class="spec-item"><span class="si-mark">—</span><span class="si-text">Must support deeply nested AND/OR logic without losing legibility</span></div>
+      <div class="spec-item"><span class="si-mark">—</span><span class="si-text">Zero tolerance for changes that break production</span></div>
+      <div class="spec-item"><span class="si-mark">—</span><span class="si-text">Learnable by non-engineers with no formal training</span></div>
     </div>
   </div>
 </section>
 
-<!-- 06 PROCESS & WHAT I DID -->
-<section class="cs-section fade-up">
-  <div class="section-head">
+<!-- 06 · PROCESS & WHAT I DID -->
+<section class="cs-section tight">
+  <div class="section-header">
     <span class="section-num">06</span>
-    <span class="section-tag">Process &amp; What I Did</span>
-    <div class="section-rule"></div>
+    <span class="section-label">Process &amp; What I Did</span>
+    <div class="section-line"></div>
   </div>
-  <div class="split">
-    <h2>A multi-method research effort — system analysis, stakeholder interviews, and collaborative workshops — to <em>teach current workflows</em> to engineers and explore what a modern system could be.</h2>
-    <div class="split-body">
-      <p>I led the effort end to end, combining system analysis, stakeholder interviews, and collaborative workshops to surface how MAC rule work actually happens — then carried that understanding forward to explore solution pathways for a modern business-rules system.</p>
+  <div class="cs-cols" style="margin-bottom: 8px;">
+    <p class="cs-lede reveal">A multi-method research effort — system analysis, stakeholder interviews, and collaborative workshops — to <em>teach current workflows</em> to engineers and explore what a modern system could be.</p>
+    <div class="cs-body reveal">
+      <p>
+        I led the effort end to end, combining system analysis, stakeholder interviews, and collaborative
+        workshops to surface how MAC rule work actually happens — then carried that understanding forward to
+        explore solution pathways for a modern business-rules system.
+      </p>
     </div>
   </div>
 
-  <div class="sub-label" style="margin-top:48px;">
-    <span class="sub-label-arrow">›</span>
-    <span class="sub-label-text">The Process</span>
-    <div class="sub-label-rule"></div>
+  <div class="section-header" style="margin-top: 56px;">
+    <span class="section-num">▸</span>
+    <span class="section-label">The Process</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="takeaways reveal" style="margin-top: 0;">
+    <div class="takeaway"><span class="tk-mark" style="font-size:14px;">01</span><span class="tk-text"><strong>Understand current MAC workflows</strong> for creating, editing, and auditing rules.</span></div>
+    <div class="takeaway"><span class="tk-mark" style="font-size:14px;">02</span><span class="tk-text"><strong>Identify constraints</strong> — business, technical, and policy — that shape rule implementation.</span></div>
+    <div class="takeaway"><span class="tk-mark" style="font-size:14px;">03</span><span class="tk-text"><strong>Explore modernization opportunities</strong> that maintain compliance and efficiency.</span></div>
   </div>
 
-  <div class="process-goals">
-    <div class="process-goal">
-      <span class="process-goal-num">01</span>
-      <span><strong>Understand current MAC workflows</strong> for creating, editing, and auditing rules.</span>
+  <figure class="double-diamond reveal" style="margin-top: 48px;">
+    <div class="dd-stage">
+      <svg class="dd-svg" viewBox="0 0 1360 720" fill="none" preserveAspectRatio="none" aria-hidden="true">
+        <g stroke="var(--accent)" stroke-width="4" stroke-linejoin="round">
+          <polygon points="345,40 680,360 345,680 10,360"/>
+          <polygon points="1015,40 1350,360 1015,680 680,360"/>
+        </g>
+        <g stroke="var(--accent)" stroke-width="2.5" stroke-dasharray="9 9" stroke-linecap="round">
+          <ellipse cx="345" cy="382" rx="190" ry="86"/>
+          <ellipse cx="1015" cy="382" rx="190" ry="86"/>
+        </g>
+        <g stroke="var(--accent)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <path d="M227.6 370 A22 22 0 1 1 202.4 370"/>
+          <polyline points="195,374 203,366 211,373"/>
+          <path d="M897.6 370 A22 22 0 1 1 872.4 370"/>
+          <polyline points="865,374 873,366 881,373"/>
+        </g>
+      </svg>
+      <div class="dd-overlay">
+        <div class="dd-node" style="left:25.4%; top:24%;"><div class="dd-label">Discover</div></div>
+        <div class="dd-cluster" style="left:25.4%; top:53%;">
+          <div class="dd-cluster-icon" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="13" cy="13" r="9"/><line x1="20" y1="20" x2="28" y2="28"/>
+            </svg>
+          </div>
+          <div class="dd-cluster-words">Research<br>Interviews<br>Mapping</div>
+        </div>
+        <div class="dd-node" style="left:25.4%; top:78%;"><div class="dd-label">Define</div><div class="dd-sub">Insights<br>Themes</div></div>
+
+        <div class="dd-node" style="left:74.6%; top:24%;"><div class="dd-label">Develop</div></div>
+        <div class="dd-cluster" style="left:74.6%; top:53%;">
+          <div class="dd-cluster-icon" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 4 a8 8 0 0 1 5 14 c-1 1-1.4 2-1.4 3 h-7.2 c0-1-0.4-2-1.4-3 a8 8 0 0 1 5-14 z"/>
+              <line x1="12.6" y1="25" x2="19.4" y2="25"/><line x1="13.6" y1="28" x2="18.4" y2="28"/>
+            </svg>
+          </div>
+          <div class="dd-cluster-words">Ideation<br>Concepts</div>
+        </div>
+        <div class="dd-node" style="left:74.6%; top:78%;"><div class="dd-label">Deliver</div><div class="dd-sub">Solution<br>Options</div></div>
+      </div>
     </div>
-    <div class="process-goal">
-      <span class="process-goal-num">02</span>
-      <span><strong>Identify constraints</strong> — business, technical, and policy — that shape rule implementation.</span>
-    </div>
-    <div class="process-goal">
-      <span class="process-goal-num">03</span>
-      <span><strong>Explore modernization opportunities</strong> that maintain compliance and efficiency.</span>
-    </div>
+    <figcaption class="figure-cap" style="justify-content:center; margin-top: 28px;">
+      <span class="fig-n">DIAGRAM</span>
+      <span class="fig-text">A Double Diamond shaped the work — diverging to discover, converging to define, then again to develop and deliver.</span>
+    </figcaption>
+  </figure>
+
+  <div class="section-header" style="margin-top: 64px;">
+    <span class="section-num">▸</span>
+    <span class="section-label">Methods</span>
+    <div class="section-line"></div>
   </div>
-
-  <!-- Double Diamond -->
-  <div class="double-diamond-wrap" style="margin-top:48px;">
-    <svg viewBox="0 0 800 360" xmlns="http://www.w3.org/2000/svg" width="100%">
-      <!-- Left diamond -->
-      <polygon points="200,20 380,180 200,340 20,180" fill="none" stroke="#C45C28" stroke-width="1.5"/>
-      <!-- Right diamond -->
-      <polygon points="600,20 780,180 600,340 420,180" fill="none" stroke="#C45C28" stroke-width="1.5"/>
-
-      <!-- Left oval -->
-      <ellipse cx="200" cy="180" rx="90" ry="52" fill="none" stroke="#C45C28" stroke-width="1" stroke-dasharray="4 3"/>
-      <!-- Right oval -->
-      <ellipse cx="600" cy="180" rx="90" ry="52" fill="none" stroke="#C45C28" stroke-width="1" stroke-dasharray="4 3"/>
-
-      <!-- Left diamond labels -->
-      <text x="200" y="56" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="13" font-weight="700" letter-spacing="1" fill="#1A1410">DISCOVER</text>
-      <text x="200" y="322" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="13" font-weight="700" letter-spacing="1" fill="#1A1410">DEFINE</text>
-      <text x="200" y="338" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="11" fill="#7A7268">Insights · Themes</text>
-
-      <!-- Right diamond labels -->
-      <text x="600" y="56" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="13" font-weight="700" letter-spacing="1" fill="#1A1410">DEVELOP</text>
-      <text x="600" y="322" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="13" font-weight="700" letter-spacing="1" fill="#1A1410">DELIVER</text>
-      <text x="600" y="338" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="11" fill="#7A7268">Solution Options</text>
-
-      <!-- Left oval content -->
-      <text x="188" y="172" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="11" fill="#1A1410">Research</text>
-      <text x="188" y="186" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="11" fill="#1A1410">Interviews</text>
-      <text x="188" y="200" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="11" fill="#1A1410">Mapping</text>
-
-      <!-- Right oval content -->
-      <text x="600" y="176" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="11" fill="#1A1410">Ideation</text>
-      <text x="600" y="192" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="11" fill="#1A1410">Concepts</text>
-    </svg>
-  </div>
-  <div class="diagram-caption">
-    <span class="diagram-label">Diagram</span>
-    <span>A Double Diamond shaped the work — diverging to discover, converging to define, then again to develop and deliver.</span>
-  </div>
-
-  <div class="sub-label" style="margin-top:40px;">
-    <span class="sub-label-arrow">›</span>
-    <span class="sub-label-text">Methods</span>
-    <div class="sub-label-rule"></div>
-  </div>
-
-  <div class="methods">
-    <div class="method-item">
-      <span class="method-num">01</span>
-      <div class="method-name">Stakeholder Interviews</div>
-      <div class="method-desc">Gathered first-hand perspectives from MAC analysts, coders, testers, and CMS stakeholders.</div>
+  <div class="def-rows">
+    <div class="def-row reveal">
+      <div class="def-key"><span class="def-tag">01</span><span class="def-name">Stakeholder Interviews</span></div>
+      <p class="def-val">Gathered first-hand perspectives from MAC analysts, coders, testers, and CMS stakeholders.</p>
     </div>
-    <div class="method-item">
-      <span class="method-num">02</span>
-      <div class="method-name">Workshop Series</div>
-      <div class="method-desc">Structured brainstorming for solution generation, with breakout sessions for deep dives on integration, usability, and scalability — plus collaborative mapping of end-to-end rule-creation workflows.</div>
+    <div class="def-row reveal">
+      <div class="def-key"><span class="def-tag">02</span><span class="def-name">Workshop Series</span></div>
+      <p class="def-val">Structured brainstorming for solution generation, with breakout sessions for deep dives on integration, usability, and scalability — plus collaborative mapping of end-to-end rule-creation workflows.</p>
     </div>
-    <div class="method-item">
-      <span class="method-num">03</span>
-      <div class="method-name">System Analysis</div>
-      <div class="method-desc">Reviewed MAP's capabilities, mainframe infrastructure, and potential third-party integration points.</div>
+    <div class="def-row reveal">
+      <div class="def-key"><span class="def-tag">03</span><span class="def-name">System Analysis</span></div>
+      <p class="def-val">Reviewed MAP's capabilities, mainframe infrastructure, and potential third-party integration points.</p>
     </div>
   </div>
 
-  <div class="diagram-wrap" style="margin-top:40px;">
-    <img src="images/cms_research_methodology.svg" alt="Research methodology timeline showing Discovery, Workshops, System Analysis, Synthesis, and Solution Concepts">
-  </div>
-  <div class="diagram-caption">
-    <span class="diagram-label">Timeline</span>
-    <span>The activities leading to a set of viable pathways to modernize MAC-controlled business rules.</span>
-  </div>
+  <figure class="timeline reveal" style="margin-top: 48px;">
+    <div class="timeline-inner">
+      <div class="tl-row tl-icons">
+        <div class="tl-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="20" cy="20" r="13"/><line x1="30" y1="30" x2="42" y2="42"/>
+          </svg>
+        </div>
+        <div class="tl-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="10" y="16" width="20" height="20" rx="3"/><rect x="18" y="9" width="20" height="20" rx="3"/>
+          </svg>
+        </div>
+        <div class="tl-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="24" y1="13" x2="24" y2="35"/><line x1="13" y1="24" x2="35" y2="24"/>
+            <circle cx="24" cy="24" r="3.4" fill="currentColor" stroke="none"/>
+            <circle cx="24" cy="11" r="3.2" fill="currentColor" stroke="none"/>
+            <circle cx="24" cy="37" r="3.2" fill="currentColor" stroke="none"/>
+            <circle cx="11" cy="24" r="3.2" fill="currentColor" stroke="none"/>
+            <circle cx="37" cy="24" r="3.2" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>
+        <div class="tl-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 13 L38 13 L28 27 L28 38 L20 42 L20 27 Z"/>
+          </svg>
+        </div>
+        <div class="tl-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="24" cy="24" r="15"/><rect x="17" y="21" width="14" height="6" rx="3" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>
+      </div>
+      <div class="tl-row tl-line">
+        <div class="tl-cell"><span class="tl-dot"></span></div>
+        <div class="tl-cell"><span class="tl-dot"></span></div>
+        <div class="tl-cell"><span class="tl-dot"></span></div>
+        <div class="tl-cell"><span class="tl-dot"></span></div>
+        <div class="tl-cell"><span class="tl-dot"></span></div>
+      </div>
+      <div class="tl-row tl-labels">
+        <div class="tl-label">Discovery</div>
+        <div class="tl-label">Workshops</div>
+        <div class="tl-label">System<br>Analysis</div>
+        <div class="tl-label">Synthesis</div>
+        <div class="tl-label">Solution<br>Concepts</div>
+      </div>
+    </div>
+    <figcaption class="figure-cap" style="justify-content:center; margin-top: 32px;">
+      <span class="fig-n">TIMELINE</span>
+      <span class="fig-text">The activities leading to a set of viable pathways to modernize MAC-controlled business rules.</span>
+    </figcaption>
+  </figure>
 </section>
 
-<!-- 07 OUTCOMES & LESSONS -->
-<section class="cs-section fade-up">
-  <div class="section-head">
+<!-- RULER -->
+<div class="ruler-strip ruler-warm" aria-hidden="true"><div class="ruler-inner" id="r4"></div></div>
+
+<!-- 07 · OUTCOMES & LESSONS -->
+<section class="cs-section">
+  <div class="section-header">
     <span class="section-num">07</span>
-    <span class="section-tag">Outcomes &amp; Lessons</span>
-    <div class="section-rule"></div>
+    <span class="section-label">Outcomes &amp; Lessons</span>
+    <div class="section-line"></div>
   </div>
-  <div class="split">
-    <h2>The work delivered a set of <em>viable, side-by-side-evaluated pathways</em> to modernize MAC-controlled business rules.</h2>
-    <div class="split-body">
-      <p>Rather than a single recommendation, the research produced a decision framework: three solution options assessed against shared evaluation criteria, with the trade-offs of each made explicit so CMS and MAC stakeholders could make an informed build-, integrate-, or buy-decision.</p>
+  <div class="cs-cols" style="margin-bottom: 8px;">
+    <p class="cs-lede reveal">The work delivered a set of <em>viable, side-by-side-evaluated pathways</em> to modernize MAC-controlled business rules.</p>
+    <div class="cs-body reveal">
+      <p>
+        Rather than a single recommendation, the research produced a decision framework: three solution options
+        assessed against shared evaluation criteria, with the trade-offs of each made explicit so CMS and MAC
+        stakeholders could make an informed build-, integrate-, or buy-decision.
+      </p>
     </div>
   </div>
 
-  <!-- Comparison Table -->
-  <div class="comparison-intro">
-    <table class="comparison-table">
-      <thead>
-        <tr>
-          <th style="width:80px;"></th>
-          <th class="col-head">Custom-Built MAP Capability<span class="col-underline"></span></th>
-          <th class="col-head">Mainframe Integration<span class="col-underline"></span></th>
-          <th class="col-head">Third-Party Service<span class="col-underline"></span></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><span class="row-label pros">PROS</span></td>
-          <td>
-            <ul class="comp-list">
-              <li><span class="comp-dot green"></span>Tailored specifically to CMS/MAC operational requirements</li>
-              <li><span class="comp-dot green"></span>Seamless integration with existing MAC infrastructure and workflows</li>
-              <li><span class="comp-dot green"></span>Long-term flexibility for future policy changes and enhancements</li>
-              <li><span class="comp-dot green"></span>Complete control over features, security, and compliance measures</li>
-            </ul>
-          </td>
-          <td>
-            <ul class="comp-list">
-              <li><span class="comp-dot green"></span>Leverages existing mainframe infrastructure and investments</li>
-              <li><span class="comp-dot green"></span>Faster initial deployment using established system architecture</li>
-              <li><span class="comp-dot green"></span>Lower short-term implementation costs and resource requirements</li>
-              <li><span class="comp-dot green"></span>Familiar technology stack for existing development teams</li>
-            </ul>
-          </td>
-          <td>
-            <ul class="comp-list">
-              <li><span class="comp-dot green"></span>Potentially faster implementation with pre-built solutions</li>
-              <li><span class="comp-dot green"></span>Modern UI/UX design patterns and user-experience standards</li>
-              <li><span class="comp-dot green"></span>Access to specialized vendor expertise and domain knowledge</li>
-              <li><span class="comp-dot green"></span>Reduced internal development and maintenance overhead</li>
-            </ul>
-          </td>
-        </tr>
-        <tr>
-          <td><span class="row-label cons">CONS</span></td>
-          <td>
-            <ul class="comp-list">
-              <li><span class="comp-dot red"></span>Higher upfront development costs and resource allocation</li>
-              <li><span class="comp-dot red"></span>Longer development timeline before system deployment</li>
-              <li><span class="comp-dot red"></span>Ongoing maintenance burden and technical-support requirements</li>
-              <li><span class="comp-dot red"></span>Risk of scope creep and implementation delays</li>
-            </ul>
-          </td>
-          <td>
-            <ul class="comp-list">
-              <li><span class="comp-dot red"></span>Limited scalability and performance constraints of legacy systems</li>
-              <li><span class="comp-dot red"></span>Continued reliance on aging mainframe infrastructure</li>
-              <li><span class="comp-dot red"></span>Difficult to modernize and adapt for future technological changes</li>
-              <li><span class="comp-dot red"></span>Limited user experience and interface modernization options</li>
-            </ul>
-          </td>
-          <td>
-            <ul class="comp-list">
-              <li><span class="comp-dot red"></span>Vendor lock-in risks and dependency on external provider</li>
-              <li><span class="comp-dot red"></span>Complex integration challenges with existing CMS/MAC systems</li>
-              <li><span class="comp-dot red"></span>Potential compliance and security risks with external data handling</li>
-              <li><span class="comp-dot red"></span>Limited customization options for CMS-specific requirements</li>
-            </ul>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="diagram-caption" style="margin-top:16px;">
-      <span class="diagram-label">Matrix</span>
-      <span>Solution options compared across pros, cons, and shared evaluation criteria.</span>
+  <figure class="matrix reveal" style="margin-top: 40px;">
+    <div class="mx">
+      <div class="mx-row mx-head">
+        <div class="mx-corner"></div>
+        <div class="mx-opt">Custom-Built MAP Capability<span class="mx-bar"></span></div>
+        <div class="mx-opt">Mainframe Integration<span class="mx-bar"></span></div>
+        <div class="mx-opt">Third-Party Service<span class="mx-bar"></span></div>
+      </div>
+      <div class="mx-row mx-pros-row">
+        <div class="mx-tagcell"><span class="mx-tag mx-tag-pos">Pros</span></div>
+        <div class="mx-cell"><ul class="mx-list">
+          <li class="mx-item">Tailored specifically to CMS/MAC operational requirements</li>
+          <li class="mx-item">Seamless integration with existing MAC infrastructure and workflows</li>
+          <li class="mx-item">Long-term flexibility for future policy changes and enhancements</li>
+          <li class="mx-item">Complete control over features, security, and compliance measures</li>
+        </ul></div>
+        <div class="mx-cell"><ul class="mx-list">
+          <li class="mx-item">Leverages existing mainframe infrastructure and investments</li>
+          <li class="mx-item">Faster initial deployment using established system architecture</li>
+          <li class="mx-item">Lower short-term implementation costs and resource requirements</li>
+          <li class="mx-item">Familiar technology stack for existing development teams</li>
+        </ul></div>
+        <div class="mx-cell"><ul class="mx-list">
+          <li class="mx-item">Potentially faster implementation with pre-built solutions</li>
+          <li class="mx-item">Modern UI/UX design patterns and user-experience standards</li>
+          <li class="mx-item">Access to specialized vendor expertise and domain knowledge</li>
+          <li class="mx-item">Reduced internal development and maintenance overhead</li>
+        </ul></div>
+      </div>
+      <div class="mx-row mx-cons-row">
+        <div class="mx-tagcell"><span class="mx-tag mx-tag-neg">Cons</span></div>
+        <div class="mx-cell"><ul class="mx-list">
+          <li class="mx-item">Higher upfront development costs and resource allocation</li>
+          <li class="mx-item">Longer development timeline before system deployment</li>
+          <li class="mx-item">Ongoing maintenance burden and technical-support requirements</li>
+          <li class="mx-item">Risk of scope creep and implementation delays</li>
+        </ul></div>
+        <div class="mx-cell"><ul class="mx-list">
+          <li class="mx-item">Limited scalability and performance constraints of legacy systems</li>
+          <li class="mx-item">Continued reliance on aging mainframe infrastructure</li>
+          <li class="mx-item">Difficult to modernize and adapt for future technological changes</li>
+          <li class="mx-item">Limited user experience and interface modernization options</li>
+        </ul></div>
+        <div class="mx-cell"><ul class="mx-list">
+          <li class="mx-item">Vendor lock-in risks and dependency on external provider</li>
+          <li class="mx-item">Complex integration challenges with existing CMS/MAC systems</li>
+          <li class="mx-item">Potential compliance and security risks with external data handling</li>
+          <li class="mx-item">Limited customization options for CMS-specific requirements</li>
+        </ul></div>
+      </div>
+      <div class="mx-criteria">
+        <div class="mx-criteria-title">Evaluation Criteria</div>
+        <div class="mx-crit-row">
+          <div class="mx-crit">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>
+            Usability
+          </div>
+          <div class="mx-crit">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="5" y1="20" x2="5" y2="14"/><line x1="12" y1="20" x2="12" y2="9"/><line x1="19" y1="20" x2="19" y2="4"/></svg>
+            Scalability
+          </div>
+          <div class="mx-crit">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2.5"/><path d="M8 12.5 l2.6 2.6 L16 9"/></svg>
+            Compliance
+          </div>
+          <div class="mx-crit">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><text x="12" y="16.5" text-anchor="middle" font-family="Space Mono, monospace" font-size="13" font-weight="700" fill="currentColor" stroke="none">$</text></svg>
+            Cost-Effectiveness
+          </div>
+          <div class="mx-crit">
+            <svg viewBox="0 0 24 24" fill="none"><polygon points="13,2 4,14 11,14 9,22 20,9 13,9" fill="currentColor"/></svg>
+            Implementation Speed
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
+  </figure>
+  <figcaption class="figure-cap" style="justify-content:center; margin-top: 20px;">
+    <span class="fig-n">MATRIX</span>
+    <span class="fig-text">Solution options compared across pros, cons, and shared evaluation criteria.</span>
+  </figcaption>
 
-  <!-- Scoring Matrix -->
-  <div class="diagram-wrap" style="margin-top:48px;">
-    <img src="images/cms_solution_options.svg" alt="Solution options evaluation matrix with scoring across usability, scalability, and compliance">
-  </div>
-  <div class="diagram-caption">
-    <span class="diagram-label">Scoring</span>
-    <span>How the engineering team scored each option against the criteria — Custom-Built MAP came out ahead.</span>
-  </div>
+  <figure class="voting-grid reveal" style="margin-top: 48px;">
+    <div class="vg">
+      <div class="vg-row vg-head">
+        <div class="vg-crit-h">Evaluation Criteria</div>
+        <div class="vg-opt">Custom-Built MAP Capability<span class="mx-bar"></span></div>
+        <div class="vg-opt">Mainframe Integration<span class="mx-bar"></span></div>
+        <div class="vg-opt">Third-Party Service<span class="mx-bar"></span></div>
+      </div>
 
-  <div class="diagram-wrap">
-    <img src="images/cms_conclusion.svg" alt="Conclusion and scoring summary showing Custom-Built MAP 12/12, Mainframe 6/12, Third-Party 8/12">
-  </div>
-  <div class="diagram-caption">
-    <span class="diagram-label">Summary</span>
-    <span>Total scores: Custom-Built MAP 12/12 · Mainframe 6/12 · Third-Party 8/12.</span>
-  </div>
+      <div class="vg-row vg-body-row">
+        <div class="vg-crit-cell">
+          <div class="vg-crit-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/></svg>
+          </div>
+          <div><div class="vg-crit-name">Usability</div><div class="vg-crit-desc">User experience &amp; interface design</div></div>
+        </div>
+        <div class="vg-score-cell"><div class="vg-tile r-exc">
+          <div class="vg-marks"><span class="vg-mk vg-mk-y">✓</span><span class="vg-mk vg-mk-y">✓</span><span class="vg-mk vg-mk-y">✓</span><span class="vg-mk vg-mk-y">✓</span></div>
+          <div class="vg-rating">Excellent (4/4)</div><div class="vg-bar"><i style="width:100%"></i></div>
+        </div></div>
+        <div class="vg-score-cell"><div class="vg-tile r-fair">
+          <div class="vg-marks"><span class="vg-mk vg-mk-y">✓</span><span class="vg-mk vg-mk-y">✓</span><span class="vg-mk vg-mk-p">△</span><span class="vg-mk vg-mk-p">△</span></div>
+          <div class="vg-rating">Fair (2/4)</div><div class="vg-bar"><i style="width:50%"></i></div>
+        </div></div>
+        <div class="vg-score-cell"><div class="vg-tile r-good">
+          <div class="vg-marks"><span class="vg-mk vg-mk-y">✓</span><span class="vg-mk vg-mk-y">✓</span><span class="vg-mk vg-mk-y">✓</span><span class="vg-mk vg-mk-p">△</span></div>
+          <div class="vg-rating">Good (3/4)</div><div class="vg-bar"><i style="width:75%"></i></div>
+        </div></div>
+      </div>
 
-  <!-- Scoring Legend -->
-  <div class="scoring-legend">
-    <h4>Scoring Legend</h4>
-    <div class="legend-item"><span class="legend-mark check">✓</span> Meets requirement</div>
-    <div class="legend-item"><span class="legend-mark partial">△</span> Partially meets</div>
-    <div class="legend-item"><span class="legend-mark cross">×</span> Does not meet</div>
-    <p class="legend-scale">Scale: 1–4 points per criterion</p>
-  </div>
+      <div class="vg-row vg-body-row">
+        <div class="vg-crit-cell">
+          <div class="vg-crit-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="5" y1="20" x2="5" y2="13"/><line x1="12" y1="20" x2="12" y2="8"/><line x1="19" y1="20" x2="19" y2="4"/></svg>
+          </div>
+          <div><div class="vg-crit-name">Scalability</div><div class="vg-crit-desc">Growth capacity &amp; performance</div></div>
+        </div>
+        <div class="vg-score-cell"><div class="vg-tile r-exc">
+          <div class="vg-marks"><span class="vg-mk vg-mk-y">✓</span><span class="vg-mk vg-mk-y">✓</span><span class="vg-mk vg-mk-y">✓</span><span class="vg-mk vg-mk-y">✓</span></div>
+          <div class="vg-rating">Excellent (4/4)</div><div class="vg-bar"><i style="width:100%"></i></div>
+        </div></div>
+        <div class="vg-score-cell"><div class="vg-tile r-poor">
+          <div class="vg-marks"><span class="vg-mk vg-mk-y">✓</span><span class="vg-mk vg-mk-n">✗</span><span class="vg-mk vg-mk-n">✗</span><span class="vg-mk vg-mk-n">✗</span></div>
+          <div class="vg-rating">Poor (1/4)</div><div class="vg-bar"><i style="width:25%"></i></div>
+        </div></div>
+        <div class="vg-score-cell"><div class="vg-tile r-good">
+          <div class="vg-marks"><span class="vg-mk vg-mk-y">✓</span><span class="vg-mk vg-mk-y">✓</span><span class="vg-mk vg-mk-y">✓</span><span class="vg-mk vg-mk-p">△</span></div>
+          <div class="vg-rating">Good (3/4)</div><div class="vg-bar"><i style="width:75%"></i></div>
+        </div></div>
+      </div>
 
-  <!-- Lessons -->
-  <div class="sub-label" style="margin-top:56px;">
-    <span class="sub-label-arrow">›</span>
-    <span class="sub-label-text">Lessons</span>
-    <div class="sub-label-rule"></div>
-  </div>
-  <div class="lessons">
-    <div class="lesson">
-      <span class="lesson-arrow">→</span>
-      <p class="lesson-text"><strong>The tooling was the constraint, not the expertise.</strong> MACs already knew the rules — the work was giving them a transparent place to express them.</p>
+      <div class="vg-row vg-body-row">
+        <div class="vg-crit-cell">
+          <div class="vg-crit-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2.5"/><path d="M8 12.5 l2.6 2.6 L16 9"/></svg>
+          </div>
+          <div><div class="vg-crit-name">Compliance</div><div class="vg-crit-desc">CMS requirements &amp; regulations</div></div>
+        </div>
+        <div class="vg-score-cell"><div class="vg-tile r-exc">
+          <div class="vg-marks"><span class="vg-mk vg-mk-y">✓</span><span class="vg-mk vg-mk-y">✓</span><span class="vg-mk vg-mk-y">✓</span><span class="vg-mk vg-mk-y">✓</span></div>
+          <div class="vg-rating">Excellent (4/4)</div><div class="vg-bar"><i style="width:100%"></i></div>
+        </div></div>
+        <div class="vg-score-cell"><div class="vg-tile r-good">
+          <div class="vg-marks"><span class="vg-mk vg-mk-y">✓</span><span class="vg-mk vg-mk-y">✓</span><span class="vg-mk vg-mk-y">✓</span><span class="vg-mk vg-mk-p">△</span></div>
+          <div class="vg-rating">Good (3/4)</div><div class="vg-bar"><i style="width:75%"></i></div>
+        </div></div>
+        <div class="vg-score-cell"><div class="vg-tile r-fair">
+          <div class="vg-marks"><span class="vg-mk vg-mk-y">✓</span><span class="vg-mk vg-mk-y">✓</span><span class="vg-mk vg-mk-p">△</span><span class="vg-mk vg-mk-p">△</span></div>
+          <div class="vg-rating">Fair (2/4)</div><div class="vg-bar"><i style="width:50%"></i></div>
+        </div></div>
+      </div>
+
+      <div class="vg-summary">
+        <div class="vg-summary-title">Total Scores Summary</div>
+        <div class="vg-summary-row">
+          <span class="vg-summary-item win">Custom-Built MAP <b>12/12</b></span>
+          <span class="vg-summary-item">Mainframe <b>6/12</b></span>
+          <span class="vg-summary-item">Third-Party <b>8/12</b></span>
+        </div>
+      </div>
     </div>
-    <div class="lesson">
-      <span class="lesson-arrow">→</span>
-      <p class="lesson-text"><strong>Modernization is a trade-off space, not a single answer.</strong> The most useful outcome was framing the options against shared criteria, not forcing one verdict.</p>
-    </div>
-    <div class="lesson">
-      <span class="lesson-arrow">→</span>
-      <p class="lesson-text"><strong>Bringing engineers into the research paid off.</strong> Workshops that taught current workflows built the shared understanding every option depended on.</p>
-    </div>
+  </figure>
+  <div class="vg-legend">
+    <div class="vg-legend-title">Scoring Legend</div>
+    <div class="vg-legend-item"><span class="vg-mk vg-mk-y">✓</span> Meets requirement</div>
+    <div class="vg-legend-item"><span class="vg-mk vg-mk-p">△</span> Partially meets</div>
+    <div class="vg-legend-item"><span class="vg-mk vg-mk-n">✗</span> Does not meet</div>
+    <div class="vg-legend-scale">Scale: 1–4 points per criterion</div>
+  </div>
+  <figcaption class="figure-cap" style="justify-content:center; margin-top: 20px;">
+    <span class="fig-n">SCORING</span>
+    <span class="fig-text">How the engineering team scored each option against the criteria — Custom-Built MAP came out ahead.</span>
+  </figcaption>
+
+  <div class="section-header" style="margin-top: 64px;">
+    <span class="section-num">▸</span>
+    <span class="section-label">Lessons</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="takeaways reveal" style="margin-top: 0;">
+    <div class="takeaway"><span class="tk-mark">→</span><span class="tk-text"><strong>The tooling was the constraint, not the expertise.</strong> MACs already knew the rules — the work was giving them a transparent place to express them.</span></div>
+    <div class="takeaway"><span class="tk-mark">→</span><span class="tk-text"><strong>Modernization is a trade-off space, not a single answer.</strong> The most useful outcome was framing the options against shared criteria, not forcing one verdict.</span></div>
+    <div class="takeaway"><span class="tk-mark">→</span><span class="tk-text"><strong>Bringing engineers into the research paid off.</strong> Workshops that taught current workflows built the shared understanding every option depended on.</span></div>
   </div>
 </section>
 
-<!-- NEXT CASE STUDY -->
-<a href="HealthInsurance_IDP_CaseStudy.html" class="next-cs fade-up">
-  <div>
-    <div class="next-cs-label">Next Case Study</div>
-    <div class="next-cs-category">Health Insurance</div>
-    <div class="next-cs-title">Internal Developer Platform</div>
-  </div>
-  <div class="next-cs-arrow">→</div>
-</a>
+<!-- NEXT PROJECT -->
+<nav class="cs-next" aria-label="Next case study">
+  <a href="HealthInsurance_IDP_CaseStudy.html">
+    <div class="nx-label">Next Case Study</div>
+    <div class="nx-row">
+      <div>
+        <div class="nx-company">Health Insurance</div>
+        <div class="nx-title">Intelligent Document Processing</div>
+      </div>
+      <span class="nx-arrow" aria-hidden="true">→</span>
+    </div>
+  </a>
+</nav>
 
 <!-- FOOTER -->
-<footer class="fade-up">
+<footer id="contact">
   <div>
     <div class="footer-name">Geri Arnold</div>
-    <p class="footer-tag">Human Factors–informed UX Designer<br>MFA · MSHCI · AHFP®</p>
+    <p class="footer-tagline">Human Factors–informed UX Designer<br>MFA · MSHCE · AHFP®</p>
   </div>
   <div>
-    <div class="footer-col-label">Navigate</div>
-    <div class="footer-nav">
-      <a href="GeriArnold_Portfolio.html#work">Selected Work</a>
-      <a href="GeriArnold_Portfolio.html#about">About</a>
+    <div class="footer-col-title">Navigate</div>
+    <div class="footer-links">
+      <a href="Portfolio (standalone-source).html#work">Selected Work</a>
+      <a href="Portfolio (standalone-source).html#about">About</a>
       <a href="https://geriarnold.myportfolio.com/research" target="_blank">Research ↗</a>
       <a href="https://geriarnold.myportfolio.com/art" target="_blank">Art ↗</a>
     </div>
   </div>
-  <div>
-    <div class="footer-col-label">Get In Touch</div>
-    <p class="footer-tag">Open to new opportunities and conversations about complex design challenges.</p>
-    <a href="mailto:geri.arnold@outlook.com" class="footer-contact-link">geri.arnold@outlook.com</a>
+  <div class="footer-contact">
+    <div class="footer-col-title">Get In Touch</div>
+    <p class="footer-tagline">Open to new opportunities and conversations about complex design challenges.</p>
+    <a href="https://geriarnold.myportfolio.com/" target="_blank">geriarnold.myportfolio.com ↗</a>
   </div>
   <div class="footer-bottom">
     <span class="footer-copy">© 2026 Geri Arnold — All rights reserved</span>
@@ -826,32 +742,6 @@
   </div>
 </footer>
 
-<script>
-  // Ruler strips
-  function buildRuler(id) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    for (let i = 0; i < 120; i++) {
-      const t = document.createElement('div');
-      t.className = 'ruler-tick';
-      el.appendChild(t);
-    }
-  }
-  buildRuler('ruler1');
-  buildRuler('ruler2');
-  buildRuler('ruler3');
-
-  // Nav scroll
-  const nav = document.getElementById('main-nav');
-  window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 20);
-  }, { passive: true });
-
-  // Scroll reveal
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
-  }, { threshold: 0.08 });
-  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-</script>
+<script src="case-study.js"></script>
 </body>
 </html>
