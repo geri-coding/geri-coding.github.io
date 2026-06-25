@@ -332,7 +332,22 @@
     #about { grid-template-columns: 1fr; padding: 72px 24px; gap: 48px; }
     .philosophy { grid-template-columns: 1fr; gap: 32px; padding: 60px 24px; }
     footer { grid-template-columns: 1fr; padding: 48px 24px; }
-  }
+  .btn-secondary {
+  display: inline-block;
+  border: 1.5px solid var(--accent);
+  color: var(--accent);
+  padding: 12px 24px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-secondary:hover {
+  background: var(--accent);
+  color: var(--warm-white);
+}
 </style>
 </head>
 <body>
