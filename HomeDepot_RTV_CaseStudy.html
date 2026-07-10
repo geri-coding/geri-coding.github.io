@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
+<script src="theme.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Home Depot RTV — Geri Arnold</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="case-study.css">
 <style>
   :root {
-    --orange: #D85A1A;
-    --orange-light: #FFF3EC;
-    --dark: #1A1410;
-    --mid: #5C4F45;
-    --light: #F7F4F1;
-    --white: #FFFFFF;
-    --border: #E8E0D8;
-    --green: #2A6B3C;
+    --orange: var(--accent);
+    --orange-light: var(--accent-light);
+    --dark: var(--ink);
+    --mid: var(--ink-60);
+    --light: var(--bg);
+    --white: var(--surface);
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -32,9 +32,10 @@
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     display: flex; align-items: center; justify-content: space-between;
     padding: 20px 48px;
-    background: rgba(247,244,241,0.95);
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
+    transition: background-color 0.2s ease;
   }
   .nav-logo {
     font-family: 'Space Mono', monospace;
@@ -383,20 +384,26 @@
 
 <nav>
   <a href="GeriArnold_Portfolio.html" class="nav-logo">GA<span>.</span></a>
-  <ul class="nav-links">
-    <li class="nav-dropdown">
-      <a href="GeriArnold_Portfolio.html#work">Work</a>
-      <div class="nav-dropdown-menu">
-        <a href="HomeDepot_RTV_CaseStudy.html" class="nav-active">Home Depot · RTV</a>
-        <a href="CMS_BusinessRules_CaseStudy.html">Flexion · CMS</a>
-        <a href="HealthInsurance_IDP_CaseStudy.html">Health Insurance · IDP</a>
-      </div>
-    </li>
-    <li><a href="GeriArnold_Portfolio.html#about">About</a></li>
-    <li><a href="https://geriarnold.myportfolio.com/research" target="_blank">Research</a></li>
-    <li><a href="https://geriarnold.myportfolio.com/art" target="_blank">Art</a></li>
-    <li><a href="GeriArnold_Portfolio.html#contact">Contact</a></li>
-  </ul>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li class="nav-dropdown">
+        <a href="GeriArnold_Portfolio.html#work">Work</a>
+        <div class="nav-dropdown-menu">
+          <a href="HomeDepot_RTV_CaseStudy.html" class="nav-active">Home Depot · RTV</a>
+          <a href="CMS_BusinessRules_CaseStudy.html">Flexion · CMS</a>
+          <a href="HealthInsurance_IDP_CaseStudy.html">Health Insurance · IDP</a>
+        </div>
+      </li>
+      <li><a href="About_GeriArnold.html">About</a></li>
+      <li><a href="https://geriarnold.myportfolio.com/research" target="_blank">Research</a></li>
+      <li><a href="https://geriarnold.myportfolio.com/art" target="_blank">Art</a></li>
+      <li><a href="GeriArnold_Portfolio.html#contact">Contact</a></li>
+    </ul>
+    <button class="theme-toggle" type="button" aria-label="Toggle color theme" onclick="toggleTheme()">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </div>
 </nav>
 
 <!-- HERO -->

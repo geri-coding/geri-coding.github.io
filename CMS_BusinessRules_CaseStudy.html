@@ -1,27 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
+<script src="theme.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CMS Business Rules — Geri Arnold</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="case-study.css">
 <style>
   :root {
-    --bg:      #F5F0E8;
-    --bg-2:    #EDEAE2;
-    --dark:    #1A1410;
-    --mid:     #7A7268;
-    --light:   #F5F0E8;
-    --white:   #FFFFFF;
-    --border:  #DDD8CE;
-    --orange:  #C45C28;
-    --orange-light: #F5EDE6;
-    --green:   #2D6A4F;
-    --red:     #C0392B;
-    --serif:   'Playfair Display', Georgia, serif;
-    --sans:    'DM Sans', system-ui, sans-serif;
-    --mono:    'Space Mono', monospace;
+    --bg-2:    color-mix(in srgb, var(--surface) 85%, var(--bg) 15%);
+    --dark:    var(--ink);
+    --mid:     var(--ink-60);
+    --light:   var(--bg);
+    --white:   var(--surface);
+    --orange:  var(--accent);
+    --orange-light: var(--accent-light);
     --max-w:   1200px;
     --gutter:  clamp(24px, 5vw, 80px);
   }
@@ -41,10 +36,10 @@
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     display: flex; align-items: center; justify-content: space-between;
     padding: 20px var(--gutter);
-    background: rgba(245,240,232,0.95);
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid transparent;
-    transition: border-color 0.3s;
+    transition: border-color 0.3s, background-color 0.2s ease;
   }
   nav.scrolled { border-bottom-color: var(--border); }
   .nav-logo { font-family: var(--mono); font-size: 13px; font-weight: 700; letter-spacing: 0.05em; color: var(--dark); text-decoration: none; }
@@ -322,20 +317,26 @@
 <!-- NAV -->
 <nav id="main-nav">
   <a href="GeriArnold_Portfolio.html" class="nav-logo">GA<span>.</span></a>
-  <ul class="nav-links">
-    <li class="nav-dropdown">
-      <a href="GeriArnold_Portfolio.html#work">Work</a>
-      <div class="nav-dropdown-menu">
-        <a href="HomeDepot_RTV_CaseStudy.html">Home Depot · RTV</a>
-        <a href="CMS_BusinessRules_CaseStudy.html" class="nav-active">Flexion · CMS</a>
-        <a href="HealthInsurance_IDP_CaseStudy.html">Health Insurance · IDP</a>
-      </div>
-    </li>
-    <li><a href="GeriArnold_Portfolio.html#about">About</a></li>
-    <li><a href="https://geriarnold.myportfolio.com/research" target="_blank">Research</a></li>
-    <li><a href="https://geriarnold.myportfolio.com/art" target="_blank">Art</a></li>
-    <li><a href="GeriArnold_Portfolio.html#contact">Contact</a></li>
-  </ul>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li class="nav-dropdown">
+        <a href="GeriArnold_Portfolio.html#work">Work</a>
+        <div class="nav-dropdown-menu">
+          <a href="HomeDepot_RTV_CaseStudy.html">Home Depot · RTV</a>
+          <a href="CMS_BusinessRules_CaseStudy.html" class="nav-active">Flexion · CMS</a>
+          <a href="HealthInsurance_IDP_CaseStudy.html">Health Insurance · IDP</a>
+        </div>
+      </li>
+      <li><a href="About_GeriArnold.html">About</a></li>
+      <li><a href="https://geriarnold.myportfolio.com/research" target="_blank">Research</a></li>
+      <li><a href="https://geriarnold.myportfolio.com/art" target="_blank">Art</a></li>
+      <li><a href="GeriArnold_Portfolio.html#contact">Contact</a></li>
+    </ul>
+    <button class="theme-toggle" type="button" aria-label="Toggle color theme" onclick="toggleTheme()">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </div>
 </nav>
 
 <!-- HERO -->
@@ -810,7 +811,7 @@
     <div class="footer-col-label">Navigate</div>
     <div class="footer-nav">
       <a href="GeriArnold_Portfolio.html#work">Selected Work</a>
-      <a href="GeriArnold_Portfolio.html#about">About</a>
+      <a href="About_GeriArnold.html">About</a>
       <a href="https://geriarnold.myportfolio.com/research" target="_blank">Research ↗</a>
       <a href="https://geriarnold.myportfolio.com/art" target="_blank">Art ↗</a>
     </div>

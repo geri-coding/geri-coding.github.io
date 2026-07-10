@@ -1,826 +1,303 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
+<script src="theme.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Geri Arnold — Human Factors UX Designer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="case-study.css">
 <style>
-  :root {
-    --cream: #F7F4F1;
-    --warm-white: #FAFAF7;
-    --ink: #1A1410;
-    --ink-60: #5C4F45;
-    --ink-30: #C2B8B0;
-    --accent: #C45C28;
-    --accent-light: #FFF3EC;
-    --grid: #E8E0D8;
-    --green: #2A6B3C;
-    --serif: 'Playfair Display', Georgia, serif;
-    --sans: 'DM Sans', system-ui, sans-serif;
-    --mono: 'Space Mono', monospace;
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
-  body {
-    font-family: var(--sans);
-    background: var(--cream);
-    color: var(--ink);
-    font-size: 16px;
-    line-height: 1.6;
-    overflow-x: hidden;
-  }
-
-  /* ── NAV ── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 20px 48px;
-    background: rgba(247,244,241,0.95);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid transparent;
-    transition: border-color 0.3s;
-  }
-  nav.scrolled { border-bottom-color: var(--grid); }
-  .nav-logo {
-    font-family: var(--mono); font-size: 13px; font-weight: 700;
-    letter-spacing: 0.05em; color: var(--ink); text-decoration: none;
-  }
-  .nav-logo span { color: var(--accent); }
-  .nav-links { display: flex; gap: 36px; list-style: none; }
-  .nav-links > li > a {
-    font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
-    text-transform: uppercase; color: var(--ink-60); text-decoration: none;
-    transition: color 0.2s; position: relative;
-  }
-  .nav-links > li > a::after {
-    content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
-    height: 1px; background: var(--accent);
-    transform: scaleX(0); transform-origin: left; transition: transform 0.25s;
-  }
-  .nav-links > li > a:hover { color: var(--ink); }
-  .nav-links > li > a:hover::after { transform: scaleX(1); }
-  .nav-dropdown { position: relative; }
-  .nav-dropdown-menu {
-    position: absolute; top: calc(100% + 16px); left: 50%;
-    transform: translateX(-50%);
-    background: var(--warm-white); border: 1px solid var(--grid);
-    border-radius: 6px; padding: 8px 0; min-width: 260px;
-    opacity: 0; visibility: hidden;
-    transition: opacity 0.2s, visibility 0.2s;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.08); z-index: 200;
-  }
-  .nav-dropdown:hover .nav-dropdown-menu { opacity: 1; visibility: visible; }
-  .nav-dropdown-menu a {
-    display: block; padding: 10px 16px;
-    font-family: var(--mono); font-size: 11px;
-    letter-spacing: 0.06em; text-transform: uppercase;
-    color: var(--ink-60); text-decoration: none;
-    transition: color 0.15s, background 0.15s;
-  }
-  .nav-dropdown-menu a:hover { color: var(--accent); background: var(--accent-light); }
-
-  /* ── HERO ── */
-  .hero {
-    min-height: 100vh;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding-top: 80px;
-    border-bottom: 1px solid var(--grid);
-  }
-  .hero-left {
-    display: flex; flex-direction: column; justify-content: center;
-    padding: 80px 48px; border-right: 1px solid var(--grid);
-  }
-  .hero-eyebrow {
-    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em;
-    text-transform: uppercase; color: var(--accent);
-    margin-bottom: 24px; display: flex; align-items: center; gap: 10px;
-  }
-  .hero-eyebrow::before {
-    content: ''; display: block; width: 24px; height: 1px; background: var(--accent);
-  }
-  .hero-name {
-    font-family: var(--serif);
-    font-size: clamp(48px, 5.5vw, 80px);
-    line-height: 1.05; color: var(--ink); margin-bottom: 12px;
-  }
-  .hero-name em { font-style: italic; color: var(--accent); display: block; }
-  .hero-credentials {
-    font-family: var(--mono); font-size: 11px; color: var(--ink-60);
-    letter-spacing: 0.08em; margin-bottom: 32px;
-  }
-  .hero-bio {
-    font-size: 16px; font-weight: 300; line-height: 1.8;
-    color: var(--ink-60); max-width: 480px; margin-bottom: 16px;
-  }
-  .hero-bio strong { color: var(--ink); font-weight: 500; }
-  .hero-bio-note {
-    font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em;
-    color: var(--accent); text-transform: uppercase; margin-bottom: 40px;
-  }
-  .hero-cta { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
-  .btn-primary {
-    font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
-    text-transform: uppercase; background: var(--ink); color: var(--cream);
-    padding: 14px 28px; text-decoration: none;
-    transition: background 0.2s, transform 0.15s; display: inline-block;
-  }
-  .btn-primary:hover { background: var(--accent); transform: translateY(-1px); }
-  .btn-ghost {
-    font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
-    text-transform: uppercase; color: var(--ink-60); text-decoration: none;
-    padding: 14px 0; border-bottom: 1px solid var(--ink-30);
-    transition: color 0.2s, border-color 0.2s;
-  }
-  .btn-ghost:hover { color: var(--ink); border-color: var(--ink); }
-.btn-secondary {
-  font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
-  text-transform: uppercase; color: var(--accent); text-decoration: none;
-  padding: 14px 28px; border: 1.5px solid var(--accent);
-  display: inline-block; transition: background 0.2s, color 0.2s;
-}
-.btn-secondary:hover { background: var(--accent); color: var(--cream); }
-
-.coaching-btn {
-  font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
-  text-transform: uppercase; color: var(--accent); text-decoration: none;
-  border-bottom: 1px solid var(--accent); display: inline;
-  transition: opacity 0.2s;
-}
-.coaching-btn:hover { opacity: 0.7; }
-  /* Hero right — photo + disciplines */
-  .hero-right {
-    display: flex; flex-direction: column; justify-content: center;
-    padding: 80px 48px; gap: 0;
-  }
-  .hero-photo-wrap {
-    display: flex; justify-content: center; margin-bottom: 48px;
-  }
-  .hero-photo {
-    width: 200px; height: 200px;
-    border-radius: 50%;
-    object-fit: cover; object-position: center top;
-    border: 3px solid var(--grid);
-  }
-  .discipline-row {
-    display: grid; grid-template-columns: 48px 1fr;
-    gap: 0 20px; align-items: start;
-    padding: 20px 0; border-bottom: 1px solid var(--grid);
-    padding-left: 12px; margin-left: -12px;
-    transition: background 0.2s;
-  }
-  .discipline-row:first-of-type { border-top: 1px solid var(--grid); }
-  .discipline-row:hover { background: rgba(196,92,40,0.04); }
-  .discipline-num { font-family: var(--mono); font-size: 10px; color: var(--ink-30); padding-top: 4px; }
-  .discipline-title { font-family: var(--serif); font-size: 20px; line-height: 1.15; color: var(--ink); margin-bottom: 3px; }
-  .discipline-desc { font-size: 13px; font-weight: 300; color: var(--ink-60); line-height: 1.5; }
-
-  /* ── STATS BAR ── */
-  .stats-bar {
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: 1px; background: var(--grid);
-    border-bottom: 1px solid var(--grid);
-  }
-  .stat-item {
-    background: var(--warm-white);
-    padding: 28px 32px; text-align: center;
-  }
-  .stat-num {
-    font-family: var(--serif); font-size: 36px;
-    color: var(--accent); line-height: 1; margin-bottom: 6px;
-  }
-  .stat-label { font-family: var(--mono); font-size: 10px; color: var(--ink-60); letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.4; }
-
-  /* ── WORK SECTION ── */
-  #work { padding: 100px 48px; background: var(--warm-white); border-bottom: 1px solid var(--grid); }
-  .section-header { display: flex; align-items: center; gap: 16px; margin-bottom: 48px; }
-  .section-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
-  .section-line { flex: 1; height: 1px; background: var(--grid); }
-  .work-intro { font-size: 15px; font-weight: 300; color: var(--ink-60); max-width: 580px; margin-bottom: 56px; line-height: 1.7; }
-
-  .work-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; background: var(--grid); border: 1px solid var(--grid); }
-  .work-card {
-    background: var(--warm-white); padding: 36px;
-    text-decoration: none; color: inherit;
-    display: flex; flex-direction: column;
-    transition: background 0.25s; min-height: 260px;
-    position: relative;
-  }
-  .work-card:hover { background: var(--cream); }
-  .work-card.featured { grid-column: span 2; flex-direction: row; gap: 48px; min-height: 300px; }
-  .work-card.featured .card-body { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-  .work-card.featured .card-img-wrap { width: 45%; min-width: 45%; }
-
-  .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
-  .card-company { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-60); }
-  .card-arrow { font-size: 16px; color: var(--ink-30); transition: transform 0.2s; line-height: 1; }
-  .work-card:hover .card-arrow { transform: translate(3px, -3px); }
-
-  .card-img-wrap {
-    width: 100%; aspect-ratio: 16/9;
-    background: var(--accent-light);
-    margin-bottom: 20px; overflow: hidden;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .card-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
-
-  .card-title { font-family: var(--serif); font-size: 22px; line-height: 1.2; color: var(--ink); margin-bottom: 8px; }
-  .card-desc { font-size: 14px; font-weight: 300; color: var(--ink-60); line-height: 1.6; flex: 1; }
-  .card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
-  .card-tag {
-    font-family: var(--mono); font-size: 9px; letter-spacing: 0.07em;
-    text-transform: uppercase; color: var(--ink-60);
-    background: var(--accent-light); padding: 4px 8px;
-  }
-  .card-badge {
-    font-family: var(--mono); font-size: 9px; letter-spacing: 0.07em;
-    text-transform: uppercase; color: var(--green);
-    background: rgba(42,107,60,0.08);
-    border: 1px solid rgba(42,107,60,0.2);
-    padding: 4px 8px;
-  }
-  .card-award {
-    font-family: var(--mono); font-size: 9px; letter-spacing: 0.07em;
-    text-transform: uppercase; color: #9B7700;
-    background: rgba(155,119,0,0.08);
-    border: 1px solid rgba(155,119,0,0.2);
-    padding: 4px 8px;
-  }
-
-  /* ── ABOUT SECTION ── */
-  #about {
-    padding: 100px 48px;
-    display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
-    border-bottom: 1px solid var(--grid);
-  }
-  .about-title { font-family: var(--serif); font-size: clamp(32px, 4vw, 48px); line-height: 1.1; margin-bottom: 24px; }
-  .about-title em { font-style: italic; color: var(--accent); }
-  .about-body { font-size: 15px; font-weight: 300; line-height: 1.8; color: var(--ink-60); margin-bottom: 16px; }
-  .about-body strong { color: var(--ink); font-weight: 500; }
-
-  .credential-list { margin-top: 36px; display: flex; flex-direction: column; }
-  .credential-item {
-    display: grid; grid-template-columns: 80px 1fr; gap: 16px;
-    align-items: baseline; padding: 12px 0; border-bottom: 1px solid var(--grid);
-  }
-  .credential-item:first-child { border-top: 1px solid var(--grid); }
-  .credential-abbr { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; color: var(--accent); font-weight: 700; }
-  .credential-full { font-size: 13px; color: var(--ink-60); font-weight: 300; }
-
-  .expertise-section { margin-bottom: 40px; }
-  .expertise-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
-  .expertise-item {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 9px 0; border-bottom: 1px solid var(--grid); font-size: 13px; color: var(--ink);
-  }
-  .expertise-item:first-of-type { border-top: 1px solid var(--grid); }
-  .expertise-dots { display: flex; gap: 4px; }
-  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-30); }
-  .dot.filled { background: var(--accent); }
-
-  .companies-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
-    background: var(--grid); border: 1px solid var(--grid); margin-top: 14px;
-  }
-  .company-cell {
-    background: var(--warm-white); padding: 14px 16px;
-    font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em;
-    color: var(--ink-60); text-transform: uppercase;
-  }
-
-  /* ── PHILOSOPHY ── */
-  .philosophy {
-    padding: 80px 48px; background: var(--ink); color: var(--cream);
-    display: grid; grid-template-columns: 1fr 2fr; gap: 80px; align-items: center;
-    border-bottom: 1px solid var(--grid);
-  }
-  .philosophy-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
-  .philosophy-quote { font-family: var(--serif); font-size: clamp(22px, 2.5vw, 34px); line-height: 1.3; font-style: italic; color: var(--cream); }
-  .philosophy-quote strong { font-style: normal; color: var(--accent); }
-
-  /* ── FOOTER ── */
-  footer {
-    padding: 56px 48px; background: var(--warm-white);
-    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 48px;
-  }
-  .footer-name { font-family: var(--serif); font-size: 26px; line-height: 1.1; margin-bottom: 8px; }
-  .footer-tagline { font-size: 13px; font-weight: 300; color: var(--ink-60); line-height: 1.6; }
-  .footer-col-title { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 18px; }
-  .footer-links { display: flex; flex-direction: column; gap: 10px; }
-  .footer-links a { font-size: 14px; color: var(--ink-60); text-decoration: none; font-weight: 300; transition: color 0.2s; }
-  .footer-links a:hover { color: var(--ink); }
-  .footer-contact-link {
-    font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em;
-    color: var(--ink); text-decoration: none;
-    padding-bottom: 2px; border-bottom: 1px solid var(--ink-30);
-    transition: border-color 0.2s; display: inline-block; margin-top: 8px;
-  }
-  .footer-contact-link:hover { border-color: var(--ink); }
-  .footer-bottom {
-    grid-column: 1 / -1; padding-top: 28px; border-top: 1px solid var(--grid);
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .footer-copy { font-family: var(--mono); font-size: 10px; color: var(--ink-30); letter-spacing: 0.06em; }
-
-  /* ── SCROLL ANIMATIONS ── */
+  body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.5; overflow-x: hidden; }
+  main { padding-top: 76px; }
   .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
   .reveal.visible { opacity: 1; transform: translateY(0); }
-  .reveal-delay-1 { transition-delay: 0.1s; }
-  .reveal-delay-2 { transition-delay: 0.2s; }
-  .reveal-delay-3 { transition-delay: 0.3s; }
-
-  @media (max-width: 900px) {
-    nav { padding: 16px 20px; }
-    .nav-links { display: none; }
-    .hero { grid-template-columns: 1fr; }
-    .hero-left { border-right: none; border-bottom: 1px solid var(--grid); padding: 60px 24px; }
-    .hero-right { padding: 48px 24px; }
-    .stats-bar { grid-template-columns: 1fr 1fr; }
-    #work { padding: 72px 24px; }
-    .work-grid { grid-template-columns: 1fr; }
-    .work-card.featured { flex-direction: column; grid-column: span 1; }
-    .work-card.featured .card-img-wrap { width: 100%; }
-    #about { grid-template-columns: 1fr; padding: 72px 24px; gap: 48px; }
-    .philosophy { grid-template-columns: 1fr; gap: 32px; padding: 60px 24px; }
-    footer { grid-template-columns: 1fr; padding: 48px 24px; }
-  .btn-secondary {
-  display: inline-block;
-  border: 1.5px solid var(--accent);
-  color: var(--accent);
-  padding: 12px 24px;
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  text-decoration: none;
-  transition: background 0.2s, color 0.2s;
-}
-.btn-secondary:hover {
-  background: var(--accent);
-  color: var(--warm-white);
-}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav id="main-nav">
-  <a href="GeriArnold_Portfolio.html" class="nav-logo">GA<span>.</span></a>
-  <ul class="nav-links">
-    <li class="nav-dropdown">
-      <a href="#work">Work</a>
-      <div class="nav-dropdown-menu">
-        <a href="HomeDepot_RTV_CaseStudy.html">Home Depot · RTV</a>
-        <a href="CMS_BusinessRules_CaseStudy.html">Flexion · CMS</a>
-        <a href="HealthInsurance_IDP_CaseStudy.html">Health Insurance · IDP</a>
-      </div>
-    </li>
-    <li><a href="#about">About</a></li>
-    <li><a href="https://geriarnold.myportfolio.com/research" target="_blank">Research</a></li>
-    <li><a href="https://geriarnold.myportfolio.com/art" target="_blank">Art</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
+<nav class="site-nav" id="site-nav">
+  <a href="GeriArnold_Portfolio.html" class="site-nav-logo">G<span>A</span></a>
+  <div class="nav-right">
+    <ul class="site-nav-links">
+      <li><a href="#work">Work</a></li>
+      <li><a href="About_GeriArnold.html">About</a></li>
+      <li><a href="https://geriarnold.myportfolio.com/research" target="_blank">Research</a></li>
+      <li><a href="https://geriarnold.myportfolio.com/art" target="_blank">Art</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="theme-toggle" type="button" aria-label="Toggle color theme" onclick="toggleTheme()">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </div>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-left">
-    <div class="hero-eyebrow">Human Factors · UX Design</div>
-    <h1 class="hero-name">Geri<em>Arnold</em></h1>
-    <div class="hero-credentials">MFA · MSHCI · AHFP®</div>
-    <p class="hero-bio">
-      I am a <strong>Product Experience Designer</strong> and <strong>Human Factors practitioner</strong> with 10+ years delivering human-centered design across healthcare, enterprise, and industrial systems. I look beyond the screen — sifting through complexity to serve the people who use the product and the business that builds it.
-    </p>
-    <p class="hero-bio-note">Co-inventor · 12 U.S. &amp; EU Patents &nbsp;·&nbsp; Red Dot Award &nbsp;·&nbsp; AHFP® Credential</p>
-    <div class="hero-cta">
-      <a href="#work" class="btn-primary">View My Work</a>
-      <div style="border-left: 3px solid #8B4A2F; padding: 20px 24px; background: #faf8f5; margin-top: 32px;">
-  <p style="font-size: 11px; letter-spacing: 0.15em; color: #8B4A2F; text-transform: uppercase; margin: 0 0 12px;">
-    Coaching &amp; Consulting
-  </p>
-  <p style="margin: 0 0 8px; line-height: 1.6;">
-    I help individuals and organizations with <strong>workflow design</strong>, 
-    <strong>AI-assisted productivity tools</strong>, and 
-    <strong>digital communication systems</strong>.
-  </p>
-  <p style="margin: 0 0 20px; font-size: 14px; color: #555;">
-    Contact: forma.nova.sketchbook@gmail.com
-  </p>
-  <a href="https://calendly.com/forma-nova-sketchbook/1-hour-coaching" target="_blank" rel="noopener" class="coaching-btn">Book a Session →</a>
-</div>
-      <a href="https://calendly.com/forma-nova-sketchbook/20min" target="_blank" rel="noopener" class="btn-secondary">Book a Free 20 Min Session.</a>
-    </div>
-  </div>
+<main>
 
-  <div class="hero-right">
-    <div class="hero-photo-wrap">
-      <img src="images/geri_arnold.jpg" alt="Geri Arnold, Human Factors UX Designer" class="hero-photo">
-    </div>
-    <div class="discipline-row">
-      <span class="discipline-num">01</span>
+<!-- HERO -->
+<section class="home-hero">
+  <div class="hero-row">
+    <div class="hero-left reveal">
       <div>
-        <div class="discipline-title">Human Factors</div>
-        <div class="discipline-desc">Applying cognitive science and ergonomics to reduce error and increase usability</div>
+        <div class="hero-eyebrow">Human Factors · UX Design</div>
+        <h1 class="hero-name">Geri<em>Arnold</em></h1>
+        <div class="hero-cred-row">
+          <span class="hero-cred-tag">MFA</span>
+          <span class="hero-cred-tag">MSHFE</span>
+          <span class="hero-cred-tag">AHFP®</span>
+        </div>
+      </div>
+      <p class="hero-bio">I am an accomplished maker recognized for my commitment to human-centered design. I leverage a background in <strong>Industrial Design</strong> and a <strong>Human Factors &amp; Cognitive Engineering</strong> degree to look beyond the screen for solutions — sifting through complexity to serve customers and businesses.</p>
+      <div class="hero-cta-row">
+        <a href="#work" class="btn-fill">View My Work</a>
+        <a href="About_GeriArnold.html" class="btn-ghost">About Me
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
       </div>
     </div>
-    <div class="discipline-row">
-      <span class="discipline-num">02</span>
-      <div>
-        <div class="discipline-title">Systems Thinking</div>
-        <div class="discipline-desc">Industrial Design and Systems Engineering background for solutions beyond the screen</div>
-      </div>
-    </div>
-    <div class="discipline-row">
-      <span class="discipline-num">03</span>
-      <div>
-        <div class="discipline-title">UX Research</div>
-        <div class="discipline-desc">Rigorous mixed-methods research that connects insight to product decisions</div>
-      </div>
-    </div>
-    <div class="discipline-row">
-      <span class="discipline-num">04</span>
-      <div>
-        <div class="discipline-title">Product Design</div>
-        <div class="discipline-desc">End-to-end ownership from discovery through delivery across complex domains</div>
+    <div class="hero-right reveal">
+      <div class="hero-photo-frame">
+        <div class="photo-inner">
+          <img src="images/geri_arnold.jpg" alt="Geri Arnold, Human Factors UX Designer">
+          <div class="photo-tint"></div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- STATS BAR -->
-<div class="stats-bar reveal">
-  <div class="stat-item">
-    <div class="stat-num">55%</div>
-    <div class="stat-label">Reduction in task time · Home Depot</div>
+<!-- COACHING -->
+<section class="coaching-section reveal">
+  <div class="coaching-content">
+    <div class="coaching-copy">
+      <div class="coaching-label">Coaching &amp; Consulting</div>
+      <p class="coaching-text">I help individuals and organizations with workflow design, AI-assisted productivity tools, and digital communication systems.</p>
+    </div>
+    <div class="coaching-ctas">
+      <a href="https://calendly.com/forma-nova-sketchbook/1-hour-coaching" target="_blank" rel="noopener" class="link-arrow">Book a Session →</a>
+      <a href="https://calendly.com/forma-nova-sketchbook/20min" target="_blank" rel="noopener" class="btn-outline">Book a Free 20 Min Session</a>
+    </div>
   </div>
-  <div class="stat-item">
-    <div class="stat-num">12</div>
-    <div class="stat-label">U.S. &amp; EU Patents · Co-Inventor</div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-num">10+</div>
-    <div class="stat-label">Years human-centered design</div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-num">6</div>
-    <div class="stat-label">Industries · Healthcare to Aerospace</div>
-  </div>
-</div>
+</section>
 
-<!-- WORK -->
-<section id="work">
-  <div class="section-header reveal">
-    <span class="section-label">Selected Work</span>
-    <div class="section-line"></div>
+<!-- EXPERTISE -->
+<section class="expertise-strip reveal">
+  <div class="expertise-strip-header">
+    <div class="expertise-strip-title">Expertise</div>
+    <div class="expertise-strip-count">01–04</div>
   </div>
-  <p class="work-intro reveal reveal-delay-1">Six companies. Complex domains. Every project started with deep curiosity about how people actually work — not how we assume they do.</p>
+  <div class="expertise-strip-row">
+    <div class="expertise-strip-item">
+      <div class="expertise-strip-num">01</div>
+      <div class="expertise-strip-name">Human Factors</div>
+      <div class="expertise-strip-desc">Applying cognitive science and ergonomics to reduce error and increase usability.</div>
+    </div>
+    <div class="expertise-strip-divider"></div>
+    <div class="expertise-strip-item">
+      <div class="expertise-strip-num">02</div>
+      <div class="expertise-strip-name">Systems Thinking</div>
+      <div class="expertise-strip-desc">Industrial Design + Systems Engineering background for solutions beyond the screen.</div>
+    </div>
+    <div class="expertise-strip-divider"></div>
+    <div class="expertise-strip-item">
+      <div class="expertise-strip-num">03</div>
+      <div class="expertise-strip-name">UX Research</div>
+      <div class="expertise-strip-desc">Rigorous mixed-methods research that converts insight to product decisions.</div>
+    </div>
+    <div class="expertise-strip-divider"></div>
+    <div class="expertise-strip-item">
+      <div class="expertise-strip-num">04</div>
+      <div class="expertise-strip-name">Product Design</div>
+      <div class="expertise-strip-desc">End-to-end ownership from discovery through delivery across complex domains.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SELECTED WORK -->
+<section class="work-section" id="work">
+  <div class="work-header reveal">
+    <div class="work-header-top">
+      <div>
+        <div class="work-label">Selected Work</div>
+        <h2 class="work-title">Seven companies. Complex domains.</h2>
+      </div>
+      <p class="work-intro">Every project started with deep curiosity about how people actually work — not how we assume they do.</p>
+    </div>
+    <div class="work-rule"></div>
+  </div>
 
   <div class="work-grid">
-
-    <!-- HEALTH INSURANCE — featured -->
-    <a href="HealthInsurance_IDP_CaseStudy.html" class="work-card featured reveal">
-      <div class="card-img-wrap">
-        <svg width="100%" height="100%" viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
-          <rect width="560" height="240" fill="#FFF3EC"/>
-          <rect x="40" y="40" width="220" height="160" rx="4" fill="white" stroke="#E8E0D8"/>
-          <rect x="60" y="60" width="80" height="8" rx="2" fill="#C45C28" opacity="0.4"/>
-          <rect x="60" y="78" width="140" height="6" rx="2" fill="#C2B8B0"/>
-          <rect x="60" y="94" width="120" height="6" rx="2" fill="#C2B8B0"/>
-          <rect x="60" y="118" width="180" height="48" rx="4" fill="#FFF3EC" stroke="#E8E0D8"/>
-          <rect x="72" y="130" width="60" height="6" rx="2" fill="#C45C28" opacity="0.5"/>
-          <rect x="72" y="146" width="100" height="4" rx="2" fill="#C2B8B0"/>
-          <rect x="300" y="40" width="220" height="72" rx="4" fill="white" stroke="#E8E0D8"/>
-          <rect x="320" y="58" width="100" height="8" rx="2" fill="#C45C28" opacity="0.4"/>
-          <rect x="320" y="76" width="160" height="5" rx="2" fill="#C2B8B0"/>
-          <rect x="300" y="128" width="220" height="72" rx="4" fill="white" stroke="#E8E0D8"/>
-          <rect x="320" y="146" width="80" height="8" rx="2" fill="#C45C28" opacity="0.4"/>
-          <rect x="320" y="164" width="160" height="5" rx="2" fill="#C2B8B0"/>
-        </svg>
-      </div>
-      <div class="card-body">
-        <div class="card-header">
-          <span class="card-company">Major U.S. Health Insurance Carrier</span>
-          <span class="card-arrow">↗</span>
-        </div>
-        <h3 class="card-title">Internal Developer Platform &amp; Healthcare UX</h3>
-        <p class="card-desc">Sole UX practitioner managing 4 concurrent workstreams on an Internal Developer Platform serving 300+ developers. Applied ISO 9241-210 lifecycle ensuring research preceded every design decision. Led discovery and formative evaluation validating 5 critical pain points before any development began.</p>
-        <div class="card-tags">
-          <span class="card-tag">Human Factors</span>
-          <span class="card-tag">ISO 9241-210</span>
-          <span class="card-tag">Healthcare UX</span>
-          <span class="card-tag">Developer Tools</span>
-          <span class="card-tag">Data Visualization</span>
+    <a href="HealthInsurance_IDP_CaseStudy.html" class="work-card reveal">
+      <div class="work-card-accent" style="background: var(--cat-blue);"></div>
+      <div class="work-card-image" style="background: var(--cat-blue);"><span>Image</span></div>
+      <div class="work-card-body">
+        <div class="work-card-eyebrow">TekSystems Consultant</div>
+        <div class="work-card-company">Major U.S. Health Insurance Carrier</div>
+        <h3 class="work-card-title">Internal Developer Platform and Healthcare UX</h3>
+        <p class="work-card-desc">Sole UX practitioner managing 4 consultant workstreams on an Internal Developer Platform serving 300+ developers. Applied ISO 9241-210 lifecycle ensuring research preceded every design decision.</p>
+        <div class="work-card-bottom">
+          <span class="work-card-tag" style="background: var(--cat-blue);">Human Factors</span>
+          <span class="work-card-arrow">VIEW CASE →</span>
         </div>
       </div>
     </a>
 
-    <!-- HOME DEPOT -->
+    <a href="CMS_BusinessRules_CaseStudy.html" class="work-card reveal">
+      <div class="work-card-accent" style="background: var(--cat-green);"></div>
+      <div class="work-card-image" style="background: var(--cat-green);"><span>Image</span></div>
+      <div class="work-card-body">
+        <div class="work-card-eyebrow">Flexion, Inc</div>
+        <div class="work-card-company">Centers for Medicare and Medicaid</div>
+        <h3 class="work-card-title">Modernize Business Rules System</h3>
+        <p class="work-card-desc">Led discovery through end-to-end UX research for the Centers for Medicare and Medicaid Services (CMS). Contributed to CMS achieving its first cloud-processed Medicare claim.</p>
+        <div class="work-card-bottom">
+          <span class="work-card-tag" style="background: var(--cat-rust);">Federal Healthcare</span>
+          <span class="work-card-arrow">VIEW CASE →</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="https://geriarnold.myportfolio.com/verizon-projects" target="_blank" class="work-card reveal">
+      <div class="work-card-accent" style="background: var(--cat-rust);"></div>
+      <div class="work-card-image" style="background: var(--cat-rust);"><span>Image</span></div>
+      <div class="work-card-body">
+        <div class="work-card-eyebrow">EdTech</div>
+        <div class="work-card-company">Verizon Wireless</div>
+        <h3 class="work-card-title">Enterprise Learning Technology</h3>
+        <p class="work-card-desc">Led user research and hi-fidelity prototyping for performance evaluation tools serving 1,000+ training managers. Owned product management from concept through deployment.</p>
+        <div class="work-card-bottom">
+          <span class="work-card-tag" style="background: var(--accent); color: var(--bg);">Enterprise UX</span>
+          <span class="work-card-arrow">VIEW CASE →</span>
+        </div>
+      </div>
+    </a>
+
     <a href="HomeDepot_RTV_CaseStudy.html" class="work-card reveal">
-      <div class="card-header">
-        <span class="card-company">The Home Depot</span>
-        <span class="card-arrow">↗</span>
-      </div>
-      <div class="card-img-wrap">
-        <svg width="100%" height="100%" viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
-          <rect width="320" height="180" fill="#FFF3EC"/>
-          <rect x="110" y="20" width="100" height="140" rx="8" fill="white" stroke="#E8E0D8"/>
-          <rect x="118" y="35" width="84" height="12" rx="2" fill="#C45C28" opacity="0.6"/>
-          <rect x="118" y="56" width="84" height="24" rx="4" fill="#FFF3EC" stroke="#E8E0D8"/>
-          <rect x="126" y="64" width="50" height="4" rx="2" fill="#C2B8B0"/>
-          <rect x="118" y="90" width="84" height="24" rx="4" fill="#FFF3EC" stroke="#E8E0D8"/>
-          <rect x="126" y="98" width="50" height="4" rx="2" fill="#C2B8B0"/>
-          <rect x="118" y="130" width="84" height="18" rx="4" fill="#C45C28"/>
-        </svg>
-      </div>
-      <h3 class="card-title">Return to Vendor · Mobile Operations</h3>
-      <p class="card-desc">Designed mobile application consolidating 4 legacy systems including green-screen terminals. Reduced task time 55% across 2,300+ stores, validated through in-store contextual inquiry.</p>
-      <div class="card-tags">
-        <span class="card-badge">Case Study Available</span>
-        <span class="card-tag">Contextual Inquiry</span>
-        <span class="card-tag">Mobile UX</span>
-        <span class="card-tag">Retail Ops</span>
+      <div class="work-card-accent" style="background: var(--cat-slate);"></div>
+      <div class="work-card-image" style="background: var(--cat-slate);"><span>Image</span></div>
+      <div class="work-card-body">
+        <div class="work-card-eyebrow">Synergis Contractor</div>
+        <div class="work-card-company">The Home Depot</div>
+        <h3 class="work-card-title">Return to Vendor — Mobile Operations</h3>
+        <p class="work-card-desc">Designed a mobile application consolidating 4 legacy systems, including green-screen terminals. Reduced task time 55% across 2,300+ stores, validated through in-store contextual inquiry.</p>
+        <div class="work-card-bottom">
+          <span class="work-card-tag" style="background: var(--cat-sage); color: var(--bg);">Mobile UX</span>
+          <span class="work-card-arrow">VIEW CASE →</span>
+        </div>
       </div>
     </a>
 
-    <!-- FLEXION -->
-    <a href="CMS_BusinessRules_CaseStudy.html" class="work-card reveal reveal-delay-1">
-      <div class="card-header">
-        <span class="card-company">Flexion, Inc</span>
-        <span class="card-arrow">↗</span>
-      </div>
-      <div class="card-img-wrap">
-        <svg width="100%" height="100%" viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
-          <rect width="320" height="180" fill="#FFF3EC"/>
-          <rect x="40" y="30" width="240" height="120" rx="4" fill="white" stroke="#E8E0D8"/>
-          <rect x="56" y="48" width="80" height="8" rx="2" fill="#C45C28" opacity="0.4"/>
-          <rect x="56" y="66" width="200" height="5" rx="2" fill="#E8E0D8"/>
-          <rect x="56" y="80" width="180" height="5" rx="2" fill="#E8E0D8"/>
-          <rect x="56" y="100" width="60" height="24" rx="4" fill="#C45C28" opacity="0.15" stroke="#C45C28" stroke-width="0.5"/>
-          <rect x="128" y="100" width="60" height="24" rx="4" fill="#C45C28" opacity="0.15" stroke="#C45C28" stroke-width="0.5"/>
-          <rect x="200" y="100" width="40" height="24" rx="4" fill="#C45C28" opacity="0.5"/>
-        </svg>
-      </div>
-      <h3 class="card-title">Medicare Adjudication Platform</h3>
-      <p class="card-desc">Led discovery through end-to-end UX research for a federal-scale healthcare system. Contributed to CMS achieving its first cloud-processed Medicare claims milestone.</p>
-      <div class="card-tags">
-        <span class="card-tag">Federal Healthcare</span>
-        <span class="card-tag">CMS Systems</span>
-        <span class="card-tag">WCAG 2.1 AA</span>
-        <span class="card-tag">Clinical Workflow</span>
-      </div>
-    </a>
-
-    <!-- VERIZON -->
-    <a href="https://geriarnold.myportfolio.com/verizon-projects" target="_blank" class="work-card reveal reveal-delay-2">
-      <div class="card-header">
-        <span class="card-company">Verizon</span>
-        <span class="card-arrow">↗</span>
-      </div>
-      <div class="card-img-wrap">
-        <svg width="100%" height="100%" viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
-          <rect width="320" height="180" fill="#FFF3EC"/>
-          <rect x="40" y="24" width="112" height="132" rx="4" fill="white" stroke="#E8E0D8"/>
-          <rect x="52" y="40" width="60" height="6" rx="2" fill="#C45C28" opacity="0.4"/>
-          <rect x="52" y="56" width="88" height="4" rx="2" fill="#E8E0D8"/>
-          <rect x="52" y="68" width="72" height="4" rx="2" fill="#E8E0D8"/>
-          <rect x="52" y="84" width="88" height="52" rx="4" fill="#FFF3EC"/>
-          <rect x="168" y="24" width="112" height="132" rx="4" fill="white" stroke="#E8E0D8"/>
-          <rect x="180" y="40" width="60" height="6" rx="2" fill="#C45C28" opacity="0.4"/>
-          <rect x="180" y="56" width="88" height="4" rx="2" fill="#E8E0D8"/>
-          <rect x="180" y="68" width="72" height="4" rx="2" fill="#E8E0D8"/>
-          <rect x="180" y="84" width="88" height="52" rx="4" fill="#FFF3EC"/>
-        </svg>
-      </div>
-      <h3 class="card-title">Enterprise Learning Platform</h3>
-      <p class="card-desc">Led user research and hi-fidelity prototyping for performance evaluation tools serving 1,000+ employees. Owned product management from concept through deployment.</p>
-      <div class="card-tags">
-        <span class="card-tag">Enterprise UX</span>
-        <span class="card-tag">Product Management</span>
-        <span class="card-tag">Learning Technology</span>
-      </div>
-    </a>
-
-    <!-- GE DIGITAL -->
     <a href="https://geriarnold.myportfolio.com/turbine-quote-generator" target="_blank" class="work-card reveal">
-      <div class="card-header">
-        <span class="card-company">GE Digital</span>
-        <span class="card-arrow">↗</span>
-      </div>
-      <div class="card-img-wrap">
-        <svg width="100%" height="100%" viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
-          <rect width="320" height="180" fill="#FFF3EC"/>
-          <rect x="40" y="20" width="240" height="140" rx="4" fill="white" stroke="#E8E0D8"/>
-          <rect x="56" y="36" width="100" height="8" rx="2" fill="#C45C28" opacity="0.4"/>
-          <rect x="56" y="58" width="206" height="1" fill="#E8E0D8"/>
-          <rect x="56" y="72" width="80" height="5" rx="2" fill="#E8E0D8"/>
-          <rect x="56" y="86" width="206" height="1" fill="#E8E0D8"/>
-          <rect x="56" y="100" width="100" height="5" rx="2" fill="#E8E0D8"/>
-          <rect x="56" y="114" width="206" height="1" fill="#E8E0D8"/>
-          <rect x="56" y="128" width="60" height="18" rx="3" fill="#C45C28"/>
-        </svg>
-      </div>
-      <h3 class="card-title">Turbine Quote Generator</h3>
-      <p class="card-desc">Conducted international UX research with B2B turbine sales teams. Validated prototypes across Oracle and Salesforce platforms through 5+ participants per research stage.</p>
-      <div class="card-tags">
-        <span class="card-tag">Industrial UX</span>
-        <span class="card-tag">B2B Tools</span>
-        <span class="card-tag">International Research</span>
+      <div class="work-card-accent" style="background: var(--cat-rust);"></div>
+      <div class="work-card-image" style="background: var(--cat-rust);"><span>Image</span></div>
+      <div class="work-card-body">
+        <div class="work-card-eyebrow">Salesforce Experience Design</div>
+        <div class="work-card-company">GE Digital</div>
+        <h3 class="work-card-title">Automated Quote Generator</h3>
+        <p class="work-card-desc">Conducted international UX research with B2B turbine sales teams. Validated prototypes across Oracle and Salesforce platforms through 5+ participants per discovery stage.</p>
+        <div class="work-card-bottom">
+          <span class="work-card-tag" style="background: var(--accent); color: var(--bg);">International Research</span>
+          <span class="work-card-arrow">VIEW CASE →</span>
+        </div>
       </div>
     </a>
 
-    <!-- STATE FARM -->
-    <a href="https://geriarnold.myportfolio.com/mail-verification-search-and-print" target="_blank" class="work-card reveal reveal-delay-1">
-      <div class="card-header">
-        <span class="card-company">State Farm</span>
-        <span class="card-arrow">↗</span>
-      </div>
-      <div class="card-img-wrap">
-        <svg width="100%" height="100%" viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
-          <rect width="320" height="180" fill="#FFF3EC"/>
-          <rect x="40" y="30" width="100" height="120" rx="4" fill="white" stroke="#E8E0D8"/>
-          <rect x="52" y="46" width="60" height="6" rx="2" fill="#C45C28" opacity="0.4"/>
-          <rect x="52" y="62" width="76" height="4" rx="2" fill="#E8E0D8"/>
-          <rect x="52" y="74" width="60" height="4" rx="2" fill="#E8E0D8"/>
-          <rect x="180" y="30" width="100" height="120" rx="4" fill="white" stroke="#E8E0D8"/>
-          <rect x="192" y="46" width="60" height="6" rx="2" fill="#C45C28" opacity="0.4"/>
-          <rect x="192" y="62" width="76" height="4" rx="2" fill="#E8E0D8"/>
-          <rect x="192" y="74" width="60" height="4" rx="2" fill="#E8E0D8"/>
-        </svg>
-      </div>
-      <h3 class="card-title">Claims &amp; Document Workflow</h3>
-      <p class="card-desc">Designed mobile and web tools across document tracking, legal verification, and claims processing. Delivered high-fidelity wireframes across all platforms for developer handoff.</p>
-      <div class="card-tags">
-        <span class="card-tag">Insurance UX</span>
-        <span class="card-tag">Claims Workflow</span>
-        <span class="card-tag">Cognitive Load</span>
+    <a href="https://geriarnold.myportfolio.com/mail-verification-search-and-print" target="_blank" class="work-card reveal">
+      <div class="work-card-accent" style="background: var(--cat-slate);"></div>
+      <div class="work-card-image" style="background: var(--cat-slate);"><span>Image</span></div>
+      <div class="work-card-body">
+        <div class="work-card-eyebrow">Tata Consulting Services</div>
+        <div class="work-card-company">State Farm Insurance</div>
+        <h3 class="work-card-title">Mail Verification</h3>
+        <p class="work-card-desc">Designed mobile and web tools across document tracking, legal verification, and claims processing. Delivered high-fidelity wireframes across all platforms for developer handoff.</p>
+        <div class="work-card-bottom">
+          <span class="work-card-tag" style="background: var(--cat-sage); color: var(--bg);">Claim Workflow</span>
+          <span class="work-card-arrow">VIEW CASE →</span>
+        </div>
       </div>
     </a>
 
-    <!-- BE AEROSPACE -->
-    <a href="https://geriarnold.myportfolio.com/lounge-for-aerobus-a350" target="_blank" class="work-card reveal reveal-delay-2">
-      <div class="card-header">
-        <span class="card-company">Collins Aerospace (formerly B/E Aerospace)</span>
-        <span class="card-arrow">↗</span>
-      </div>
-      <div class="card-img-wrap">
-        <svg width="100%" height="100%" viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
-          <rect width="320" height="180" fill="#FFF3EC"/>
-          <ellipse cx="160" cy="90" rx="100" ry="60" fill="none" stroke="#E8E0D8" stroke-width="1"/>
-          <ellipse cx="160" cy="90" rx="70" ry="42" fill="white" stroke="#E8E0D8"/>
-          <rect x="130" y="76" width="60" height="8" rx="2" fill="#C45C28" opacity="0.4"/>
-          <rect x="140" y="94" width="40" height="4" rx="2" fill="#C2B8B0"/>
-        </svg>
-      </div>
-      <h3 class="card-title">A350 Aircraft Seating · Industrial Design</h3>
-      <p class="card-desc">Co-inventor on 12 U.S. and EU patents. Part of Red Dot award-winning team for ergonomics and usability innovations in premium aircraft seating systems on the Airbus A350.</p>
-      <div class="card-tags">
-        <span class="card-award">Red Dot Award</span>
-        <span class="card-tag">12 Patents</span>
-        <span class="card-tag">Industrial Design</span>
-        <span class="card-tag">Ergonomics</span>
+    <a href="https://geriarnold.myportfolio.com/lounge-for-aerobus-a350" target="_blank" class="work-card reveal">
+      <div class="work-card-accent" style="background: var(--cat-rust);"></div>
+      <div class="work-card-image" style="background: var(--cat-rust);"><span>Image</span></div>
+      <div class="work-card-body">
+        <div class="work-card-eyebrow">Industrial Design</div>
+        <div class="work-card-company">Collins Aerospace (formerly B/E Aerospace)</div>
+        <h3 class="work-card-title">Airbus A350 Aircraft Seating</h3>
+        <p class="work-card-desc">Co-inventor on 12 U.S. and EU patents. Part of a Red Dot award-winning team for ergonomics and usability innovations in premium aircraft seating systems on the Airbus A350.</p>
+        <div class="work-card-bottom">
+          <span class="work-card-tag" style="background: var(--accent); color: var(--bg);">Ergonomics</span>
+          <span class="work-card-arrow">VIEW CASE →</span>
+        </div>
       </div>
     </a>
-
   </div>
 </section>
 
-<!-- ABOUT -->
-<section id="about">
-  <div class="reveal">
-    <div class="section-header">
-      <span class="section-label">About</span>
-      <div class="section-line"></div>
-    </div>
-    <h2 class="about-title">Human-<em>centered</em><br>by training.</h2>
-    <p class="about-body">My path into UX is unusual — and that is the point. A foundation in <strong>Industrial Design</strong> taught me to think about the whole artifact: how it sits in a hand, how it lives in space, how it fails gracefully. A <strong>Master's in Human Factors and Cognitive Engineering</strong> gave me the science to understand why people err and how systems can be built to prevent it.</p>
-    <p class="about-body">That combination — aesthetic maker plus analytical engineer — is what I bring to every screen, workflow, and research study. I currently teach <strong>Human-Centered Design</strong> at Cuyahoga Community College, bringing this practice to the next generation.</p>
-    <div class="credential-list">
-      <div class="credential-item">
-        <span class="credential-abbr">AHFP®</span>
-        <span class="credential-full">Associate Human Factors Professional · Board of Certification in Professional Ergonomics</span>
-      </div>
-      <div class="credential-item">
-        <span class="credential-abbr">MSHCI</span>
-        <span class="credential-full">Master of Science, Human Factors &amp; Cognitive Engineering · Iowa State University</span>
-      </div>
-      <div class="credential-item">
-        <span class="credential-abbr">MFA</span>
-        <span class="credential-full">Master of Fine Arts, Industrial Design · The Ohio State University</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="reveal reveal-delay-2">
-    <div class="expertise-section">
-      <div class="expertise-label">Core Skills</div>
-      <div class="expertise-item">UX Research &amp; Usability Testing
-        <div class="expertise-dots"><span class="dot filled"></span><span class="dot filled"></span><span class="dot filled"></span><span class="dot filled"></span><span class="dot filled"></span></div>
-      </div>
-      <div class="expertise-item">Human Factors Engineering
-        <div class="expertise-dots"><span class="dot filled"></span><span class="dot filled"></span><span class="dot filled"></span><span class="dot filled"></span><span class="dot filled"></span></div>
-      </div>
-      <div class="expertise-item">Information Architecture
-        <div class="expertise-dots"><span class="dot filled"></span><span class="dot filled"></span><span class="dot filled"></span><span class="dot filled"></span><span class="dot"></span></div>
-      </div>
-      <div class="expertise-item">Interaction Design
-        <div class="expertise-dots"><span class="dot filled"></span><span class="dot filled"></span><span class="dot filled"></span><span class="dot filled"></span><span class="dot filled"></span></div>
-      </div>
-      <div class="expertise-item">Systems Thinking
-        <div class="expertise-dots"><span class="dot filled"></span><span class="dot filled"></span><span class="dot filled"></span><span class="dot filled"></span><span class="dot"></span></div>
-      </div>
-      <div class="expertise-item">Industrial Design
-        <div class="expertise-dots"><span class="dot filled"></span><span class="dot filled"></span><span class="dot filled"></span><span class="dot filled"></span><span class="dot filled"></span></div>
-      </div>
-    </div>
-
-    <div class="expertise-section">
-      <div class="expertise-label">Experience</div>
-      <div class="companies-grid">
-        <div class="company-cell">Health Insurance</div>
-        <div class="company-cell">Flexion, Inc</div>
-        <div class="company-cell">Verizon</div>
-        <div class="company-cell">The Home Depot</div>
-        <div class="company-cell">GE Digital</div>
-        <div class="company-cell">State Farm</div>
-        <div class="company-cell">Collins Aerospace</div>
-        <div class="company-cell">Tri-C · Instructor</div>
-      </div>
-    </div>
-
-    <div class="expertise-section">
-      <div class="expertise-label">Domains</div>
-      <div class="expertise-item">Healthcare &amp; Federal Systems</div>
-      <div class="expertise-item">Enterprise &amp; Industrial Tools</div>
-      <div class="expertise-item">Retail &amp; Consumer Operations</div>
-      <div class="expertise-item">Aerospace &amp; Spatial Design</div>
-    </div>
-  </div>
+<!-- QUOTE -->
+<section class="quote-section reveal">
+  <div class="quote-label">Design Approach</div>
+  <p class="quote-text">"I look <strong>beyond the screen</strong> for solutions — sifting through complexity to serve both the people who use the product and the business that builds it."</p>
 </section>
 
-<!-- PHILOSOPHY -->
-<div class="philosophy reveal">
-  <div class="philosophy-label">Design Approach</div>
-  <blockquote class="philosophy-quote">
-    "I look <strong>beyond the screen</strong> for solutions — sifting through complexity to serve both the people who use the product and the business that builds it."
-  </blockquote>
-</div>
+</main>
 
 <!-- FOOTER -->
-<footer id="contact">
-  <div>
-    <div class="footer-name">Geri Arnold</div>
-    <p class="footer-tagline">Human Factors–informed UX Designer<br>MFA · MSHCI · AHFP®<br>Beachwood, OH</p>
-  </div>
-  <div>
-    <div class="footer-col-title">Navigate</div>
-    <div class="footer-links">
-      <a href="#work">Selected Work</a>
-      <a href="#about">About</a>
-      <a href="https://geriarnold.myportfolio.com/research" target="_blank">Research ↗</a>
-      <a href="https://geriarnold.myportfolio.com/art" target="_blank">Art ↗</a>
+<footer class="home-footer" id="contact">
+  <div class="home-footer-main">
+    <div>
+      <div class="footer-col-name">Geri Arnold</div>
+      <div class="footer-col-details">
+        <span>Human Factors–informed UX Designer</span>
+        <span>MFA · MSHFE · AHFP®</span>
+        <span>Beachwood, OH</span>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-label">Browse</div>
+      <div class="footer-nav-links">
+        <a href="#work">Selected Work</a>
+        <a href="About_GeriArnold.html">About</a>
+        <a href="https://geriarnold.myportfolio.com/research" target="_blank">Research ↗</a>
+        <a href="https://geriarnold.myportfolio.com/art" target="_blank">Art ↗</a>
+      </div>
+    </div>
+    <div style="max-width: 420px;">
+      <div class="footer-col-label">Get In Touch</div>
+      <div class="footer-consulting">
+        <div class="footer-consulting-bar"></div>
+        <div>
+          <div class="footer-consulting-label">Coaching &amp; Consulting</div>
+          <p class="footer-consulting-text">I help individuals and organizations with workflow design, AI-assisted productivity tools, and digital communication systems.</p>
+        </div>
+      </div>
+      <p class="footer-contact-line">Contact: forma.nova.sketchbook@gmail.com</p>
+      <a href="https://calendly.com/forma-nova-sketchbook/1-hour-coaching" target="_blank" rel="noopener" class="link-arrow">Book a Session →</a>
+      <p class="footer-tagline">Open to new opportunities and conversations about complex design challenges.<br>geri.arnold@outlook.com</p>
     </div>
   </div>
-  <div>
-    <div class="footer-col-title">Get In Touch</div>
-    <div style="border-left: 3px solid #8B4A2F; padding: 20px 24px; background: #faf8f5; margin-top: 32px;">
-  <p style="font-size: 11px; letter-spacing: 0.15em; color: #8B4A2F; text-transform: uppercase; margin: 0 0 12px;">
-    Coaching &amp; Consulting
-  </p>
-  <p style="margin: 0 0 8px; line-height: 1.6;">
-    I help individuals and organizations with <strong>workflow design</strong>, 
-    <strong>AI-assisted productivity tools</strong>, and 
-    <strong>digital communication systems</strong>.
-  </p>
-  <p style="margin: 0 0 20px; font-size: 14px; color: #555;">
-    Contact: forma.nova.sketchbook@gmail.com
-  </p>
-  <a href="https://calendly.com/forma-nova-sketchbook/1-hour-coaching" target="_blank" rel="noopener" class="coaching-btn">Book a Session →</a>
-</div>
-    <p class="footer-tagline">Open to new opportunities and conversations about complex design challenges.</p>
-    <a href="mailto:geri.arnold@outlook.com" class="footer-contact-link">geri.arnold@outlook.com</a>
-  </div>
-  <div class="footer-bottom">
-    <span class="footer-copy">© 2026 Geri Arnold — All rights reserved</span>
-    <span class="footer-copy">Human Factors · UX · Industrial Design</span>
+  <div class="home-footer-bottom">
+    <span>© 2026 Geri Arnold. All rights reserved.</span>
+    <div class="footer-legal-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+    </div>
   </div>
 </footer>
 
 <script>
-  // Nav scroll state
-  const nav = document.getElementById('main-nav');
+  const nav = document.getElementById('site-nav');
   window.addEventListener('scroll', () => {
     nav.classList.toggle('scrolled', window.scrollY > 20);
   }, { passive: true });
 
-  // Scroll reveal
   const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
-    });
-  }, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.08 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 </script>
 </body>
