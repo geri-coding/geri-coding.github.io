@@ -1,0 +1,26 @@
+<svg width="559" height="562" viewBox="0 0 559 562" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Head circle -->
+  <path class="draw" d="M283.791 77.19C330.058 77.19 367.564 114.7 367.564 160.97C367.564 207.23 330.058 244.74 283.791 244.74C237.525 244.74 200.018 207.23 200.018 160.97C200.018 114.7 237.525 77.19 283.791 77.19Z" stroke="currentColor" stroke-width="2"/>
+  <!-- Horizontal line 1 -->
+  <path class="draw" d="M0.5 163.1L558.5 163.1" stroke="currentColor" stroke-linecap="round" stroke-dasharray="4 4"/>
+  <!-- Chin circle -->
+  <ellipse class="draw" cx="283.793" cy="241.44" rx="72.97" ry="72.97" stroke="currentColor" stroke-width="2"/>
+  <!-- Face oval -->
+  <path class="draw" d="M283.339 76.93C336.309 76.93 379.903 129.7 379.903 195.7C379.903 261.69 336.309 314.47 283.339 314.47C230.368 314.47 186.774 261.69 186.774 195.7C186.774 129.7 230.368 76.93 283.339 76.93Z" stroke="currentColor" stroke-width="4"/>
+  <!-- Horizontal line 2 -->
+  <line class="draw" x1="1" y1="177.64" x2="558" y2="177.64" stroke="currentColor" stroke-linecap="round" stroke-dasharray="4 4"/>
+  <!-- Vertical line 1 -->
+  <line class="draw" x1="248.88" y1="0" x2="247.81" y2="558" stroke="currentColor" stroke-dasharray="4 4"/>
+  <!-- Vertical line 2 -->
+  <line class="draw" x1="321.85" y1="0" x2="321.85" y2="558" stroke="currentColor" stroke-dasharray="4 4"/>
+  <!-- Left neck -->
+  <line class="draw" x1="225.85" y1="298.31" x2="225.85" y2="348.75" stroke="currentColor" stroke-dasharray="2 2"/>
+  <!-- Left shoulder -->
+  <line class="draw" x1="226.92" y1="321.93" x2="74.5" y2="369.1" stroke="currentColor" stroke-dasharray="2 2"/>
+  <!-- Left arm -->
+  <line class="draw" x1="94.93" y1="357.34" x2="55.25" y2="561" stroke="currentColor" stroke-dasharray="2 2"/>
+  <!-- Right shoulder -->
+  <line class="draw" x1="334.23" y1="321.93" x2="486.5" y2="369.1" stroke="currentColor" stroke-dasharray="2 2"/>
+  <!-- Right arm -->
+  <line class="draw" x1="466.22" y1="357.34" x2="505.3" y2="558" stroke="currentColor" stroke-dasharray="2 2"/>
+</svg>
