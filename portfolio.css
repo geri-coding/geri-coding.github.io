@@ -211,26 +211,55 @@ a { color: inherit; text-decoration: none; }
 .btn-outlined { border: 1px solid var(--accent); color: var(--accent); }
 .link-arrow { font-weight: 700; font-size: 13px; color: var(--accent); }
 
-.portrait-frame {
+.hero-photo {
+  position: relative;
   width: 100%;
   aspect-ratio: 1;
   border-radius: 16px;
-  border: 4px solid var(--accent);
   overflow: hidden;
-  background: var(--bg-card);
   transform: scale(1.03);
 }
-.portrait-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.portrait-frame.portrait-fallback img { display: none; }
-.portrait-frame.portrait-fallback::after {
-  content: "GA";
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  font-family: 'Instrument Serif', serif;
-  font-size: 64px;
-  color: var(--text-secondary);
+.hero-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hero-photo img.theme-dark { display: none; }
+:root[data-theme="dark"] .hero-photo img.theme-light { display: none; }
+:root[data-theme="dark"] .hero-photo img.theme-dark { display: block; }
+
+/* Hero overlay container */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  color: var(--stroke-overlay, #8B3A2A); /* Brick Red light */
+  pointer-events: none;
+}
+:root[data-theme="dark"] .hero-overlay {
+  --stroke-overlay: #64748B; /* Cool Slate dark */
+}
+.draw-svg { width: 100%; height: 100%; }
+
+/* Draw-on animation */
+.draw {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawLine 1.5s ease forwards;
+}
+/* Stagger each element */
+.draw:nth-child(1)  { animation-delay: 0.8s; }   /* head circle */
+.draw:nth-child(2)  { animation-delay: 1.0s; }   /* h-line 1 */
+.draw:nth-child(3)  { animation-delay: 1.1s; }   /* chin circle */
+.draw:nth-child(4)  { animation-delay: 1.3s; }   /* face oval */
+.draw:nth-child(5)  { animation-delay: 1.5s; }   /* h-line 2 */
+.draw:nth-child(6)  { animation-delay: 1.6s; }   /* v-line 1 */
+.draw:nth-child(7)  { animation-delay: 1.7s; }   /* v-line 2 */
+.draw:nth-child(8)  { animation-delay: 1.9s; }   /* left neck */
+.draw:nth-child(9)  { animation-delay: 2.0s; }   /* left shoulder */
+.draw:nth-child(10) { animation-delay: 2.1s; }   /* left arm */
+.draw:nth-child(11) { animation-delay: 2.0s; }   /* right shoulder */
+.draw:nth-child(12) { animation-delay: 2.1s; }   /* right arm */
+@keyframes drawLine {
+  to { stroke-dashoffset: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .draw { animation: none; stroke-dashoffset: 0; }
 }
 
 /* ============ COACHING ============ */

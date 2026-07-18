@@ -1,304 +1,267 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<script src="theme.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Geri Arnold — Human Factors UX Designer</title>
+<title>Geri Arnold — Human Factors &amp; UX Design</title>
+<meta name="description" content="Geri Arnold — Human Factors and UX design portfolio. Systems thinking, usability research, and product design across enterprise and healthcare domains.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="case-study.css">
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.5; overflow-x: hidden; }
-  main { padding-top: 76px; }
-  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
-</style>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="portfolio.css">
+<script>
+  /* Set theme before paint to avoid flash */
+  (function () {
+    var saved = localStorage.getItem('theme');
+    var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+  })();
+</script>
 </head>
 <body>
 
-<nav class="site-nav" id="site-nav">
-  <a href="GeriArnold_Portfolio.html" class="site-nav-logo">G<span>A</span></a>
-  <div class="nav-right">
-    <ul class="site-nav-links">
+<!-- HEADER -->
+<header id="site-header">
+  <a href="#top" class="logo">GA</a>
+  <nav aria-label="Primary">
+    <ul class="nav-links">
       <li><a href="#work">Work</a></li>
-      <li><a href="About_GeriArnold.html">About</a></li>
-      <li><a href="https://geriarnold.myportfolio.com/research" target="_blank">Research</a></li>
-      <li><a href="https://geriarnold.myportfolio.com/art" target="_blank">Art</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#art">Art</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
-    <button class="theme-toggle" type="button" aria-label="Toggle color theme" onclick="toggleTheme()">
-      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
-      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-    </button>
-  </div>
-</nav>
+  </nav>
+  <button id="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false">
+    <i class="fa-solid fa-moon" aria-hidden="true"></i>
+    <i class="fa-solid fa-sun" aria-hidden="true"></i>
+  </button>
+</header>
 
-<main>
+<main id="top">
 
-<!-- HERO -->
-<section class="home-hero">
-  <div class="hero-row">
+  <!-- HERO -->
+  <section class="hero">
     <div class="hero-left reveal">
-      <div>
-        <div class="hero-eyebrow">Human Factors · UX Design</div>
-        <h1 class="hero-name">Geri<em>Arnold</em></h1>
-        <div class="hero-cred-row">
-          <span class="hero-cred-tag">MFA</span>
-          <span class="hero-cred-tag">MSHFE</span>
-          <span class="hero-cred-tag">AHFP®</span>
-        </div>
+      <p class="hero-subtitle">— HUMAN FACTORS · UX DESIGN</p>
+      <h1 class="hero-name">Geri <em>Arnold</em></h1>
+      <div class="credential-tags">
+        <span class="tag">AHFP&reg;</span>
+        <span class="tag">MFA</span>
+        <span class="tag">MSHCI</span>
       </div>
-      <p class="hero-bio">I am an accomplished maker recognized for my commitment to human-centered design. I leverage a background in <strong>Industrial Design</strong> and a <strong>Human Factors &amp; Cognitive Engineering</strong> degree to look beyond the screen for solutions — sifting through complexity to serve customers and businesses.</p>
-      <div class="hero-cta-row">
-        <a href="#work" class="btn-fill">View My Work</a>
-        <a href="About_GeriArnold.html" class="btn-ghost">About Me
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </a>
+      <p class="hero-bio">
+        <!-- [ Bio copy — please review/replace with your preferred wording ] -->
+        I design for the moments where complex systems meet real people under pressure. Over 10 years
+        in User Experience, trained in Human Factors, I bring cognitive science and systems thinking
+        to enterprise, healthcare, and industrial products — reducing error, not just polishing screens.
+      </p>
+      <div class="hero-cta">
+        <a href="#work" class="btn btn-filled">View my work</a>
+        <a href="#about" class="btn btn-text">About me &rarr;</a>
       </div>
     </div>
     <div class="hero-right reveal">
-      <div class="hero-photo-frame">
-        <div class="photo-inner">
-          <img src="images/geri_arnold.jpg" alt="Geri Arnold, Human Factors UX Designer">
-          <div class="photo-tint"></div>
+      <div class="hero-photo">
+        <img src="assets/images/hero-portrait-light.png" alt="Geri Arnold" class="theme-light" />
+        <img src="assets/images/hero-portrait-dark.png" alt="Geri Arnold" class="theme-dark" />
+        <div class="hero-overlay">
+          <svg class="draw-svg" viewBox="0 0 559 562" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <path class="draw" d="M283.791 77.19C330.058 77.19 367.564 114.7 367.564 160.97C367.564 207.23 330.058 244.74 283.791 244.74C237.525 244.74 200.018 207.23 200.018 160.97C200.018 114.7 237.525 77.19 283.791 77.19Z" stroke="currentColor" stroke-width="2"/>
+            <path class="draw" d="M0.5 163.1L558.5 163.1" stroke="currentColor" stroke-linecap="round" stroke-dasharray="4 4"/>
+            <ellipse class="draw" cx="283.793" cy="241.44" rx="72.97" ry="72.97" stroke="currentColor" stroke-width="2"/>
+            <path class="draw" d="M283.339 76.93C336.309 76.93 379.903 129.7 379.903 195.7C379.903 261.69 336.309 314.47 283.339 314.47C230.368 314.47 186.774 261.69 186.774 195.7C186.774 129.7 230.368 76.93 283.339 76.93Z" stroke="currentColor" stroke-width="4"/>
+            <line class="draw" x1="1" y1="177.64" x2="558" y2="177.64" stroke="currentColor" stroke-linecap="round" stroke-dasharray="4 4"/>
+            <line class="draw" x1="248.88" y1="0" x2="247.81" y2="558" stroke="currentColor" stroke-dasharray="4 4"/>
+            <line class="draw" x1="321.85" y1="0" x2="321.85" y2="558" stroke="currentColor" stroke-dasharray="4 4"/>
+            <line class="draw" x1="225.85" y1="298.31" x2="225.85" y2="348.75" stroke="currentColor" stroke-dasharray="2 2"/>
+            <line class="draw" x1="226.92" y1="321.93" x2="74.5" y2="369.1" stroke="currentColor" stroke-dasharray="2 2"/>
+            <line class="draw" x1="94.93" y1="357.34" x2="55.25" y2="561" stroke="currentColor" stroke-dasharray="2 2"/>
+            <line class="draw" x1="334.23" y1="321.93" x2="486.5" y2="369.1" stroke="currentColor" stroke-dasharray="2 2"/>
+            <line class="draw" x1="466.22" y1="357.34" x2="505.3" y2="558" stroke="currentColor" stroke-dasharray="2 2"/>
+          </svg>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- COACHING -->
-<section class="coaching-section reveal">
-  <div class="coaching-content">
-    <div class="coaching-copy">
-      <div class="coaching-label">Coaching &amp; Consulting</div>
-      <p class="coaching-text">I help individuals and organizations with workflow design, AI-assisted productivity tools, and digital communication systems.</p>
+  <!-- COACHING -->
+  <section class="coaching">
+    <div class="divider"></div>
+    <div class="coaching-inner">
+      <div class="coaching-left reveal">
+        <p class="eyebrow">Coaching &amp; Consulting</p>
+        <p class="coaching-desc">
+          I coach designers and teams on applying Human Factors methods inside real engineering
+          orgs — and consult on UX strategy for products that need to be safe, not just usable.
+        </p>
+      </div>
+      <div class="coaching-right reveal">
+        <a href="https://calendly.com/YOUR-LINK/discovery" class="link-arrow" target="_blank" rel="noopener">Book a session &rarr;</a>
+        <a href="https://calendly.com/YOUR-LINK/free-20min" class="btn btn-outlined" target="_blank" rel="noopener">Book a free 20 min session</a>
+      </div>
     </div>
-    <div class="coaching-ctas">
-      <a href="https://calendly.com/forma-nova-sketchbook/1-hour-coaching" target="_blank" rel="noopener" class="link-arrow">Book a Session →</a>
-      <a href="https://calendly.com/forma-nova-sketchbook/20min" target="_blank" rel="noopener" class="btn-outline">Book a Free 20 Min Session</a>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="skills" id="about">
+    <div class="skills-header">
+      <h2>Expertise</h2>
+      <span class="skills-counter">01&ndash;04</span>
     </div>
-  </div>
-</section>
-
-<!-- EXPERTISE -->
-<section class="expertise-strip reveal">
-  <div class="expertise-strip-header">
-    <div class="expertise-strip-title">Expertise</div>
-    <div class="expertise-strip-count">01–04</div>
-  </div>
-  <div class="expertise-strip-row">
-    <div class="expertise-strip-item">
-      <div class="expertise-strip-num">01</div>
-      <div class="expertise-strip-name">Human Factors</div>
-      <div class="expertise-strip-desc">Applying cognitive science and ergonomics to reduce error and increase usability.</div>
+    <div class="skills-grid">
+      <div class="skill reveal">
+        <span class="skill-num">01</span>
+        <h3>Human Factors</h3>
+        <p>Applying cognitive science and ergonomics to reduce error and increase usability.</p>
+      </div>
+      <div class="skill reveal">
+        <span class="skill-num">02</span>
+        <h3>Systems Thinking</h3>
+        <p>Industrial Design + Systems Engineering background for solutions beyond the screen.</p>
+      </div>
+      <div class="skill reveal">
+        <span class="skill-num">03</span>
+        <h3>UX Research</h3>
+        <p>Rigorous mixed-methods research that converts insight to product decisions.</p>
+      </div>
+      <div class="skill reveal">
+        <span class="skill-num">04</span>
+        <h3>Product Design</h3>
+        <p>End-to-end ownership from discovery through delivery across complex domains.</p>
+      </div>
     </div>
-    <div class="expertise-strip-divider"></div>
-    <div class="expertise-strip-item">
-      <div class="expertise-strip-num">02</div>
-      <div class="expertise-strip-name">Systems Thinking</div>
-      <div class="expertise-strip-desc">Industrial Design + Systems Engineering background for solutions beyond the screen.</div>
+  </section>
+
+  <!-- CASE STUDIES -->
+  <section class="case-studies" id="work">
+    <div class="cs-header">
+      <p class="eyebrow">Selected Work</p>
+      <h2>Case Studies</h2>
+      <p class="cs-subtitle">A sample of recent work across healthcare, enterprise, and retail operations.</p>
     </div>
-    <div class="expertise-strip-divider"></div>
-    <div class="expertise-strip-item">
-      <div class="expertise-strip-num">03</div>
-      <div class="expertise-strip-name">UX Research</div>
-      <div class="expertise-strip-desc">Rigorous mixed-methods research that converts insight to product decisions.</div>
+
+    <div class="filter-nav" role="tablist" aria-label="Filter case studies">
+      <button class="filter-btn active" data-filter="all" role="tab" aria-selected="true">All</button>
+      <button class="filter-btn" data-filter="healthcare" role="tab" aria-selected="false">Healthcare</button>
+      <button class="filter-btn" data-filter="enterprise" role="tab" aria-selected="false">Enterprise</button>
+      <button class="filter-btn" data-filter="consumer" role="tab" aria-selected="false">Consumer</button>
     </div>
-    <div class="expertise-strip-divider"></div>
-    <div class="expertise-strip-item">
-      <div class="expertise-strip-num">04</div>
-      <div class="expertise-strip-name">Product Design</div>
-      <div class="expertise-strip-desc">End-to-end ownership from discovery through delivery across complex domains.</div>
+
+    <div class="cs-grid">
+
+      <!-- Card 1: IDP / Health Insurance -->
+      <article class="cs-card reveal" data-category="healthcare enterprise" style="--cat-color:#1E3A5F;">
+        <div class="cs-card-image">
+          <div class="cs-grid-overlay" aria-hidden="true"></div>
+          <i class="fa-solid fa-kit-medical cs-icon" aria-hidden="true"></i>
+        </div>
+        <div class="cs-card-content">
+          <p class="cs-employer">TEKsystems / Health Insurance Carrier</p>
+          <h3 class="cs-title">Internal Developer Platform and Healthcare UX</h3>
+          <p class="cs-card-desc">
+            Facilitated cross-team alignment and UI direction for an internal developer platform
+            serving software engineers across a national health insurer.
+          </p>
+          <div class="cs-pills">
+            <span class="pill">Human Factors</span>
+            <span class="pill">Facilitation</span>
+            <span class="pill">IDP UX</span>
+          </div>
+          <a href="HealthInsurance_IDP_CaseStudy.html" class="link-arrow">View case &rarr;</a>
+        </div>
+      </article>
+
+      <!-- Card 2: Flexion / CMS -->
+      <article class="cs-card reveal" data-category="enterprise" style="--cat-color:#2D5C3E;">
+        <div class="cs-card-image">
+          <div class="cs-grid-overlay" aria-hidden="true"></div>
+          <i class="fa-solid fa-kit-medical cs-icon" aria-hidden="true"></i>
+        </div>
+        <div class="cs-card-content">
+          <p class="cs-employer">Flexion / Centers for Medicare</p>
+          <h3 class="cs-title">Modernize Business Rules System</h3>
+          <p class="cs-card-desc">
+            Redesigned how Medicare Administrative Contractors author and manage localized
+            business rules, replacing an opaque legacy mainframe workflow.
+          </p>
+          <div class="cs-pills">
+            <span class="pill">Human Factors</span>
+            <span class="pill">BPMN</span>
+            <span class="pill">Business Rules</span>
+          </div>
+          <a href="CMS_BusinessRules_CaseStudy.html" class="link-arrow">View case &rarr;</a>
+        </div>
+      </article>
+
+      <!-- Card 3: Synergis / Home Depot -->
+      <article class="cs-card reveal" data-category="consumer enterprise" style="--cat-color:#64748B;">
+        <div class="cs-card-image">
+          <div class="cs-grid-overlay" aria-hidden="true"></div>
+          <i class="fa-solid fa-store cs-icon" aria-hidden="true"></i>
+        </div>
+        <div class="cs-card-content">
+          <p class="cs-employer">Synergis / The Home Depot</p>
+          <h3 class="cs-title">Return to Vendor — Mobile Operations</h3>
+          <p class="cs-card-desc">
+            Redesigned the mobile RTV workflow used by store associates to process returns,
+            reducing steps and scan errors in a fast-paced retail environment.
+          </p>
+          <div class="cs-pills">
+            <span class="pill">Human Factors</span>
+            <span class="pill">Mobile UX</span>
+            <span class="pill">Field Research</span>
+          </div>
+          <a href="HomeDepot_RTV_CaseStudy.html" class="link-arrow">View case &rarr;</a>
+        </div>
+      </article>
+
     </div>
-  </div>
-</section>
 
-<!-- SELECTED WORK -->
-<section class="work-section" id="work">
-  <div class="work-header reveal">
-    <div class="work-header-top">
-      <div>
-        <div class="work-label">Selected Work</div>
-        <h2 class="work-title">Seven companies. Complex domains.</h2>
-      </div>
-      <p class="work-intro">Every project started with deep curiosity about how people actually work — not how we assume they do.</p>
+    <a href="#" class="explore-archive">Explore archive &rarr;</a>
+  </section>
+
+  <!-- QUOTE -->
+  <section class="quote-band">
+    <p class="eyebrow">Design Approach</p>
+    <p class="quote-text">
+      I look beyond the screen for solutions — sifting through complexity to serve both the
+      people who use the product and the business that builds it.
+    </p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="contact">
+    <div class="footer-col">
+      <p class="footer-name">Geri Arnold</p>
+      <p class="footer-role">Product Design + Interaction UX Designer</p>
+      <p class="footer-location">Beachwood, OH</p>
+      <a href="mailto:forma.nova.sketchbook@gmail.com" class="footer-email">forma.nova.sketchbook@gmail.com</a>
     </div>
-    <div class="work-rule"></div>
-  </div>
-
-  <div class="work-grid">
-    <a href="HealthInsurance_IDP_CaseStudy.html" class="work-card reveal">
-      <div class="work-card-accent" style="background: var(--cat-blue);"></div>
-      <div class="work-card-image" style="background: var(--cat-blue);"><span>Image</span></div>
-      <div class="work-card-body">
-        <div class="work-card-eyebrow">TekSystems Consultant</div>
-        <div class="work-card-company">Major U.S. Health Insurance Carrier</div>
-        <h3 class="work-card-title">Internal Developer Platform and Healthcare UX</h3>
-        <p class="work-card-desc">Sole UX practitioner managing 4 consultant workstreams on an Internal Developer Platform serving 300+ developers. Applied ISO 9241-210 lifecycle ensuring research preceded every design decision.</p>
-        <div class="work-card-bottom">
-          <span class="work-card-tag" style="background: var(--cat-blue);">Human Factors</span>
-          <span class="work-card-arrow">VIEW CASE →</span>
-        </div>
-      </div>
-    </a>
-
-    <a href="CMS_BusinessRules_CaseStudy.html" class="work-card reveal">
-      <div class="work-card-accent" style="background: var(--cat-green);"></div>
-      <div class="work-card-image" style="background: var(--cat-green);"><span>Image</span></div>
-      <div class="work-card-body">
-        <div class="work-card-eyebrow">Flexion, Inc</div>
-        <div class="work-card-company">Centers for Medicare and Medicaid</div>
-        <h3 class="work-card-title">Modernize Business Rules System</h3>
-        <p class="work-card-desc">Led discovery through end-to-end UX research for the Centers for Medicare and Medicaid Services (CMS). Contributed to CMS achieving its first cloud-processed Medicare claim.</p>
-        <div class="work-card-bottom">
-          <span class="work-card-tag" style="background: var(--cat-rust);">Federal Healthcare</span>
-          <span class="work-card-arrow">VIEW CASE →</span>
-        </div>
-      </div>
-    </a>
-
-    <a href="https://geriarnold.myportfolio.com/verizon-projects" target="_blank" class="work-card reveal">
-      <div class="work-card-accent" style="background: var(--cat-rust);"></div>
-      <div class="work-card-image" style="background: var(--cat-rust);"><span>Image</span></div>
-      <div class="work-card-body">
-        <div class="work-card-eyebrow">EdTech</div>
-        <div class="work-card-company">Verizon Wireless</div>
-        <h3 class="work-card-title">Enterprise Learning Technology</h3>
-        <p class="work-card-desc">Led user research and hi-fidelity prototyping for performance evaluation tools serving 1,000+ training managers. Owned product management from concept through deployment.</p>
-        <div class="work-card-bottom">
-          <span class="work-card-tag" style="background: var(--accent); color: var(--bg);">Enterprise UX</span>
-          <span class="work-card-arrow">VIEW CASE →</span>
-        </div>
-      </div>
-    </a>
-
-    <a href="HomeDepot_RTV_CaseStudy.html" class="work-card reveal">
-      <div class="work-card-accent" style="background: var(--cat-slate);"></div>
-      <div class="work-card-image" style="background: var(--cat-slate);"><span>Image</span></div>
-      <div class="work-card-body">
-        <div class="work-card-eyebrow">Synergis Contractor</div>
-        <div class="work-card-company">The Home Depot</div>
-        <h3 class="work-card-title">Return to Vendor — Mobile Operations</h3>
-        <p class="work-card-desc">Designed a mobile application consolidating 4 legacy systems, including green-screen terminals. Reduced task time 55% across 2,300+ stores, validated through in-store contextual inquiry.</p>
-        <div class="work-card-bottom">
-          <span class="work-card-tag" style="background: var(--cat-sage); color: var(--bg);">Mobile UX</span>
-          <span class="work-card-arrow">VIEW CASE →</span>
-        </div>
-      </div>
-    </a>
-
-    <a href="https://geriarnold.myportfolio.com/turbine-quote-generator" target="_blank" class="work-card reveal">
-      <div class="work-card-accent" style="background: var(--cat-rust);"></div>
-      <div class="work-card-image" style="background: var(--cat-rust);"><span>Image</span></div>
-      <div class="work-card-body">
-        <div class="work-card-eyebrow">Salesforce Experience Design</div>
-        <div class="work-card-company">GE Digital</div>
-        <h3 class="work-card-title">Automated Quote Generator</h3>
-        <p class="work-card-desc">Conducted international UX research with B2B turbine sales teams. Validated prototypes across Oracle and Salesforce platforms through 5+ participants per discovery stage.</p>
-        <div class="work-card-bottom">
-          <span class="work-card-tag" style="background: var(--accent); color: var(--bg);">International Research</span>
-          <span class="work-card-arrow">VIEW CASE →</span>
-        </div>
-      </div>
-    </a>
-
-    <a href="https://geriarnold.myportfolio.com/mail-verification-search-and-print" target="_blank" class="work-card reveal">
-      <div class="work-card-accent" style="background: var(--cat-slate);"></div>
-      <div class="work-card-image" style="background: var(--cat-slate);"><span>Image</span></div>
-      <div class="work-card-body">
-        <div class="work-card-eyebrow">Tata Consulting Services</div>
-        <div class="work-card-company">State Farm Insurance</div>
-        <h3 class="work-card-title">Mail Verification</h3>
-        <p class="work-card-desc">Designed mobile and web tools across document tracking, legal verification, and claims processing. Delivered high-fidelity wireframes across all platforms for developer handoff.</p>
-        <div class="work-card-bottom">
-          <span class="work-card-tag" style="background: var(--cat-sage); color: var(--bg);">Claim Workflow</span>
-          <span class="work-card-arrow">VIEW CASE →</span>
-        </div>
-      </div>
-    </a>
-
-    <a href="https://geriarnold.myportfolio.com/lounge-for-aerobus-a350" target="_blank" class="work-card reveal">
-      <div class="work-card-accent" style="background: var(--cat-rust);"></div>
-      <div class="work-card-image" style="background: var(--cat-rust);"><span>Image</span></div>
-      <div class="work-card-body">
-        <div class="work-card-eyebrow">Industrial Design</div>
-        <div class="work-card-company">Collins Aerospace (formerly B/E Aerospace)</div>
-        <h3 class="work-card-title">Airbus A350 Aircraft Seating</h3>
-        <p class="work-card-desc">Co-inventor on 12 U.S. and EU patents. Part of a Red Dot award-winning team for ergonomics and usability innovations in premium aircraft seating systems on the Airbus A350.</p>
-        <div class="work-card-bottom">
-          <span class="work-card-tag" style="background: var(--accent); color: var(--bg);">Ergonomics</span>
-          <span class="work-card-arrow">VIEW CASE →</span>
-        </div>
-      </div>
-    </a>
-  </div>
-</section>
-
-<!-- QUOTE -->
-<section class="quote-section reveal">
-  <div class="quote-label">Design Approach</div>
-  <p class="quote-text">"I look <strong>beyond the screen</strong> for solutions — sifting through complexity to serve both the people who use the product and the business that builds it."</p>
-</section>
+    <div class="footer-col">
+      <p class="footer-heading">Browse</p>
+      <ul class="footer-nav">
+        <li><a href="#work">Work</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#research">Research</a></li>
+        <li><a href="#art">Art</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <p class="footer-heading">Get in touch</p>
+      <p class="footer-blurb">Open to coaching, consulting, and full-time roles focused on Human Factors and healthcare UX.</p>
+      <a href="https://calendly.com/YOUR-LINK/discovery" class="link-arrow" target="_blank" rel="noopener">Book a design session &rarr;</a>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; <span id="year"></span> Geri Arnold. All rights reserved.</p>
+      <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+    </div>
+  </footer>
 
 </main>
 
-<!-- FOOTER -->
-<footer class="home-footer" id="contact">
-  <div class="home-footer-main">
-    <div>
-      <div class="footer-col-name">Geri Arnold</div>
-      <div class="footer-col-details">
-        <span>Human Factors–informed UX Designer</span>
-        <span>MFA · MSHFE · AHFP®</span>
-        <span>Beachwood, OH</span>
-      </div>
-    </div>
-    <div>
-      <div class="footer-col-label">Browse</div>
-      <div class="footer-nav-links">
-        <a href="#work">Selected Work</a>
-        <a href="About_GeriArnold.html">About</a>
-        <a href="https://geriarnold.myportfolio.com/research" target="_blank">Research ↗</a>
-        <a href="https://geriarnold.myportfolio.com/art" target="_blank">Art ↗</a>
-      </div>
-    </div>
-    <div style="max-width: 420px;">
-      <div class="footer-col-label">Get In Touch</div>
-      <div class="footer-consulting">
-        <div class="footer-consulting-bar"></div>
-        <div>
-          <div class="footer-consulting-label">Coaching &amp; Consulting</div>
-          <p class="footer-consulting-text">I help individuals and organizations with workflow design, AI-assisted productivity tools, and digital communication systems.</p>
-        </div>
-      </div>
-      <p class="footer-contact-line">Contact: forma.nova.sketchbook@gmail.com</p>
-      <a href="https://calendly.com/forma-nova-sketchbook/1-hour-coaching" target="_blank" rel="noopener" class="link-arrow">Book a Session →</a>
-      <p class="footer-tagline">Open to new opportunities and conversations about complex design challenges.<br>geri.arnold@outlook.com</p>
-    </div>
-  </div>
-  <div class="home-footer-bottom">
-    <span>© 2026 Geri Arnold. All rights reserved.</span>
-    <div class="footer-legal-links">
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Service</a>
-    </div>
-  </div>
-</footer>
-
-<script>
-  const nav = document.getElementById('site-nav');
-  window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 20);
-  }, { passive: true });
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
-  }, { threshold: 0.08 });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-</script>
+<script src="portfolio.js"></script>
 </body>
 </html>
