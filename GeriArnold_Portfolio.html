@@ -10,6 +10,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="portfolio.css">
+<style>
+  /* Fix 2: slow the headshot entrance + Loomis draw animation */
+  .hero-photo img { animation-duration: 2.5s !important; transition-duration: 2.5s !important; animation-timing-function: ease-out !important; }
+  .draw-svg .draw { animation-duration: 2.5s !important; transition-duration: 2.5s !important; }
+</style>
 <script>
   /* Set theme before paint to avoid flash */
   (function () {
@@ -52,10 +57,10 @@
         <span class="tag">MSHCI</span>
       </div>
       <p class="hero-bio">
-        <!-- [ Bio copy — please review/replace with your preferred wording ] -->
-        I design for the moments where complex systems meet real people under pressure. Over 10 years
-        in User Experience, trained in Human Factors, I bring cognitive science and systems thinking
-        to enterprise, healthcare, and industrial products — reducing error, not just polishing screens.
+        Human Factors is my foundation: I design for cognition, workload, and error, not just
+        aesthetics. It's how I became a co-inventor on 12 patents, and why regulated industries,
+        healthcare, government Medicare systems, and retail supply chain, trust me with their
+        most complex workflows.
       </p>
       <div class="hero-cta">
         <a href="#work" class="btn btn-filled">View my work</a>
