@@ -456,8 +456,8 @@ footer{background:var(--bg-footer);border-top:1px solid var(--divider-line)}
     for(var i=0;i<30;i++){
       var x = Math.round(i*spacing);
       var major = i%5===0;
-      var y = major?12:18, w = major?12:6;
-      html += '<line x1="'+x+'" y1="'+y+'" x2="'+(x+w)+'" y2="'+y+'" stroke="var(--ruler-stroke)" stroke-width="1.5"/>';
+      var y1 = major?12:18;
+      html += '<line x1="'+x+'" y1="'+y1+'" x2="'+x+'" y2="24" stroke="var(--ruler-stroke)" stroke-width="1.5"/>';
     }
     svg.innerHTML = html;
   });
